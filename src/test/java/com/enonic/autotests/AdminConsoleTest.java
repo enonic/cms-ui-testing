@@ -1,58 +1,42 @@
 package com.enonic.autotests;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import com.enonic.autotests.exceptions.AuthenticationException;
 import com.enonic.autotests.pages.v4.AdminConsoolePage;
 import com.enonic.autotests.pages.v4.HomePage;
 
-public class AdminConsoleTest {
-	private String baseUrl;
-	private WebDriver driver;
-	private static Properties prop = new Properties();
+public class AdminConsoleTest extends BaseTest {
 
-	@BeforeClass
-	public static void initProperties() throws IOException {
-		InputStream in = AdminConsoleTest.class.getClassLoader().getResourceAsStream("test.properties");
+	@BeforeMethod
+	public void openBrowser() {
 
-		prop.load(in);
+		setDriver(new FirefoxDriver());
+
 	}
 
-	@Before
-	public void openBrowser() {
-		baseUrl = prop.getProperty("base.url");
-		driver = new FirefoxDriver();
-
+	@AfterMethod
+	public void closeBrowser() {
+		getDriver().quit();
 	}
 
 	@Test
 	public void testOpenConsoleLoginSucess() {
-		HomePage home = new HomePage(driver, baseUrl);
+		HomePage home = new HomePage(getDriver(), getBaseUrl());
 		home.open();
 		AdminConsoolePage page = home.openAdminConsole("admin", "password");
 		// TODO check correct info for console page
 	}
 
-	@Test(expected = AuthenticationException.class)
+	@Test(expectedExceptions = AuthenticationException.class)
 	public void testWrongPassword() {
-		HomePage home = new HomePage(driver, baseUrl);
+		HomePage home = new HomePage(getDriver(), getBaseUrl());
+		home.setLogged(false);
 		home.open();
 		AdminConsoolePage page = home.openAdminConsole("admin", "password1");
-	}
-
-	@After
-	public void saveScreenshotAndCloseBrowser() throws IOException {
-		TestUtils.saveScreenshot("screenshot.png", driver);
-		driver.quit();
 	}
 
 }

@@ -25,10 +25,7 @@ public class HomePage extends Page {
 
 	public void open() {
 		getDriver().get(url);
-		if (!getDriver().getTitle().trim().equals(title)) {
-
-			throw new IllegalStateException("This is not the login page");
-		}
+		
 		(new WebDriverWait(getDriver(), TIMEOUT)).until(new ExpectedCondition<Boolean>() {
 			public Boolean apply(WebDriver d) {
 				return d.getTitle().trim().contains(title);
@@ -53,7 +50,8 @@ public class HomePage extends Page {
 		if (!isLogged) {
 			LoginPage loginPage = new LoginPage(getDriver());
 			loginPage.doLogin(username, password);
-			new WebDriverWait(getDriver(), TIMEOUT).until(ExpectedConditions.visibilityOfElementLocated(By.className("leftframe")));
+			new WebDriverWait(getDriver(), TIMEOUT).until(ExpectedConditions.visibilityOfElementLocated(
+															  By.className(AdminConsoolePage.LEFT_FRAME_CLASSNAME)));
 			isLogged = true;
 		}
 		TestUtils.saveScreenshot("adminconsole.png", getDriver());
