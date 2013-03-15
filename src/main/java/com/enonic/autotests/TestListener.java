@@ -8,10 +8,7 @@ import org.testng.ITestResult;
 import org.testng.Reporter;
 import org.testng.TestListenerAdapter;
 
-/**
- * @author Dzmitry_Ramanets
- *
- */
+
 public class TestListener extends TestListenerAdapter { 
 	@Override
 	public void onConfigurationFailure(ITestResult tr) {
