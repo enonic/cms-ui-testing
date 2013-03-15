@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.TestUtils;
+import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.pages.Page;
 
 public class HomePage extends Page {
@@ -18,6 +19,8 @@ public class HomePage extends Page {
 
 	@FindBy(xpath = "//span[text()='Admin Console']")
 	private WebElement admConsoleLink;
+	
+	Logger logger = Logger.getInstance();
 
 	private String url;
 
@@ -48,13 +51,17 @@ public class HomePage extends Page {
 	public AdminConsoolePage openAdminConsole(String username, String password) {
 		admConsoleLink.click();
 		if (!isLogged) {
+			logger.info("try to login with userName:"+username + " password: "+password);
+			long start = System.currentTimeMillis();
 			LoginPage loginPage = new LoginPage(getDriver());
 			loginPage.doLogin(username, password);
 			new WebDriverWait(getDriver(), TIMEOUT).until(ExpectedConditions.visibilityOfElementLocated(
 															  By.className(AdminConsoolePage.LEFT_FRAME_CLASSNAME)));
+			
+			logger.perfomance("user logged in "+username +"  password:"+password,start);
 			isLogged = true;
 		}
-		TestUtils.saveScreenshot("adminconsole.png", getDriver());
+		TestUtils.saveScreenshot( getDriver());
 		return new AdminConsoolePage(getDriver());
 	}
 

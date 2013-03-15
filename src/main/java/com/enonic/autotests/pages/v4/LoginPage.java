@@ -3,7 +3,6 @@ package com.enonic.autotests.pages.v4;
 
 
 import org.openqa.selenium.By;
-import org.apache.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -11,14 +10,20 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Reporter;
 
 import com.enonic.autotests.TestUtils;
 import com.enonic.autotests.exceptions.AuthenticationException;
+import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.pages.Page;
 
+/**
+ * Page Object for Login page version 4.7 
+ *
+ */
 public class LoginPage extends Page {
 	
-	private Logger logger = Logger.getLogger(LoginPage.class);
+	private Logger logger = Logger.getInstance();
 	//TODO message should be localized:
 	private String errorMessage = "Wrong username or password";
 
@@ -46,12 +51,12 @@ public class LoginPage extends Page {
 
 		usernameInput.sendKeys(username);
 		passwordInput.sendKeys(password);
-		TestUtils.saveScreenshot("credentials.png", getDriver());
+		TestUtils.saveScreenshot( getDriver());
 		loginButton.submit();
 		if(TestUtils.checkIfDisplayed(By.className("cms-error"), getDriver())){
 			String erMess = getDriver().findElement(By.className("cms-error")).getText();
 			logger.info("could not to login "+erMess);
-			TestUtils.saveScreenshot("error.png", getDriver());
+			TestUtils.saveScreenshot( getDriver());
 			throw new AuthenticationException("Wrong username or password");
 		}
 

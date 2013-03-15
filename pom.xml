@@ -1,201 +1,191 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.enonic.autotests</groupId>
-  <artifactId>auto-tests</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+	<groupId>com.enonic.autotests</groupId>
+	<artifactId>ui-testing</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
 
-  <name>auto-tests</name>
-  <url>http://maven.apache.org</url>
+	<name>ui-testing</name>
+	<url>http://maven.apache.org</url>
 
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
-  <dependencies>
-	<dependency>
-  		<groupId>org.seleniumhq.selenium</groupId>
-  		<artifactId>selenium-java</artifactId>
-  		 <version>2.31.0</version>
-	</dependency>
-	<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
-	</dependency>
-	<dependency>
+	<dependencies>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>2.31.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>20041127.091804</version>
 		</dependency>
-<!--     <dependency> -->
-<!--       <groupId>junit</groupId> -->
-<!--       <artifactId>junit</artifactId> -->
-<!--       <version>4.10</version>      -->
-<!--     </dependency> -->
-    
-   <dependency>
-	<groupId>org.testng</groupId>
-	<artifactId>testng</artifactId>
-	<version>6.8</version>
-	<scope>runtime</scope>
-</dependency>
-            
-  </dependencies>
-  
-  <profiles>
-    <!-- Profile to enable integration test execution Should be enabled given
-        a -Dintegration.test option when running the build -->
-    <profile>
-        <id>auto-test</id>
-        <activation>
-            <property>
-                <name>auto.test</name>
-            </property>
-        </activation>
-        <build>
-         <resources>
-            <resource>
-                <directory>${basedir}/src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-        </resources>
-            <plugins>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <!-- Skip the normal tests, we'll run the integration-tests only -->
-                        <skip>true</skip>
-                        <excludes>
-                        </excludes>
-                        <includes>
-                            <include>com/test/**</include>
-                        </includes>
-                    </configuration>
-                    <executions>
-                    
-                        <execution>
-                        	<id>package</id>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>test</goal>
-                            </goals>
-                            <configuration>
-                                <skip>false</skip>
-                                <includes>
-                                    <include>com/enonic/autotests/**</include>
-                                </includes>
-                                <excludes>
-                                </excludes>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </build>
-    </profile>
-    <profile>
-        <!-- Added a micro/unit test profile that is run by default
-             so that we can override the surefire excludes in an
-             integration test build -->
-        <id>micro-test</id>
-        <activation>
-            <property>
-                <name>!auto.test</name>
-            </property>              
-        </activation>
-        <build>
-        <resources>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-			<resource>
-				<directory>${basedir}/src/test/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-           
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-surefire-plugin</artifactId>
-                    <configuration>
-                        <excludes>
-                            <exclude>com/enonic/autotests/**</exclude>
-                        </excludes>
-                    </configuration>
-                </plugin>
-                
-                <plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>com.enonic.autotests.TestRunner</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>jar-with-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-					
-				</executions>
-			</plugin>
-			 <plugin>
-       <groupId>org.apache.maven.plugins</groupId>
-       <artifactId>maven-jar-plugin</artifactId>
-       <version>2.2</version>
-       <executions>
-         <execution>
-           <goals>
-             <goal>test-jar</goal>
-           </goals>
-         </execution>
-       </executions>
-     </plugin>
-            </plugins>
-        </build>
-    </profile>
-</profiles>   
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8</version>
+			<scope>runtime</scope>
+		</dependency>
+
+	</dependencies>
+
+	<profiles>
+		<!-- Profile to enable integration test execution Should be enabled given 
+			a -Dintegration.test option when running the build -->
+		<profile>
+			<id>auto-test</id>
+			<activation>
+				<property>
+					<name>auto.test</name>
+				</property>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>${basedir}/src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>**</include>
+						</includes>
+						<excludes>
+							<exclude>**/*.java</exclude>
+						</excludes>
+					</resource>
+				</resources>
+				<plugins>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<!-- Skip the normal tests, we'll run the integration-tests only -->
+							<skip>true</skip>
+							<excludes>
+							</excludes>
+							<includes>
+								<include>com/test/**</include>
+							</includes>
+						</configuration>
+						<executions>
+
+							<execution>
+								<id>package</id>
+								<phase>package</phase>
+								<goals>
+									<goal>test</goal>
+								</goals>
+								<configuration>
+									<skip>false</skip>
+									<includes>
+										<include>com/enonic/autotests/**</include>
+									</includes>
+									<excludes>
+									</excludes>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<!-- Added a micro/unit test profile that is run by default so that we 
+				can override the surefire excludes in an integration test build -->
+			<id>micro-test</id>
+			<activation>
+				<property>
+					<name>!auto.test</name>
+				</property>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>${basedir}/src/main/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>**</include>
+						</includes>
+						<excludes>
+							<exclude>**/*.java</exclude>
+						</excludes>
+					</resource>
+					<resource>
+						<directory>${basedir}/src/test/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>**</include>
+						</includes>
+						<excludes>
+							<exclude>**/*.java</exclude>
+						</excludes>
+					</resource>
+				</resources>
+				<plugins>
+					<plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>2.3.2</version>
+						<configuration>
+							<source>1.6</source>
+							<target>1.6</target>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>com/enonic/autotests/**</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>com.enonic.autotests.TestRunner</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+						<executions>
+							<execution>
+								<id>jar-with-dependencies</id>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jar-plugin</artifactId>
+						<version>2.2</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>test-jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
 
