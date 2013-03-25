@@ -1,22 +1,27 @@
 package com.enonic.autotests.pages;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.PageFactory;
 
-public abstract class Page {
+import com.enonic.autotests.TestSession;
 
-	//TODO should be configured in properties file
-	protected final long TIMEOUT = 10;
-	
-	private WebDriver driver;
+public abstract class Page {// extends LoadableComponent<Page>{
+
+	private TestSession session;
 
 	public abstract String getTitle();
 
-	public WebDriver getDriver() {
-		return driver;
+	public Page(TestSession session) {
+		this.session = session;
+		PageFactory.initElements(session.getDriver(), this);
 	}
 
-	public void setDriver(WebDriver driver) {
-		this.driver = driver;
+	public TestSession getSession() {
+		return session;
+	}
+
+	public void setSession(TestSession session) {
+		this.session = session;
 	}
 
 }

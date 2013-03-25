@@ -1,75 +1,81 @@
 package com.enonic.autotests.pages.v4;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.FindsByLinkText;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.enonic.autotests.TestSession;
 import com.enonic.autotests.TestUtils;
 import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.pages.Page;
+import com.enonic.autotests.pages.v4.adminconsole.AdminConsolePage;
 
 public class HomePage extends Page {
 
-	private String title = "Enonic CMS - Boot Page";
+	private Logger logger = Logger.getInstance();
+
+	public static String TITLE = "Enonic CMS - Boot Page";
 
 	@FindBy(xpath = "//span[text()='Admin Console']")
 	private WebElement admConsoleLink;
-	
-	Logger logger = Logger.getInstance();
 
-	private String url;
+	/**
+	 * @param session
+	 */
+	public HomePage(TestSession session) {
+		super(session);
 
-	private boolean isLogged;
-
-	public void open() {
-		getDriver().get(url);
-		
-		(new WebDriverWait(getDriver(), TIMEOUT)).until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver d) {
-				return d.getTitle().trim().contains(title);
-			}
-		});
 	}
 
-	public HomePage(WebDriver driver, String homeUrl) {
-		setDriver(driver);
-		this.url = homeUrl;
-		PageFactory.initElements(driver, this);
+	public void open() {
+		// open page via the driver.get(BASE_URL)
+		getSession().getDriver().get(getSession().getBaseUrl());
+		TestUtils.getInstance().waitUntilTitleVisible(getSession(), getTitle().trim());
+
 	}
 
 	@Override
 	public String getTitle() {
 
-		return title;
+		return TITLE;
 	}
 
-	public AdminConsoolePage openAdminConsole(String username, String password) {
+	/**
+	 * @param username
+	 * @param password
+	 * @return
+	 */
+	public AdminConsolePage openAdminConsole(String username, String password) {
 		admConsoleLink.click();
-		if (!isLogged) {
-			logger.info("try to login with userName:"+username + " password: "+password);
+		if (!getSession().isLoggedIn()) {
+			logger.info("try to login with userName:" + username + " password: " + password);
 			long start = System.currentTimeMillis();
-			LoginPage loginPage = new LoginPage(getDriver());
+			LoginPage loginPage = new LoginPage(getSession());
 			loginPage.doLogin(username, password);
-			new WebDriverWait(getDriver(), TIMEOUT).until(ExpectedConditions.visibilityOfElementLocated(
-															  By.className(AdminConsoolePage.LEFT_FRAME_CLASSNAME)));
-			
-			logger.perfomance("user logged in "+username +"  password:"+password,start);
-			isLogged = true;
+
+			logger.perfomance("user logged in " + username + "  password:" + password, start);
+			getSession().setLoggedIn(true);
 		}
-		TestUtils.saveScreenshot( getDriver());
-		return new AdminConsoolePage(getDriver());
+		TestUtils.getInstance().waitUntilVisible(getSession(), By.className(AdminConsolePage.LEFT_FRAME_CLASSNAME));
+		TestUtils.getInstance().waitUntilVisible(getSession(), By.name(AdminConsolePage.MAIN_FRAME_NAME));
+		TestUtils.getInstance().saveScreenshot(getSession());
+		return new AdminConsolePage(getSession());
 	}
 
-	public boolean isLogged() {
-		return isLogged;
-	}
-
-	public void setLogged(boolean isLogged) {
-		this.isLogged = isLogged;
+	/**
+	 * @param siteName
+	 * @return
+	 */
+	public boolean isSiteExistsOnHomePage(String siteName) {
+		// "//a[text()='siteName']" <span class="name">gav</span>
+		// List<WebElement> elements =
+		// ((FindsByLinkText)getSession().getDriver()).findElementsByLinkText(siteName);
+		return true;
 	}
 }

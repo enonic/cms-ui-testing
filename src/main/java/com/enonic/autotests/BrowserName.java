@@ -4,8 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum BrowserName {
-	FIREFOX("firefox"), HTMLUNIT("htmlunit"), IE("ie"), OPERA("opera"), CHROME("chrome"), ;
+	FIREFOX("firefox"), HTMLUNIT("htmlunit"), IE("ie"), OPERA("opera"), CHROME("chrome");
 	private String name;
+
+	public String getName() {
+		return name;
+	}
 
 	private final static Map<String, BrowserName> map = new HashMap<String, BrowserName>();
 	static {
@@ -17,8 +21,8 @@ public enum BrowserName {
 	private BrowserName(String name) {
 		this.name = name;
 	}
-	
-	   public static BrowserName findByValue(String value) {
-	        return value != null ? map.get(value.toLowerCase()) : null;
-	    }
+
+	public static BrowserName findByValue(String value) {
+		return value != null ? map.get(value.toLowerCase()) : null;
+	}
 }

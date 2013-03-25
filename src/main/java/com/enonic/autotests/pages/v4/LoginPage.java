@@ -1,7 +1,5 @@
 package com.enonic.autotests.pages.v4;
 
-
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,19 +10,20 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 
+import com.enonic.autotests.TestSession;
 import com.enonic.autotests.TestUtils;
 import com.enonic.autotests.exceptions.AuthenticationException;
 import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.pages.Page;
 
 /**
- * Page Object for Login page version 4.7 
- *
+ * Page Object for Login page version 4.7
+ * 
  */
 public class LoginPage extends Page {
-	
+
 	private Logger logger = Logger.getInstance();
-	//TODO message should be localized:
+	// TODO message should be localized:
 	private String errorMessage = "Wrong username or password";
 
 	private String title = "Enonic CMS - Login";
@@ -36,27 +35,31 @@ public class LoginPage extends Page {
 	@FindBy(how = How.NAME, using = "login")
 	private WebElement loginButton;
 
+	/**
+	 * @param session
+	 */
+	public LoginPage(TestSession session) {
+		super(session);
 
-	public LoginPage(WebDriver driver) {
-		setDriver(driver);
-		(new WebDriverWait(getDriver(), TIMEOUT)).until(new ExpectedCondition<Boolean>() {
-            public Boolean apply(WebDriver d) {
-                return d.getTitle().trim().contains(title);
-            }
-        });
-		PageFactory.initElements(driver, this);
+		(new WebDriverWait(getSession().getDriver(), TestUtils.TIMEOUT_IMPLICIT)).until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver d) {
+				return d.getTitle().trim().contains(title);
+			}
+		});
 	}
 
 	public void doLogin(String username, String password) {
 
 		usernameInput.sendKeys(username);
 		passwordInput.sendKeys(password);
-		TestUtils.saveScreenshot( getDriver());
+		// TestUtils.saveScreenshot( getSession().getDriver());
 		loginButton.submit();
-		if(TestUtils.checkIfDisplayed(By.className("cms-error"), getDriver())){
-			String erMess = getDriver().findElement(By.className("cms-error")).getText();
-			logger.info("could not to login "+erMess);
-			TestUtils.saveScreenshot( getDriver());
+
+		if (TestUtils.getInstance().checkIfDisplayed(By.className("cms-error"), getSession().getDriver())) {
+			String erMess = getSession().getDriver().findElement(By.className("cms-error")).getText();
+			logger.info("could not to login " + erMess);
+			// TestUtils.saveScreenshot( getSession().getDriver());
+			TestUtils.getInstance().saveScreenshot(getSession());
 			throw new AuthenticationException("Wrong username or password");
 		}
 

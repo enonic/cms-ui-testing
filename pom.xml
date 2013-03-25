@@ -13,6 +13,8 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<org.springframework.version>3.1.1.RELEASE</org.springframework.version>
+		<org.hibernate.version>3.5.1-Final</org.hibernate.version>
 	</properties>
 
 	<dependencies>
@@ -32,8 +34,25 @@
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>6.8</version>
-			<scope>runtime</scope>
+			<scope>compile</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>3.1.2.RELEASE</version>
+		</dependency>
+
 
 	</dependencies>
 
@@ -67,6 +86,7 @@
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
 							<!-- Skip the normal tests, we'll run the integration-tests only -->
+
 							<skip>true</skip>
 							<excludes>
 							</excludes>
@@ -83,6 +103,11 @@
 									<goal>test</goal>
 								</goals>
 								<configuration>
+
+									<suiteXmlFiles>
+										<suiteXmlFile>${basedir}/src/main/resources/template.xml</suiteXmlFile>
+									</suiteXmlFiles>
+
 									<skip>false</skip>
 									<includes>
 										<include>com/enonic/autotests/**</include>
@@ -156,7 +181,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>com.enonic.autotests.TestRunner</mainClass>
+
 								</manifest>
 							</archive>
 						</configuration>

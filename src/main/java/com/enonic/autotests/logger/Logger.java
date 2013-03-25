@@ -10,19 +10,18 @@ import java.util.logging.Level;
 
 import org.testng.Reporter;
 
-
 public class Logger implements ILogger {
 
 	private static volatile Logger instance;
-	
+
 	private final int defaultLogLevel = Severity.INFO;
 
 	protected static java.util.logging.Logger perfLogger;
 
 	protected static Logger defaultLogger = new Logger();
-	
+
 	protected int severity;
-	
+
 	public static Logger getInstance() {
 		if (instance == null) {
 			synchronized (Logger.class) {
@@ -37,7 +36,7 @@ public class Logger implements ILogger {
 	}
 
 	public class Entry implements IEntry {
-		
+
 		protected int severity;
 
 		protected String message;
@@ -66,7 +65,7 @@ public class Logger implements ILogger {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss]");
 			Date time = Calendar.getInstance().getTime();
 			StringBuffer buffer = new StringBuffer(dateFormat.format(time));
-			
+
 			buffer.append(severityToString(severity)).append(": ");
 
 			if (message != null) {
@@ -83,10 +82,11 @@ public class Logger implements ILogger {
 			return buffer.toString();
 		}
 	}
-	
+
 	public class PerfFormatter extends java.util.logging.Formatter {
-	    private String lineSeparator = (String) java.security.AccessController.doPrivileged(
-	               new sun.security.action.GetPropertyAction("line.separator"));
+		private String lineSeparator = (String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction(
+				"line.separator"));
+
 		@Override
 		public String format(java.util.logging.LogRecord record) {
 			String message = formatMessage(record);
@@ -142,7 +142,7 @@ public class Logger implements ILogger {
 			java.util.logging.FileHandler perfHandler = new java.util.logging.FileHandler("performance%u.output", true);
 			perfHandler.setFormatter(new PerfFormatter());
 			perfLogger.addHandler(perfHandler);
-			
+
 			perfLogger.setUseParentHandlers(false);
 		} catch (SecurityException e) {
 			e.printStackTrace();
@@ -150,8 +150,8 @@ public class Logger implements ILogger {
 			e.printStackTrace();
 		}
 	}
-	
-	public void log(IEntry entry) {		
+
+	public void log(IEntry entry) {
 		Reporter.log(entry.toString());
 		System.out.println(entry.toString());
 	}
@@ -159,13 +159,14 @@ public class Logger implements ILogger {
 	public void log(int severity, String message, Throwable exception) {
 		if (this.severity < severity)
 			return;
-		
-		if (severity == Severity.EXCEPTION){
-			//Assert.fail(message+" SNAPSHOT: "+ TestUtils.saveScreenshot(screenshotFileName, driver));
-		}
-		else if (severity == Severity.ERROR){
-			//log(new Entry(severity, message+" SNAPSHOT: "+  TestUtils.captureSnapshot(), exception));
-		}else
+
+		if (severity == Severity.EXCEPTION) {
+			// Assert.fail(message+" SNAPSHOT: "+
+			// TestUtils.saveScreenshot(screenshotFileName, driver));
+		} else if (severity == Severity.ERROR) {
+			// log(new Entry(severity, message+" SNAPSHOT: "+
+			// TestUtils.captureSnapshot(), exception));
+		} else
 			log(new Entry(severity, message, exception));
 	}
 
@@ -188,20 +189,21 @@ public class Logger implements ILogger {
 	public void info(String message, Throwable exception) {
 		log(Severity.INFO, message, exception);
 	}
-		
-	private class PerformanceLevel extends Level{
+
+	private class PerformanceLevel extends Level {
 		private static final long serialVersionUID = 1L;
 
 		protected PerformanceLevel() {
-			super("PERFORMANCE",1488);
-		}		
+			super("PERFORMANCE", 1488);
+		}
 	}
+
 	private PerformanceLevel oLevel = new PerformanceLevel();
-	
+
 	public void perfomance(String message, long startTime, Throwable exception) {
 		double time = System.currentTimeMillis() - startTime;
-		log(Severity.PERFOMANCE, time/1000 + ", Sec takes to " + message, exception);
-		perfLogger.log(oLevel, time/1000 + ", Sec takes to " + message);
+		log(Severity.PERFOMANCE, time / 1000 + ", Sec takes to " + message, exception);
+		perfLogger.log(oLevel, time / 1000 + ", Sec takes to " + message);
 	}
 
 	public void perfomance(String message, Throwable exception) {
@@ -241,11 +243,11 @@ public class Logger implements ILogger {
 		this.severity = severity;
 	}
 
-	public void exception(String message, Throwable exception){
+	public void exception(String message, Throwable exception) {
 		log(Severity.EXCEPTION, message, exception);
 	}
-	
-	public void exception(String message){
+
+	public void exception(String message) {
 		log(Severity.EXCEPTION, message, null);
 	}
 

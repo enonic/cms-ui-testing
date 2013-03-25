@@ -2,6 +2,7 @@ package com.enonic.autotests;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
@@ -18,31 +20,87 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.enonic.autotests.logger.Logger;
 
 public class TestUtils {
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd-HH-mm-ss";
+
+	private static TestUtils instance;
+
+	public static final long TIMEOUT_IMPLICIT = 10;
+
+	private Logger logger = Logger.getInstance();
+
+	/**
+	 * @return
+	 */
+	public static TestUtils getInstance() {
+		if (instance == null) {
+			synchronized (TestUtils.class) {
+				if (instance == null) {
+					instance = new TestUtils();
+				}
+			}
+		}
+		return instance;
+	}
+
+	/**
+	 * The Default constructor.
+	 */
+	private TestUtils() {
+
+	}
+
+	public void waitUntilVisible(final TestSession testSession, final By by) {
+		new WebDriverWait(testSession.getDriver(), TIMEOUT_IMPLICIT).until(ExpectedConditions.visibilityOfElementLocated(by));
+	}
+
+	public void waitUntilTitleVisible(final TestSession testSession, final String title) {
+		(new WebDriverWait(testSession.getDriver(), TestUtils.TIMEOUT_IMPLICIT)).until(new ExpectedCondition<Boolean>() {
+			public Boolean apply(WebDriver d) {
+				return d.getTitle().trim().contains(title);
+			}
+		});
+	}
 
 	/**
 	 * @param screenshotFileName
 	 * @param driver
 	 */
-	public static void saveScreenshot( WebDriver driver) {
-		String fileName = timeNow()+".png";
-		File folder = new File(System.getProperty("user.dir")+File.separator+"snapshots");
-		
-		if (!folder.exists()){
-			if (!folder.mkdir()){
+	public void saveScreenshot(final TestSession testSession) {
+		WebDriver driver = testSession.getDriver();
+		String fileName = timeNow() + ".png";
+		File folder = new File(System.getProperty("user.dir") + File.separator + "snapshots");
+
+		if (!folder.exists()) {
+			if (!folder.mkdir()) {
 				System.out.println("Folder for snapshots was not created ");
-			}else{
-				System.out.println("Folder for snapshots was created "+ folder.getAbsolutePath());
+			} else {
+				System.out.println("Folder for snapshots was created " + folder.getAbsolutePath());
 			}
 		}
-				
-		String fullFileName = folder.getAbsolutePath()+File.separator+fileName;
-		File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		File screenshot = null;
+
+		if ((Boolean) testSession.get(TestSession.IS_REMOTE)) {
+
+			WebDriver augmentedDriver = new Augmenter().augment(driver);
+			screenshot = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
+		} else {
+			screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		}
+
+		String fullFileName = folder.getAbsolutePath() + File.separator + fileName;
+
 		try {
 			FileUtils.copyFile(screenshot, new File(fullFileName));
 		} catch (IOException e) {
@@ -50,19 +108,24 @@ public class TestUtils {
 
 		}
 	}
-	public static String timeNow() {
-	    Calendar cal = Calendar.getInstance();
-	    SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-	    return sdf.format(cal.getTime());
 
-	  }
-	
+	public String timeNow() {
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+		return sdf.format(cal.getTime());
+
+	}
+
+	public void clickByLocator1(final By locator, WebDriver driver) {
+		WebElement myDynamicElement = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(locator));
+		myDynamicElement.click();
+	}
+
 	/**
 	 * @param locator
 	 * @param driver
 	 */
-	public static void clickByLocator(final By locator, WebDriver driver) {
-		// staticlogger.info( "Click by locator: " + locator.toString() );
+	public void clickByLocator(final By locator, final WebDriver driver) {
 		final long startTime = System.currentTimeMillis();
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(90000, TimeUnit.MILLISECONDS).pollingEvery(5500,
@@ -82,8 +145,8 @@ public class TestUtils {
 			}
 		});
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		long endTime = System.currentTimeMillis();
-		long totalTime = endTime - startTime;
+		// TODO add perfomance log
+		logger.perfomance("clickByLocator:" + locator.toString(), startTime);
 		// staticlogger.info("Finished click after waiting for " + totalTime +
 		// " milliseconds.");
 	}
@@ -93,7 +156,7 @@ public class TestUtils {
 	 * @param driver
 	 * @return
 	 */
-	public static boolean checkIfDisplayed(By by, WebDriver driver) {
+	public boolean checkIfDisplayed(final By by, final WebDriver driver) {
 		List<WebElement> elements = driver.findElements(by);
 		return ((elements.size() > 0) && (elements.get(0).isDisplayed()));
 	}
@@ -102,9 +165,21 @@ public class TestUtils {
 	 * @param browser
 	 * @return
 	 */
-	public static WebDriver createWebDriver(String browser) {
-		BrowserName cfgBrowser = BrowserName.findByValue(browser);
+	public void createDriverAndOpenBrowser(final TestSession testSession) throws IOException {
 		WebDriver driver = null;
+
+		String browserName = (String) testSession.get(TestSession.BROWSER_NAME);
+		BrowserName cfgBrowser = BrowserName.findByValue(browserName);
+		Boolean isRemote = (Boolean) testSession.get(TestSession.IS_REMOTE);
+
+		if (isRemote != null && isRemote) {
+			String hubUrl = (String) testSession.get(TestSession.HUB_URL);
+			Capabilities desiredCapabilities = createDesiredCapabilities(testSession);
+			driver = new RemoteWebDriver(new URL(hubUrl), desiredCapabilities);
+			testSession.put(TestSession.WEBDRIVER, driver);
+			return;
+		}
+
 		if (cfgBrowser == null) {
 			throw new RuntimeException("browser was not specified in the suite file!");
 		}
@@ -113,10 +188,31 @@ public class TestUtils {
 		} else if (cfgBrowser.equals(BrowserName.CHROME)) {
 			driver = new ChromeDriver();
 		} else if (cfgBrowser.equals(BrowserName.IE)) {
-			return new InternetExplorerDriver();
+			driver = new InternetExplorerDriver();
 		} else if (cfgBrowser.equals(BrowserName.HTMLUNIT)) {
 			driver = new HtmlUnitDriver();
+		} else {
+			throw new RuntimeException("Driver not supported:" + cfgBrowser.getName());
 		}
-		return driver;
+
+		testSession.put(TestSession.WEBDRIVER, driver);
+
+	}
+
+	private static Capabilities createDesiredCapabilities(final TestSession testSession) {
+		String browserName = (String) testSession.get(TestSession.BROWSER_NAME);
+		BrowserName cfgBrowser = BrowserName.findByValue(browserName);
+		Capabilities capability = null;
+		if (cfgBrowser.equals(BrowserName.FIREFOX)) {
+			capability = DesiredCapabilities.firefox();
+			// capability.setBrowserName("firefox");
+			// capability.setVersion("17.0.1");
+
+			// TODO create for CHROME
+		} else {
+			capability = DesiredCapabilities.internetExplorer();
+		}
+
+		return capability;
 	}
 }
