@@ -1,13 +1,16 @@
 package com.enonic.autotests.pages;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.logger.Logger;
 
 public abstract class Page {// extends LoadableComponent<Page>{
 
 	private TestSession session;
+	
+	private  Logger logger = Logger.getLogger();
+	
 
 	public abstract String getTitle();
 
@@ -23,5 +26,10 @@ public abstract class Page {// extends LoadableComponent<Page>{
 	public void setSession(TestSession session) {
 		this.session = session;
 	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+
 
 }

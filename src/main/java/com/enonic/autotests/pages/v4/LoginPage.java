@@ -5,10 +5,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Reporter;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.TestUtils;
@@ -22,7 +20,7 @@ import com.enonic.autotests.pages.Page;
  */
 public class LoginPage extends Page {
 
-	private Logger logger = Logger.getInstance();
+	private static Logger logger = Logger.getLogger();
 	// TODO message should be localized:
 	private String errorMessage = "Wrong username or password";
 
@@ -58,7 +56,6 @@ public class LoginPage extends Page {
 		if (TestUtils.getInstance().checkIfDisplayed(By.className("cms-error"), getSession().getDriver())) {
 			String erMess = getSession().getDriver().findElement(By.className("cms-error")).getText();
 			logger.info("could not to login " + erMess);
-			// TestUtils.saveScreenshot( getSession().getDriver());
 			TestUtils.getInstance().saveScreenshot(getSession());
 			throw new AuthenticationException("Wrong username or password");
 		}

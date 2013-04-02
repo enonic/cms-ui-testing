@@ -3,6 +3,10 @@ package com.enonic.autotests.model;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *
+ * 02.04.2013
+ */
 public class Content {
 
 	private String name;

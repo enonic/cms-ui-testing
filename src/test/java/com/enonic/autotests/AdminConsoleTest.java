@@ -1,42 +1,20 @@
 package com.enonic.autotests;
 
-import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.enonic.autotests.exceptions.AuthenticationException;
-import com.enonic.autotests.services.IAdminConsoleService;
+import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 
-@ContextConfiguration(locations = { "/test-applicationContext.xml" })
 public class AdminConsoleTest extends BaseTest {
-	
-	@Autowired
-	IAdminConsoleService adminConsoleServiceV4;
 
-	@BeforeMethod
-	public void openBrowser() throws IOException {
-		TestUtils.getInstance().createDriverAndOpenBrowser(getTestSession());
-		
-
-	}
-
-	@AfterMethod
-	public void closeBrowser() {
-		getTestSession().closeBrowser();
-	
-	}
-
-	@Test
-	public void testOpenConsoleLoginSucess() {
+	@Test(description = "open admin console with valid administartor's password and verify left and right screens")
+	public void testOpenConsoleValidPassword() {
 		adminConsoleServiceV4.openAdminConsole(getTestSession(), "admin", "password");
+		AbstractAdminConsolePage.verify(getTestSession());
 	}
 
-	@Test(expectedExceptions = AuthenticationException.class)
-	public void testWrongPassword() {
+	@Test(description = "open admin console with invalid administartor's password", expectedExceptions = AuthenticationException.class)
+	public void testOpenConsoleWrongPassword() {
 		adminConsoleServiceV4.openAdminConsole(getTestSession(), "admin", "password1");
 	}
 

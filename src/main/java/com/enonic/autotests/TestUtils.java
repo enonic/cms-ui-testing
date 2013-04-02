@@ -12,12 +12,14 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Platform;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.Augmenter;
@@ -26,19 +28,20 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.logger.Logger;
 
 public class TestUtils {
+	//public static Logger logger = Logger.getLogger();
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd-HH-mm-ss";
 
 	private static TestUtils instance;
 
 	public static final long TIMEOUT_IMPLICIT = 10;
 
-	private Logger logger = Logger.getInstance();
 
 	/**
 	 * @return
@@ -73,11 +76,28 @@ public class TestUtils {
 		});
 	}
 
+	public boolean alertIsPresent(final TestSession testSession) {
+		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), 2);
+
+		// return wait.until(ExpectedConditions.alertIsPresent())==null;
+		try {
+
+			wait.until(ExpectedConditions.alertIsPresent());
+			System.out.println("alert was present");
+			return true;
+		} catch (Exception e) {
+			System.out.println("alert was not present");
+			return false;
+
+		}
+
+	}
+
 	/**
 	 * @param screenshotFileName
 	 * @param driver
 	 */
-	public void saveScreenshot(final TestSession testSession) {
+	public String saveScreenshot(final TestSession testSession) {
 		WebDriver driver = testSession.getDriver();
 		String fileName = timeNow() + ".png";
 		File folder = new File(System.getProperty("user.dir") + File.separator + "snapshots");
@@ -107,6 +127,7 @@ public class TestUtils {
 			// TODO Auto-generated catch block
 
 		}
+		return fileName;
 	}
 
 	public String timeNow() {
@@ -146,7 +167,7 @@ public class TestUtils {
 		});
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		// TODO add perfomance log
-		logger.perfomance("clickByLocator:" + locator.toString(), startTime);
+		//logger.perfomance("clickByLocator:" + locator.toString(), startTime);
 		// staticlogger.info("Finished click after waiting for " + totalTime +
 		// " milliseconds.");
 	}
@@ -160,6 +181,10 @@ public class TestUtils {
 		List<WebElement> elements = driver.findElements(by);
 		return ((elements.size() > 0) && (elements.get(0).isDisplayed()));
 	}
+//	public boolean checkIfDisplayed(final By by, final WebDriver driver) {
+//		WebElement element = driver.findElement(by);
+//		return element.isDisplayed();
+//	}
 
 	/**
 	 * @param browser
@@ -184,7 +209,11 @@ public class TestUtils {
 			throw new RuntimeException("browser was not specified in the suite file!");
 		}
 		if (cfgBrowser.equals(BrowserName.FIREFOX)) {
-			driver = new FirefoxDriver();
+			// ProfilesIni allProfiles = new ProfilesIni();
+			FirefoxProfile myProfile = new FirefoxProfile();
+			myProfile.setPreference("capability.policy.default.Window.frameElement.get", "allAccess");
+			driver = new FirefoxDriver(myProfile);
+			driver.manage().window().maximize();
 		} else if (cfgBrowser.equals(BrowserName.CHROME)) {
 			driver = new ChromeDriver();
 		} else if (cfgBrowser.equals(BrowserName.IE)) {
@@ -202,17 +231,34 @@ public class TestUtils {
 	private static Capabilities createDesiredCapabilities(final TestSession testSession) {
 		String browserName = (String) testSession.get(TestSession.BROWSER_NAME);
 		BrowserName cfgBrowser = BrowserName.findByValue(browserName);
-		Capabilities capability = null;
+		// Capabilities capability = null;
+		DesiredCapabilities capability = null;
+
 		if (cfgBrowser.equals(BrowserName.FIREFOX)) {
+
 			capability = DesiredCapabilities.firefox();
+			capability.setBrowserName("firefox");
+			capability.setPlatform(Platform.WINDOWS);
+			capability.setVersion("18.0");
+			// capability = DesiredCapabilities.firefox();
 			// capability.setBrowserName("firefox");
 			// capability.setVersion("17.0.1");
 
 			// TODO create for CHROME
 		} else {
 			capability = DesiredCapabilities.internetExplorer();
+			capability.setPlatform(Platform.WINDOWS);
+			capability.setVersion("19.0.2");
 		}
 
 		return capability;
 	}
+
+	public void selectByText(TestSession session, By by, String text) {
+		Select select = new Select(session.getDriver().findElement(by));
+		select.selectByVisibleText(text);
+	}
+
+	// driver.switch.frame(driver.findElementByXpath("//iframe[contains(@src,'forsee')]"))
+	// xpath=id('backOptionsArea')//img[contains(@src,'color/02')]/../..
 }

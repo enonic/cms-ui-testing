@@ -2,21 +2,13 @@ package com.enonic.autotests;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.services.IAdminConsoleService;
 
-
-@ContextConfiguration(locations = { "/test-applicationContext.xml" })
 public class ContentTypeTests extends BaseTest{
-
-	@Autowired
-	IAdminConsoleService adminConsoleServiceV4;
 	
 	@BeforeMethod
 	public void openBrowser() throws IOException {
@@ -31,12 +23,24 @@ public class ContentTypeTests extends BaseTest{
 	
 	}
 	
-	@Test(description="open cretae 'Content Types' page and create content types")
+	@Test(description="open 'Content Types' wizard page and create new custom content type")
+	public void createCustomContentType(){
+		ContentType ctype = new ContentType();
+		ctype.setName("customct");
+		ctype.setDescription("custom content type");
+		ctype.setContentHandler(ContentType.DEFAULT_CONTENTHANDLER_NAME);
+		ctype.setConfiguration("<contenttype> <indexparameters /></contenttype>");
+		adminConsoleServiceV4.createContentType(getTestSession(), ctype );
+	}
+	
+	
+	@Test(description="open 'Content Types' wizard page and create content type with 'File' content handler")
 	public void createFileContentType(){
 		ContentType ctype = new ContentType();
-		ctype.setName("file content type");
+		ctype.setName("filecontenttype");
 		ctype.setDescription("description");
 		ctype.setContentHandler("Files");
+		
 		adminConsoleServiceV4.createContentType(getTestSession(), ctype );
 	}
 }

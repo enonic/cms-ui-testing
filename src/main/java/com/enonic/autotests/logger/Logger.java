@@ -8,13 +8,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 
+import org.openqa.selenium.WebDriver;
 import org.testng.Reporter;
 
+import com.enonic.autotests.TestSession;
+import com.enonic.autotests.TestUtils;
+
+/**
+ * Wrapper for {@link Reporter} instance. 
+ *
+ * 02.04.2013
+ */
 public class Logger implements ILogger {
-
+	
 	private static volatile Logger instance;
-
-	private final int defaultLogLevel = Severity.INFO;
 
 	protected static java.util.logging.Logger perfLogger;
 
@@ -22,7 +29,9 @@ public class Logger implements ILogger {
 
 	protected int severity;
 
-	public static Logger getInstance() {
+	private WebDriver driver;
+
+	public static Logger getLogger() {
 		if (instance == null) {
 			synchronized (Logger.class) {
 				if (instance == null) {
@@ -42,6 +51,12 @@ public class Logger implements ILogger {
 		protected String message;
 
 		protected Throwable exception;
+
+		public Entry(int severity, String message) {
+			this.severity = severity;
+			this.message = message;
+
+		}
 
 		public Entry(int severity, String message, Throwable exception) {
 			this.severity = severity;
@@ -84,14 +99,9 @@ public class Logger implements ILogger {
 	}
 
 	public class PerfFormatter extends java.util.logging.Formatter {
-		// r/n  in windows
-		 String lineSeparator = java.security.AccessController.doPrivileged(
-				    new java.security.PrivilegedAction<String>() {
-				        public String run() {
-				            return System.getProperty("line.separator");
-				        }
-				    }
-				 );
+		private String lineSeparator = (String) java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction(
+				"line.separator"));
+
 		@Override
 		public String format(java.util.logging.LogRecord record) {
 			String message = formatMessage(record);
@@ -141,7 +151,7 @@ public class Logger implements ILogger {
 	}
 
 	private Logger() {
-		this.severity = defaultLogLevel;
+		
 		try {
 			perfLogger = java.util.logging.Logger.getLogger("Perfomance");
 			java.util.logging.FileHandler perfHandler = new java.util.logging.FileHandler("performance%u.output", true);
@@ -161,38 +171,18 @@ public class Logger implements ILogger {
 		System.out.println(entry.toString());
 	}
 
-	public void log(int severity, String message, Throwable exception) {
+	public void log(int severity, String message, TestSession session) {
 		if (this.severity < severity)
 			return;
 
-		if (severity == Severity.EXCEPTION) {
-			// Assert.fail(message+" SNAPSHOT: "+
-			// TestUtils.saveScreenshot(screenshotFileName, driver));
-		} else if (severity == Severity.ERROR) {
-			// log(new Entry(severity, message+" SNAPSHOT: "+
-			// TestUtils.captureSnapshot(), exception));
+		if (severity == Severity.ERROR && session != null) {
+			log(new Entry(severity, message + " SNAPSHOT: " + TestUtils.getInstance().saveScreenshot(session)));
 		} else
-			log(new Entry(severity, message, exception));
+			log(new Entry(severity, message));
 	}
 
-	public void log(int severity, String message) {
-		log(severity, message, null);
-	}
-
-	public void log(int severity, Throwable exception) {
-		log(severity, null, exception);
-	}
-
-	public void error(String message, Throwable exception) {
-		log(Severity.ERROR, message, exception);
-	}
-
-	public void warning(String message, Throwable exception) {
-		log(Severity.WARNING, message, exception);
-	}
-
-	public void info(String message, Throwable exception) {
-		log(Severity.INFO, message, exception);
+	public void info(String message) {
+		log(Severity.INFO, message, null);
 	}
 
 	private class PerformanceLevel extends Level {
@@ -205,55 +195,39 @@ public class Logger implements ILogger {
 
 	private PerformanceLevel oLevel = new PerformanceLevel();
 
-	public void perfomance(String message, long startTime, Throwable exception) {
+	public void perfomance(String message, long startTime) {
 		double time = System.currentTimeMillis() - startTime;
-		log(Severity.PERFOMANCE, time / 1000 + ", Sec takes to " + message, exception);
+		log(Severity.PERFOMANCE, time / 1000 + ", Sec takes to " + message, null);
 		perfLogger.log(oLevel, time / 1000 + ", Sec takes to " + message);
 	}
 
-	public void perfomance(String message, Throwable exception) {
-		log(Severity.PERFOMANCE, message, exception);
-		perfLogger.log(oLevel, message);
-	}
-
-	public void debug(String message, Throwable exception) {
-		log(Severity.DEBUG, message, exception);
-	}
-
-	public void error(String message) {
-		error(message, null);
+	public void error(String message, TestSession session) {
+		log(Severity.ERROR, message, session);
 	}
 
 	public void warning(String message) {
-		warning(message, null);
-	}
-
-	public void info(String message) {
-		info(message, null);
-	}
-
-	public void perfomance(String message, long startTime) {
-		perfomance(message, startTime, null);
-	}
-
-	public void perfomance(String message) {
-		perfomance(message, null);
+		log(Severity.WARNING, message, null);
 	}
 
 	public void debug(String message) {
-		debug(message, null);
+		log(Severity.INFO, message, null);
 	}
 
 	public void setSeverity(int severity) {
 		this.severity = severity;
 	}
 
-	public void exception(String message, Throwable exception) {
-		log(Severity.EXCEPTION, message, exception);
+	public void exception(String message, TestSession session) {
+		log(Severity.EXCEPTION, message, session);
 	}
 
-	public void exception(String message) {
-		log(Severity.EXCEPTION, message, null);
+	public WebDriver getDriver() {
+		return driver;
+	}
+
+	public Logger setDriver(WebDriver driver) {
+		this.driver = driver;
+		return this;
 	}
 
 }
