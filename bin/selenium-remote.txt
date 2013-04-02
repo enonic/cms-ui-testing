@@ -1,16 +1,16 @@
 1) Setting up a Hub is a fairly simple job. Launch the Selenium Server using the  following command:
 
-        java -jar selenium-server-standalone-2.31.0.jar -role hub
+         java -jar selenium-server-standalone-2.31.0.jar -port 4444 -role hub  -nodeTimeout 600
         
   When we launch the Selenium Standalone Server in Hub role, it starts listening to nodes and  Selenium tests on port 4444. 
 
 2)To start and register a node to the Hub, use the following command by specifying browser type, version, platform, hostname, and port as arguments:
 
-    java -jar selenium-server-standalone-2.31.0.jar -role webdriver -hub http://127.0.0.1:4444/grid/register/ -port 5555
+     java -jar selenium-server-standalone-2.31.0.jar -role webdriver  -nodeConfig qlty-selenium-hub.json
    
 3) the parameter "hab.url" should be added in the template.xml:
 
-       <parameter name="hab.url" value="http://127.0.0.1:4444/wd/hub" />
+       <parameter name="hab.url" value="http://qlty-selenium-hub:4444/wd/hub" />
        
        
 4) after that we can create instance of RemoteWebDriver and use it in our tests:       
