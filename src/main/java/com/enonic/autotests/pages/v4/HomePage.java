@@ -5,9 +5,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import com.enonic.autotests.TestSession;
-import com.enonic.autotests.TestUtils;
 import com.enonic.autotests.pages.Page;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
+import com.enonic.autotests.utils.TestUtils;
 
 /**
  * Page Object for 'Home' page. Version 4.7

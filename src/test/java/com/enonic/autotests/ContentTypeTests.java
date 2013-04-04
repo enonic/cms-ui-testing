@@ -1,46 +1,36 @@
 package com.enonic.autotests;
 
-import java.io.IOException;
-
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.enonic.autotests.exceptions.ContentTypeException;
 import com.enonic.autotests.model.ContentType;
+import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
+import com.enonic.autotests.providers.ContentTypeTestsProvider;
+import com.enonic.autotests.testdata.contenttype.ContenTypeUtils;
+import com.enonic.autotests.testdata.contenttype.ContentTypeXml;
 
 public class ContentTypeTests extends BaseTest{
 	
-	@BeforeMethod
-	public void openBrowser() throws IOException {
-		TestUtils.getInstance().createDriverAndOpenBrowser(getTestSession());
-		
+	
+	
 
+	@Test(description = "positive tests",dataProvider = "createContentTypePositive", dataProviderClass = ContentTypeTestsProvider.class)
+	public void createContentTypePositive( ContentTypeXml ctypeXML){
+		logger.info(ctypeXML.getCaseInfo());
+		ContentType ctype = ContenTypeUtils.convertToModel(ctypeXML);		
+		adminConsoleServiceV4.createContentType(getTestSession(), ctype );
+		ContentTypesFrame frame = new ContentTypesFrame(getTestSession());
+		boolean isCreated = frame.verifyIsCreated(ctype.getName());
+		Assert.assertTrue(isCreated,"new Content Type was not found on the Content Types page! ");
+	}
+	
+	@Test(dependsOnMethods="createContentTypePositive",description = "negative tests",expectedExceptions=ContentTypeException.class,dataProvider = "createContentTypeNegative", dataProviderClass = ContentTypeTestsProvider.class)
+	public void createContentTypeNegative(ContentTypeXml ctypeXML){
+		logger.info(ctypeXML.getCaseInfo());
+		ContentType ctype = ContenTypeUtils.convertToModel(ctypeXML);		
+		adminConsoleServiceV4.createContentType(getTestSession(), ctype );
+		
 	}
 
-	@AfterMethod
-	public void closeBrowser() {
-		getTestSession().closeBrowser();
-	
-	}
-	
-	@Test(description="open 'Content Types' wizard page and create new custom content type")
-	public void createCustomContentType(){
-		ContentType ctype = new ContentType();
-		ctype.setName("customct");
-		ctype.setDescription("custom content type");
-		ctype.setContentHandler(ContentType.DEFAULT_CONTENTHANDLER_NAME);
-		ctype.setConfiguration("<contenttype> <indexparameters /></contenttype>");
-		adminConsoleServiceV4.createContentType(getTestSession(), ctype );
-	}
-	
-	
-	@Test(description="open 'Content Types' wizard page and create content type with 'File' content handler")
-	public void createFileContentType(){
-		ContentType ctype = new ContentType();
-		ctype.setName("filecontenttype");
-		ctype.setDescription("description");
-		ctype.setContentHandler("Files");
-		
-		adminConsoleServiceV4.createContentType(getTestSession(), ctype );
-	}
 }

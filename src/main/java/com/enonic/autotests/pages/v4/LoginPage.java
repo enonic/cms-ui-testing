@@ -9,10 +9,10 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.TestSession;
-import com.enonic.autotests.TestUtils;
 import com.enonic.autotests.exceptions.AuthenticationException;
 import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.pages.Page;
+import com.enonic.autotests.utils.TestUtils;
 
 /**
  * Page Object for Login page version 4.7
