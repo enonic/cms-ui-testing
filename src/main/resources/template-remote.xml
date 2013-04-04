@@ -5,8 +5,8 @@
 
     <parameter name="isRemote" value="true" />
 	<parameter name="browser" value="firefox" />
-	<parameter name="base.url" value="http://localhost:8080/cms-webapp-4.7.2-SNAPSHOT/" />
-	<parameter name="hab.url" value="http://127.0.0.1:4444/wd/hub" />
+	<parameter name="base.url" value="http:/http://vtnode3:8080/cms-46ce-unstable-packages/" />
+	<parameter name="hub.url" value="http://10.0.6.77:4444/wd/hub" />
 	
 	<listeners>	
 		<listener class-name="com.enonic.autotests.TestListener"></listener>
