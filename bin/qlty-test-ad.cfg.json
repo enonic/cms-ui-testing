@@ -1,0 +1,25 @@
+{
+    "class": "org.openqa.grid.common.RegistrationRequest",
+    "capabilities": [
+        {
+            "seleniumProtocol": "WebDriver",
+            "browserName": "internet explorer",
+            "version": "8",
+            "maxInstances": 1,
+            "platform" : "WINDOWS"
+        }
+    ],
+    "configuration": {
+        "port": 8989,
+        "register": true,
+        "host": "192.168.1.100",
+        "proxy": "org.openqa.grid.selenium.proxy.DefaultRemoteProxy",
+        "maxSession": 2,
+        "hubHost": "192.168.1.100",
+        "role": "webdriver",
+        "registerCycle": 5000,
+        "hub": "http://192.168.1.100:4444/grid/register",
+        "hubPort": 4444,
+        "remoteHost": "http://192.168.1.101:8989"
+    }
+}
