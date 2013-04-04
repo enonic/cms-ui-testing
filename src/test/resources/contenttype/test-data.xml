@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<contentTypeTestData>
+    <contentTypes>
+        <contentType>
+            <caseInfo>creation of Content Type with Custom content handler and all inputs </caseInfo>
+            <name>all-inputs</name>
+            <contentHandler>Custom content</contentHandler>
+            <description>content type with Custom content.</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile>cty-all-inputs-4-5-6.xml</cfgFile>
+        </contentType>
+     
+        <contentType>
+            <caseInfo>creation of Content Type with Files content handler</caseInfo>
+            <name>files-ctype</name>
+            <contentHandler>Files</contentHandler>
+            <description>content type with File content handler</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+        </contentType>
+         <contentType>
+            <caseInfo>creation of Content Type with Images content handler</caseInfo>
+            <name>images-ctype</name>
+            <contentHandler>Images</contentHandler>
+            <description>content type with Images content handler</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+        </contentType>
+       
+      
+     
+    </contentTypes>
+</contentTypeTestData>

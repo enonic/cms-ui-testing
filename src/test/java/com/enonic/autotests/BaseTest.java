@@ -7,11 +7,14 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
+import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.services.IAdminConsoleService;
 import com.enonic.autotests.services.v4.AdminConsoleServiceImplV4;
+import com.enonic.autotests.utils.TestUtils;
 
 public class BaseTest {
 
+	protected  Logger logger = Logger.getLogger();
 	protected IAdminConsoleService adminConsoleServiceV4 = new AdminConsoleServiceImplV4();
 	private TestSession testSession;
 

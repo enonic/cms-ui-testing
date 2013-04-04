@@ -12,7 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.testng.Reporter;
 
 import com.enonic.autotests.TestSession;
-import com.enonic.autotests.TestUtils;
+import com.enonic.autotests.utils.TestUtils;
 
 /**
  * Wrapper for {@link Reporter} instance. 

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<contentTypeTestData>
+    <contentTypes>
+       
+     
+        <contentType>
+            <caseInfo>creation of Content Type with name, which already exists</caseInfo>
+            <name>files-ctype</name>
+            <contentHandler>Files</contentHandler>
+            <description>content type with File content handler</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+        </contentType>
+         <contentType>
+            <caseInfo>creation of Content Type with name, which contains white spaces</caseInfo>
+            <name>white space ctype</name>
+            <contentHandler>Images</contentHandler>
+            <description>content type with Images content handler</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+        </contentType>
+       
+      
+     
+    </contentTypes>
+</contentTypeTestData>
