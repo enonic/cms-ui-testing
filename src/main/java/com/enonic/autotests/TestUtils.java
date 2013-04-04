@@ -94,8 +94,7 @@ public class TestUtils {
 	}
 
 	/**
-	 * @param screenshotFileName
-	 * @param driver
+	 * @param testSession
 	 */
 	public String saveScreenshot(final TestSession testSession) {
 		WebDriver driver = testSession.getDriver();
@@ -187,7 +186,7 @@ public class TestUtils {
 //	}
 
 	/**
-	 * @param browser
+	 * @param testSession
 	 * @return
 	 */
 	public void createDriverAndOpenBrowser(final TestSession testSession) throws IOException {
@@ -239,7 +238,7 @@ public class TestUtils {
 			capability = DesiredCapabilities.firefox();
 			capability.setBrowserName("firefox");
 			capability.setPlatform(Platform.WINDOWS);
-			capability.setVersion("18.0");
+			capability.setVersion("19.0.2");
 			// capability = DesiredCapabilities.firefox();
 			// capability.setBrowserName("firefox");
 			// capability.setVersion("17.0.1");
@@ -248,7 +247,7 @@ public class TestUtils {
 		} else {
 			capability = DesiredCapabilities.internetExplorer();
 			capability.setPlatform(Platform.WINDOWS);
-			capability.setVersion("19.0.2");
+			capability.setVersion("8");
 		}
 
 		return capability;
