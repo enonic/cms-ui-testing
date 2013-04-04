@@ -27,7 +27,7 @@ public class ContentTypeTestsProvider {
 		List<Object[]> casesParameters = new ArrayList<Object[]>();
 		JAXBContext context = JAXBContext.newInstance(ContentTypeTestData.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		ContentTypeTestData testdata = (ContentTypeTestData) unmarshaller.unmarshal(new File(ContenTypeUtils.BASE_PATH_TO_RES+"/test-data.xml"));
+		ContentTypeTestData testdata = (ContentTypeTestData) unmarshaller.unmarshal(new File(ContenTypeUtils.BASE_PATH_TO_RES+"test-data.xml"));
 		List<ContentTypeXml> cases = testdata.getContentTypes();
 		for (ContentTypeXml ctype : cases) {
 			casesParameters.add(new Object[] { ctype
