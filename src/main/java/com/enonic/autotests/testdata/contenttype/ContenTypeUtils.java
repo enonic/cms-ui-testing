@@ -1,15 +1,13 @@
 package com.enonic.autotests.testdata.contenttype;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Scanner;
 
-import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.ContentType;
 
 public class ContenTypeUtils {
- public static String BASE_PATH_TO_RES = "src"+File.separator+"test"+File.separator+"resources"+File.separator+"contenttype"+File.separator;
- //public static String BASE_PATH_TO_RES = "src"+File.separator+"test"+File.separator+"resources"+File.separator;
+ 
 	/**
 	 * Converts from {@link ContentTypeXml} to {@link ContentType}.
 	 * 
@@ -17,31 +15,33 @@ public class ContenTypeUtils {
 	 * @return {@link ContentType} instance.
 	 */
 	public static ContentType convertToModel(ContentTypeXml ctypeXML) {
+		InputStream in = ContenTypeUtils.class.getClassLoader().getResourceAsStream("contenttype/"+ ctypeXML.getCfgFile());
+		String fs  =System.getProperty("file.separator");
+
+		//InputStream in = ContenTypeUtils.class.getClassLoader().getResourceAsStream("contenttype"+fs+ ctypeXML.getCfgFile());
 		ContentType ctype = new ContentType();
 		ctype.setName(ctypeXML.getName());
 		ctype.setDescription(ctypeXML.getDescription());
 		ctype.setPathToCSS(ctypeXML.getPathToCSS());
 		ctype.setContentHandler(ctypeXML.getContentHandler());
 		if(ctypeXML.getCfgFile()!=null && !ctypeXML.getCfgFile().isEmpty()){
-			ctype.setConfiguration(readConfiguration(BASE_PATH_TO_RES+ctypeXML.getCfgFile()));
+			ctype.setConfiguration(readConfiguration(in));
 		}
 		return ctype;
 	}
 	
-	private static String readConfiguration(String fileName){
-		File confXML = new File(fileName);
+	/**
+	 * Reads data in XML for ContentType configuration Text Area.
+	 * @param in {@link InputStream} instance.
+	 * @return configuration as String.
+	 */
+	private static String readConfiguration(InputStream in){
 		StringBuilder sb = new StringBuilder();
-	    Scanner scanner;
-		try {
-			scanner = new Scanner(confXML);
-		
+	    Scanner scanner = new Scanner(in);
         while (scanner.hasNextLine()) {
             sb.append(scanner.nextLine());
            
-        }
-		} catch (FileNotFoundException e) {
-			throw new TestFrameworkException("error during reading the test-data..."+ e.getMessage());
-		}
+        }		
         return sb.toString();
 	}
 }

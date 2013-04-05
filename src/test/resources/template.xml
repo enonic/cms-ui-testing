@@ -4,7 +4,11 @@
 
 
 	<parameter name="browser" value="firefox" />
-	<parameter name="base.url" value="http://localhost:8080/cms-webapp-4.7.2-SNAPSHOT/" />
+	<parameter name="browserVersion" value="17.0.1" />
+	<parameter name="platform" value="windows" />
+	<parameter name="isRemote" value="true" />
+	<parameter name="base.url" value="http://10.10.9.152:8080/cms-webapp-4.7.2-SNAPSHOT/" />
+	<parameter name="hub.url" value="http://127.0.0.1:4444/wd/hub" />
 	
 	<listeners>	
 		<listener class-name="com.enonic.autotests.TestListener"></listener>

@@ -14,6 +14,8 @@ public class TestSession {
 	public final static String START_URL = "bas_url";
 	public final static String HUB_URL = "hub_url";
 	public final static String BROWSER_NAME = CapabilityType.BROWSER_NAME;
+	public final static String BROWSER_VERSION = "browser_version";
+	public final static String PLATFORM = "platform";
 	public final static String IS_REMOTE = "isRemote";
 	public final static String CURRENT_USER = "current_user";
 
@@ -47,6 +49,13 @@ public class TestSession {
 
 	public String getBrowserName() {
 		return (String) session.get(TestSession.BROWSER_NAME);
+	}
+	public String getPlatform() {
+		return (String) session.get(TestSession.PLATFORM);
+	}
+	
+	public String getBrowserVersion() {
+		return (String) session.get(TestSession.BROWSER_VERSION);
 	}
 
 	public WebDriver getDriver() {

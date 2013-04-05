@@ -18,6 +18,8 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -34,15 +36,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.BrowserName;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.TestFrameworkException;
+import com.enonic.autotests.logger.Logger;
 
 public class TestUtils {
-	//public static Logger logger = Logger.getLogger();
+	public static Logger logger = Logger.getLogger();
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd-HH-mm-ss";
 
 	private static TestUtils instance;
 
 	public static final long TIMEOUT_IMPLICIT = 10;
-
 
 	/**
 	 * @return
@@ -78,7 +81,7 @@ public class TestUtils {
 	}
 
 	public boolean alertIsPresent(final TestSession testSession) {
-		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), 2);
+		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), 1);
 		try {
 
 			wait.until(ExpectedConditions.alertIsPresent());
@@ -166,7 +169,7 @@ public class TestUtils {
 		});
 		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		// TODO add perfomance log
-		//logger.perfomance("clickByLocator:" + locator.toString(), startTime);
+		// logger.perfomance("clickByLocator:" + locator.toString(), startTime);
 		// staticlogger.info("Finished click after waiting for " + totalTime +
 		// " milliseconds.");
 	}
@@ -180,7 +183,6 @@ public class TestUtils {
 		List<WebElement> elements = driver.findElements(by);
 		return ((elements.size() > 0) && (elements.get(0).isDisplayed()));
 	}
-
 
 	/**
 	 * @param browser
@@ -211,7 +213,10 @@ public class TestUtils {
 			driver = new FirefoxDriver(myProfile);
 			driver.manage().window().maximize();
 		} else if (cfgBrowser.equals(BrowserName.CHROME)) {
-			driver = new ChromeDriver();
+			ChromeOptions options = new ChromeOptions();
+			options.addExtensions(new File("c:/path/to/extension.crx"));
+			driver = new ChromeDriver(options);
+			
 		} else if (cfgBrowser.equals(BrowserName.IE)) {
 			driver = new InternetExplorerDriver();
 		} else if (cfgBrowser.equals(BrowserName.HTMLUNIT)) {
@@ -226,31 +231,44 @@ public class TestUtils {
 
 	private static Capabilities createDesiredCapabilities(final TestSession testSession) {
 		String browserName = (String) testSession.get(TestSession.BROWSER_NAME);
+
+		String browserVersion = (String) testSession.get(TestSession.BROWSER_VERSION);
+		String platform = (String) testSession.get(TestSession.PLATFORM);
+
 		BrowserName cfgBrowser = BrowserName.findByValue(browserName);
-		// Capabilities capability = null;
 		DesiredCapabilities capability = null;
 
 		if (cfgBrowser.equals(BrowserName.FIREFOX)) {
-
-			// org.openqa.selenium.Proxy proxy = new org.openqa.selenium.Proxy(); proxy.setHttpProxy("PROXY");
-			
 			capability = DesiredCapabilities.firefox();
-			capability.setBrowserName("firefox");
-			//capability.setCapability(CapabilityType.PROXY, proxy);
-			capability.setPlatform(Platform.WINDOWS);
-			capability.setVersion("19.0.2");
-			// capability = DesiredCapabilities.firefox();
-			// capability.setBrowserName("firefox");
-			 capability.setVersion("17.0.1");
+			capability.setPlatform(getPLatform(platform));
+			capability.setVersion(browserVersion);
+			FirefoxBinary firefoxBinary = new FirefoxBinary();
+			// capability.setCapability(FirefoxDriver.BINARY, firefoxBinary);
 
-			// TODO create for CHROME
-		} else {
+		} else if (cfgBrowser.equals(BrowserName.CHROME)) {
+			capability = DesiredCapabilities.chrome();
+			capability.setPlatform(getPLatform(platform));
+			capability.setVersion(browserVersion);
+		} else if (cfgBrowser.equals(BrowserName.IE)) {
 			capability = DesiredCapabilities.internetExplorer();
 			capability.setPlatform(Platform.WINDOWS);
-			capability.setVersion("19.0.2");
+			capability.setVersion(browserVersion);
+		} else {
+			throw new TestFrameworkException("support of browser " + cfgBrowser.getName() + " not implemented yet");
 		}
-
+		logger.info("DesiredCapabilities for RemoteWebDriver uses:  platform:"+platform+" browser:"+browserName+ "version:"+browserVersion+" created");
 		return capability;
+	}
+
+	private static Platform getPLatform(String platform) {
+		if (platform.equalsIgnoreCase("windows")) {
+			return Platform.WINDOWS;
+		} else if (platform.equalsIgnoreCase("linux")) {
+			return Platform.LINUX;
+		} else if (platform.equalsIgnoreCase("mac")) {
+			return Platform.MAC;
+		} else
+			return Platform.ANY;
 	}
 
 	public void selectByText(TestSession session, By by, String text) {
