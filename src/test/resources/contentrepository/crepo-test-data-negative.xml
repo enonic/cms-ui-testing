@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<contentRepositoryTestData>
+	<contentRepositories>
+		<contentRepositories>
+			<name></name>
+			<caseInfo>create new Content Repository with empty name</caseInfo>
+			<defaultLanguage>English</defaultLanguage>
+			<allowedContentTypes>cty-all-inputs</allowedContentTypes>
+			<allowedContentTypes>Files</allowedContentTypes>
+			
+			<topCategory>
+				<name></name>
+				<description>description for Top Category</description>
+				<contentType>cty-all-inputs</contentType>
+			</topCategory>
+		</contentRepositories>
+	</contentRepositories>
+</contentRepositoryTestData>

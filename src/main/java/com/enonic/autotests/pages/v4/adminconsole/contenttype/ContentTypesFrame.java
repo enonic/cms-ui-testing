@@ -21,15 +21,14 @@ import com.enonic.autotests.utils.TestUtils;
  */
 public class ContentTypesFrame extends AbstractAdminConsolePage {
 
-	public static final String FRAME_NAME_XPATH = "//a[text()='Content types']";
+	public static final String CONTENT_TYPES_FRAME_NAME_XPATH = "//a[text()='Content types']";
 	public static final String CONTENT_TYPES_TABLE_NAME_TD_XPATH = "//td[@class='browsetablecell' or @class='browsetablecell row-last'][1]";
 	public static final String CONTENT_TYPES_TABLE_DELETE_TD_XPATH = "";
 
 	@FindBy(xpath = "//button[text()='New']")
 	private WebElement buttonNew;
 
-	@FindBy(xpath = FRAME_NAME_XPATH)
-	private WebElement contentTypesLink;// Admin/Content Types
+	
 
 	/**
 	 * The Constructor
@@ -42,37 +41,34 @@ public class ContentTypesFrame extends AbstractAdminConsolePage {
 
 	}
 
-	public void open() {
-		String whandle = getSession().getDriver().getWindowHandle();
-		getSession().getDriver().switchTo().window(whandle);
-		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
-
-		By leftFrameContentTypes = By.xpath(LeftMenuFrame.CONTENT_TYPES_LOCATOR_XPATH);
-		TestUtils.getInstance().clickByLocator(leftFrameContentTypes, getSession().getDriver());
-
-		getSession().getDriver().switchTo().window(whandle);
-		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
-
-		// check for exists, frame name should be is " Admin/Content Types"
-		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(FRAME_NAME_XPATH));
-
-	}
+//	public void open() {
+//		String whandle = getSession().getDriver().getWindowHandle();
+//		getSession().getDriver().switchTo().window(whandle);
+//		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
+//
+//		By leftFrameContentTypes = By.xpath(LeftMenuFrame.CONTENT_TYPES_LOCATOR_XPATH);
+//		TestUtils.getInstance().clickByLocator(leftFrameContentTypes, getSession().getDriver());
+//
+//		getSession().getDriver().switchTo().window(whandle);
+//		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
+//
+//		// check for exists, frame name should be is " Admin/Content Types"
+//		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(CONTENT_TYPES_FRAME_NAME_XPATH));
+//
+//	}
 
 	public void createContentType(ContentType ctype) {
-		//buttonNew.click();
-		//TestUtils.getInstance().waitUntilVisible(getSession(), By.id(ContentTypeWizardPage.TAB1_ID));
-		ContentTypeWizardPage wizardPage = openContentTypeWizard();//new ContentTypeWizardPage(getSession());
+		ContentTypeWizardPage wizardPage = openContentTypeWizard();
+		wizardPage.verifyWizardOpened(getSession());
 		wizardPage.doTypeDataAndSave(ctype);
 		
-		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(FRAME_NAME_XPATH));
+		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(CONTENT_TYPES_FRAME_NAME_XPATH));
 		getLogger().info("Content Type with name: " + ctype.getName() + " was created!");
 
 	}
 
 	private ContentTypeWizardPage openContentTypeWizard(){
 		buttonNew.click();
-		ContentTypeWizardPage.verifyWizardOpened(getSession());
-		//TestUtils.getInstance().waitUntilVisible(getSession(), By.id(ContentTypeWizardPage.TAB1_ID));
 		return new ContentTypeWizardPage(getSession());
 	}
 	

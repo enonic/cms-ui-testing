@@ -13,7 +13,7 @@ import org.testng.annotations.DataProvider;
 import com.enonic.autotests.ContentTypeTests;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.logger.Logger;
-import com.enonic.autotests.testdata.contenttype.ContenTypeUtils;
+import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.testdata.contenttype.ContentTypeTestData;
 import com.enonic.autotests.testdata.contenttype.ContentTypeXml;
 
@@ -27,6 +27,9 @@ public class ContentTypeTestsProvider {
 	private static final String POSITIVE_TEST_DATA_FILE_NAME = "test-data.xml";
 	private static final String NEGATIVE_TEST_DATA_FILE_NAME = "test-data-negative.xml";
 
+	
+
+	
 	@DataProvider(name = "createContentTypePositive")
 	public static Object[][] createContentTypePositive() throws JAXBException {
 
@@ -34,7 +37,7 @@ public class ContentTypeTestsProvider {
 		JAXBContext context = JAXBContext.newInstance(ContentTypeTestData.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		//logger.info(message)
-		InputStream in = ContenTypeUtils.class.getClassLoader().getResourceAsStream("contenttype/" +POSITIVE_TEST_DATA_FILE_NAME);
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contenttype/" +POSITIVE_TEST_DATA_FILE_NAME);
 		String fs  =System.getProperty("file.separator");
 		//InputStream in = ContenTypeUtils.class.getClassLoader().getResourceAsStream("contenttype"+fs+POSITIVE_TEST_DATA_FILE_NAME);
 		if(in == null){
@@ -57,7 +60,7 @@ public class ContentTypeTestsProvider {
 		JAXBContext context = JAXBContext.newInstance(ContentTypeTestData.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		//InputStream in = ContenTypeUtils.class.getClassLoader().getResourceAsStream("contenttype/"  + NEGATIVE_TEST_DATA_FILE_NAME);
-		InputStream in = ContenTypeUtils.class.getClassLoader().getResourceAsStream("contenttype/"+NEGATIVE_TEST_DATA_FILE_NAME);
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contenttype/"+NEGATIVE_TEST_DATA_FILE_NAME);
 		ContentTypeTestData testdata = (ContentTypeTestData) unmarshaller.unmarshal(in);
 		List<ContentTypeXml> cases = testdata.getContentTypes();
 		for (ContentTypeXml ctype : cases) {

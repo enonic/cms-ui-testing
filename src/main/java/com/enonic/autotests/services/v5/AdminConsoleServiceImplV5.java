@@ -1,6 +1,7 @@
 package com.enonic.autotests.services.v5;
 
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.services.IAdminConsoleService;
 
@@ -29,6 +30,12 @@ public class AdminConsoleServiceImplV5 implements IAdminConsoleService {
 	public void deleteContentType(TestSession testSession, String name) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void createContentRepository(TestSession testSession, ContentRepository ctype) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

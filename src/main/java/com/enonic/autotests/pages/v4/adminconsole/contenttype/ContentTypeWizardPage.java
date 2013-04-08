@@ -15,7 +15,7 @@ import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.ContentTypeException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
+import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsoleWizardPage;
 import com.enonic.autotests.utils.TestUtils;
 import com.enonic.autotests.utils.TextTransfer;
 import com.enonic.autotests.validation.contenttype.ContentTypeValidateHelper;
@@ -24,11 +24,14 @@ import com.enonic.autotests.validation.contenttype.ContentTypeValidateHelper;
  * Wizard page for creating of new 'Content Type'.
  * 
  */
-public class ContentTypeWizardPage extends AbstractAdminConsolePage {
+public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage {
+	
 	private static String GET_CONFIGURATION_SCRIPT = "return document.getElementsByTagName('iframe')[0].contentDocument.body.innerHTML;";
+	
 	private static String CLEAR_CONFIGURATION_SCRIPT = "document.getElementsByTagName('iframe')[0].contentDocument.body.innerHTML = '';";
+	
 	public static String CUSTOM_CONTENT_HANDLER_NAME = "Custom content";
-	public static String TAB1_ID = "tab-pane-1";
+	
 	public static String CONFIGURATION_TEXTAREA_TAGNAME = "iframe";
 
 	public static String CONTENT_HANDLER_SELCET_NAME = "contenthandlerkey";
@@ -40,8 +43,6 @@ public class ContentTypeWizardPage extends AbstractAdminConsolePage {
 	@FindBy(how = How.XPATH, using = ERROR_MESSAGE_XPATH)
 	private WebElement errorMessage;
 
-	@FindBy(how = How.NAME, using = "lagre")
-	private WebElement saveButton;
 
 	@FindBy(how = How.ID, using = "name")
 	private WebElement nameInput;
@@ -61,8 +62,9 @@ public class ContentTypeWizardPage extends AbstractAdminConsolePage {
 		super(session);
 
 	}
-
-	public static void verifyWizardOpened(TestSession session){
+	
+	@Override
+	public  void verifyWizardOpened(TestSession session){
 		TestUtils.getInstance().waitUntilVisible(session, By.id(ContentTypeWizardPage.TAB1_ID));
 	}
 	/**
@@ -193,7 +195,7 @@ public class ContentTypeWizardPage extends AbstractAdminConsolePage {
 
 		// ContentTypesFrame should appear, frame's name should be is
 		// " Admin/Content Types":
-		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(ContentTypesFrame.FRAME_NAME_XPATH));
+		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(ContentTypesFrame.CONTENT_TYPES_FRAME_NAME_XPATH));
 		getLogger().debug("ContentTypeWizardPage, was canceled.");
 	}
 	

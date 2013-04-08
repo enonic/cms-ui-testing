@@ -38,6 +38,7 @@ import com.enonic.autotests.BrowserName;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.logger.Logger;
+import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 
 public class TestUtils {
 	public static Logger logger = Logger.getLogger();
@@ -182,6 +183,20 @@ public class TestUtils {
 	public boolean checkIfDisplayed(final By by, final WebDriver driver) {
 		List<WebElement> elements = driver.findElements(by);
 		return ((elements.size() > 0) && (elements.get(0).isDisplayed()));
+	}
+	
+	/**
+	 * Refresh Left Frame Menu.
+	 * @param driver {@link WebDriver} instance.
+	 * 
+	 */
+	public static void refreshLeftFrame(final WebDriver driver){
+		List<WebElement> elements = driver.findElements(By.xpath(AbstractAdminConsolePage.REFRESH_IMAGE_XPATH));
+		if (elements.size() > 0) {
+			elements.get(0).click();
+		 }else{
+			 throw new TestFrameworkException("Refresh left Frame Action was failed");
+		 }
 	}
 
 	/**

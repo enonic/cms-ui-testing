@@ -1,11 +1,13 @@
 package com.enonic.autotests.services.v4;
 
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.User;
 import com.enonic.autotests.pages.v4.HomePage;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesFrame;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.services.IAdminConsoleService;
 
@@ -15,21 +17,33 @@ public class AdminConsoleServiceImplV4 implements IAdminConsoleService {
 	@Override
 	public void createContentType(TestSession testSession, ContentType ctype) {
 		navgateToAdminConsole(testSession);
-		LeftMenuFrame menu = new LeftMenuFrame();
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		ContentTypesFrame frame = menu.openContentTypesFrame(testSession);
 		frame.createContentType(ctype);
 
 	}
+	@Override
+	public void createContentRepository(TestSession testSession, ContentRepository cRepository) {
+		navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		ContentRepositoriesFrame frame = menu.openContentFrame(testSession);
+		frame.createContentRepository(cRepository);
+		
+
+	}
+
 
 	@Override
 	public void editContentType(TestSession testSession, String name) {
 		navgateToAdminConsole(testSession);
+		//TODO add implementation.
 
 	}
 
 	@Override
 	public void deleteContentType(TestSession testSession, String name) {
 		navgateToAdminConsole(testSession);
+		//TODO add implementation.
 
 	}
 
