@@ -1,7 +1,7 @@
 #!/bin/sh
 
-BASEPATH=/Workspace/EnonicGIT/tools/ui-testing/
+BASEPATH=/Workspace/EnonicGIT/tools/ui-testing
 
-PROJECT=auto-tests-1.0-SNAPSHOT
-CLASSPATH="$BASEPATH"target/"$PROJECT".jar;"$BASEPATH"target/"$PROJECT"-tests.jar
-java org.testng.TestNG template.xml
+PROJECT=ui-testing-1.0
+CLASSPATH="$BASEPATH/target/$PROJECT-jar-with-dependencies.jar:$BASEPATH/target/$PROJECT-tests.jar"
+java org.testng.TestNG template-remote.xml
