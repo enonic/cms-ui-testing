@@ -58,7 +58,8 @@ public class ContentTypeTests extends BaseTest{
 		
 		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
 		ContentRepositoryWizardPage page = PageNavigatorV4.openRepositoryProperties(getTestSession(), cRepository.getName());
-		page.verifyData(cRepository);
+		boolean result = page.verifyData(cRepository);
+		Assert.assertTrue(result,"expected and actual ContentRepository's properties are not equals!!!");
 	}    
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
