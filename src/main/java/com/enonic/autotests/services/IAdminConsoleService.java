@@ -6,7 +6,7 @@ import com.enonic.autotests.model.ContentType;
 
 public interface IAdminConsoleService {
 
-	void openAdminConsole(TestSession testSession, String user, String password);
+	//void openAdminConsole(TestSession testSession, String user, String password);
 
 	void createContentType(TestSession testSession, ContentType ctype);
 
@@ -15,4 +15,6 @@ public interface IAdminConsoleService {
 	void deleteContentType(TestSession testSession, String name);
 	
 	void createContentRepository(TestSession testSession, ContentRepository ctype);
+	
+	void addContentToRepository(TestSession testSession,String repoName); 
 }

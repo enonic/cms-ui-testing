@@ -15,7 +15,7 @@ public class ContentRepositoryTestData {
 	private List<ContentRepositoryXml> contentRepositories = new ArrayList<ContentRepositoryXml>();
 
 	@XmlElementWrapper(name = "contentRepositories")
-	@XmlElement(name = "contentRepositories")
+	@XmlElement(name = "contentRepository")
 	public List<ContentRepositoryXml> getContentRepositories() {
 		return contentRepositories;
 	}

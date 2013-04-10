@@ -1,5 +1,6 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -7,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.Select;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.ContentRepositoryException;
@@ -33,6 +35,16 @@ public class ContentRepositoryWizardPage extends AbstractAdminConsoleWizardPage 
 	@FindBy(how = How.ID, using = "name")
 	protected WebElement nameInput;
 
+	@FindBy(how = How.NAME, using = "languagekey")
+	protected WebElement languageSelect;
+
+	@FindBy(how = How.ID, using = "contenttypekey")
+	protected WebElement contentTypesSelect;
+	
+	@FindBy(how = How.ID, using = "categorycontenttypekey")
+	protected WebElement contentTypeSelect;
+	
+
 	/**
 	 * The constructor.
 	 * 
@@ -43,6 +55,10 @@ public class ContentRepositoryWizardPage extends AbstractAdminConsoleWizardPage 
 
 	}
 
+	/**
+	 * Types test-data and press button "Save".
+	 * @param cRepository
+	 */
 	public void doTypeDataAndSave(ContentRepository cRepository) {
 		if (cRepository.getName() == null) {
 			throw new IllegalArgumentException("The Content Repository name must not be null!");
@@ -50,7 +66,7 @@ public class ContentRepositoryWizardPage extends AbstractAdminConsoleWizardPage 
 		getLogger().debug("new 'Content type' creation. The Content Repository's name: " + cRepository.getName());
 		nameInput.sendKeys(cRepository.getName());
 
-		addContentTypes(cRepository.getAlowedTypes());
+		addContentTypes(cRepository.getSelectedTypes());
 
 		String defLanguage = cRepository.getDefaultLanguage();
 		if (defLanguage == null || (defLanguage != null && defLanguage.isEmpty())) {
@@ -60,9 +76,9 @@ public class ContentRepositoryWizardPage extends AbstractAdminConsoleWizardPage 
 		TestUtils.getInstance().selectByText(getSession(), By.name(DEFAULT_LANGUAGE_SELCET_NAME), defLanguage);
 		TopCategory topCat = cRepository.getTopCategory();
 		if (topCat != null) {
-			String type = topCat.getType();
-			if (type != null) {
-				TestUtils.getInstance().selectByText(getSession(), By.name(TOP_CATEGORY_SELCET_NAME), type);
+			String contentTypeName = topCat.getContentType().getName();
+			if (contentTypeName != null) {
+				TestUtils.getInstance().selectByText(getSession(), By.name(TOP_CATEGORY_SELCET_NAME), contentTypeName);
 			}
 
 		}
@@ -106,6 +122,17 @@ public class ContentRepositoryWizardPage extends AbstractAdminConsoleWizardPage 
 
 	}
 
+	private List<String> getSelectedContentTypes() {
+		List<WebElement> allOptions = contentTypesSelect.findElements(By.tagName("option"));
+		List<String> selectedContentTypes = new ArrayList<String>();
+		for (WebElement option : allOptions) {
+			selectedContentTypes.add(option.getText());
+		}
+
+		return selectedContentTypes;
+
+	}
+
 	/**
 	 * @param session
 	 */
@@ -113,6 +140,34 @@ public class ContentRepositoryWizardPage extends AbstractAdminConsoleWizardPage 
 	public void verifyWizardOpened(TestSession session) {
 		// TODO add check for presence of another TABS
 		TestUtils.getInstance().waitUntilVisible(session, By.id(ContentTypeWizardPage.TAB1_ID));
+	}
+
+	/**
+	 * @param expected
+	 * @return true if expected test-data equals actual data, otherwise false.
+	 */
+	public boolean verifyData(ContentRepository expected) {
+		boolean result = true;
+		String actualName = nameInput.getAttribute("value");
+		result &= expected.getName().equals(actualName);
+		if(!expected.getName().equals(actualName)){
+			getLogger().error("expected name is:"+expected.getName()+" but actual is: "+actualName, getSession());
+		}else{
+			
+			getLogger().info("Expected and actual value are equals. Expected name is:"+expected.getName()+" and  actual is: "+actualName);
+		}
+		String actualLanguage =  new Select(languageSelect).getFirstSelectedOption().getText();
+		result &= expected.getDefaultLanguage().equals(actualLanguage);
+		
+		if(!expected.getDefaultLanguage().equals(actualLanguage)){
+			getLogger().error("expected language is:"+expected.getDefaultLanguage()+" but actual is: "+actualLanguage, getSession());
+		}else{
+			
+			getLogger().info("Expected and actual value are equals. Expected Language is:"+expected.getDefaultLanguage()+" and  actual is: "+actualLanguage);
+		}
+		List<String> actualSelectedContentTypes = getSelectedContentTypes();
+		result &= actualSelectedContentTypes.equals(expected.getSelectedTypes());
+		return result;
 	}
 
 }

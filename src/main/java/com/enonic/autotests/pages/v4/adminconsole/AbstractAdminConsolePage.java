@@ -31,17 +31,18 @@ public abstract class AbstractAdminConsolePage extends Page {
 	 * the right frame. 
 	 * 
 	 */
-	public void open(String menuItemXpath) {
+	public void open(String itemXpath) {
 		String whandle = getSession().getDriver().getWindowHandle();
 		getSession().getDriver().switchTo().window(whandle);
 		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
 
-		TestUtils.getInstance().clickByLocator(By.xpath(menuItemXpath), getSession().getDriver());
+		TestUtils.getInstance().clickByLocator(By.xpath(itemXpath), getSession().getDriver());
 
 		getSession().getDriver().switchTo().window(whandle);
 		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
 
 	}
+	
 
 	/**
 	 * Waits until expected Title visible,

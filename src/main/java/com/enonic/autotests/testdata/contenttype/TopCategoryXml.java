@@ -9,7 +9,7 @@ public class TopCategoryXml {
 
 	private String name;
 	private String description;
-	private String contentType;
+	private ContentTypeXml contentType;
 
 	public String getName() {
 		return name;
@@ -27,11 +27,11 @@ public class TopCategoryXml {
 		this.description = description;
 	}
 
-	public String getContentType() {
+	public ContentTypeXml getContentType() {
 		return contentType;
 	}
 
-	public void setContentType(String contentType) {
+	public void setContentType(ContentTypeXml contentType) {
 		this.contentType = contentType;
 	}
 }

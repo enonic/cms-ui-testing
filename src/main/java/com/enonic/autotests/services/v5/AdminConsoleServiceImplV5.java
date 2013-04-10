@@ -7,12 +7,12 @@ import com.enonic.autotests.services.IAdminConsoleService;
 
 public class AdminConsoleServiceImplV5 implements IAdminConsoleService {
 
-	@Override
-	public void openAdminConsole(TestSession testSession, String user, String password) {
-		// TODO Auto-generated method stub
-		// return null;
-
-	}
+//	@Override
+//	public void openAdminConsole(TestSession testSession, String user, String password) {
+//		// TODO Auto-generated method stub
+//		// return null;
+//
+//	}
 
 	@Override
 	public void createContentType(TestSession testSession, ContentType ctype) {
@@ -34,6 +34,12 @@ public class AdminConsoleServiceImplV5 implements IAdminConsoleService {
 
 	@Override
 	public void createContentRepository(TestSession testSession, ContentRepository ctype) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addContentToRepository(TestSession testSession, String repoName) {
 		// TODO Auto-generated method stub
 		
 	}

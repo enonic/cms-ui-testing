@@ -41,6 +41,7 @@ public class LeftMenuFrame extends Page{
 		return frame;
 
 	}
+	
 	@Override
 	public String getTitle() {
 		// TODO Auto-generated method stub

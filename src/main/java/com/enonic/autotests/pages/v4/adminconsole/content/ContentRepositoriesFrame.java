@@ -12,9 +12,11 @@ import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
- * Path: Content
+ * Path to Frame: Content
  * 
- * Page Object for 'Content Repositories ' frame. Version 4.7
+ * This Frame contains a table with list of Content Repositories.
+ * 
+ * <br>Page Object for 'Content Repositories ' frame. Version 4.7
  * 
  * 02.04.2013
  */
@@ -23,11 +25,13 @@ public class ContentRepositoriesFrame extends AbstractAdminConsolePage {
 	public static final String CONTENT_REPOSITORIES_TABLE_NAME_TD_XPATH = "//td[@class='browsetablecell' or @class='browsetablecell row-last'][1]";
 
 	public static final String CONTENT_FRAME_NAME_XPATH = "//a[text()='Content']";
+	
+	public static  String CONTENT_REPOSITORY_FRAME_NAME_XPATH = "//span[@id='titlename' and contains(.,'%s')]";
 
 	/**
 	 * The Constructor.
 	 * 
-	 * @param session
+	 * @param session {@link TestSession} instance.
 	 */
 	public ContentRepositoriesFrame(TestSession session) {
 		super(session);
@@ -37,6 +41,7 @@ public class ContentRepositoriesFrame extends AbstractAdminConsolePage {
 	private WebElement buttonNew;
 
 
+  
 
 	/**
 	 * Opens 'Create Content Repository'-wizard page, types test-data and clicks

@@ -212,7 +212,7 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage {
 		}
 		return false;
 	}
-	public boolean verifyFields(ContentType expected) {
+	public boolean verifyData(ContentType expected) {
 		boolean result = true;
 		String actualHandler = getSession().getDriver().findElement(By.name(CONTENT_HANDLER_SELCET_NAME)).getText().trim();
 		//String actualHandler = contentHandlerInput.getText().trim();

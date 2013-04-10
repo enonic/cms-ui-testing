@@ -8,9 +8,11 @@ import com.enonic.autotests.exceptions.ContentTypeException;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesFrame;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoryWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.providers.ContentRepositoryProvider;
 import com.enonic.autotests.providers.ContentTypeTestsProvider;
+import com.enonic.autotests.services.v4.PageNavigatorV4;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.testdata.contenttype.ContentRepositoryXml;
 import com.enonic.autotests.testdata.contenttype.ContentTypeXml;
@@ -49,6 +51,22 @@ public class ContentTypeTests extends BaseTest{
 		logger.info(contentRepoXML.getCaseInfo());
 		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);		
 		adminConsoleServiceV4.createContentRepository(getTestSession(), cRepository);		
-	}
+	}       
+	
+	@Test(dataProvider = "createContentRepositoryPositive", dataProviderClass = ContentRepositoryProvider.class)
+	public void testOpenRepositoryProperties(ContentRepositoryXml contentRepoXML){
+		
+		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
+		ContentRepositoryWizardPage page = PageNavigatorV4.openRepositoryProperties(getTestSession(), cRepository.getName());
+		page.verifyData(cRepository);
+	}    
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//@Test(dataProvider = "addContentToRepository", dataProviderClass = ContentRepositoryProvider.class)
+	public void testAddContentToRepository(ContentRepositoryXml contentRepoXML){
+		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
+		adminConsoleServiceV4.addContentToRepository(getTestSession(),cRepository.getName());
+	}    
+
 
 }

@@ -9,11 +9,10 @@ import org.openqa.selenium.support.FindBy;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
-import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
- * Path: Admin / Content types
+ * Path to Frame: Admin / Content types
  *
  * Page Object for 'Content types' frame. Version 4.7
  *
@@ -41,21 +40,7 @@ public class ContentTypesFrame extends AbstractAdminConsolePage {
 
 	}
 
-//	public void open() {
-//		String whandle = getSession().getDriver().getWindowHandle();
-//		getSession().getDriver().switchTo().window(whandle);
-//		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
-//
-//		By leftFrameContentTypes = By.xpath(LeftMenuFrame.CONTENT_TYPES_LOCATOR_XPATH);
-//		TestUtils.getInstance().clickByLocator(leftFrameContentTypes, getSession().getDriver());
-//
-//		getSession().getDriver().switchTo().window(whandle);
-//		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
-//
-//		// check for exists, frame name should be is " Admin/Content Types"
-//		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(CONTENT_TYPES_FRAME_NAME_XPATH));
-//
-//	}
+
 
 	public void createContentType(ContentType ctype) {
 		ContentTypeWizardPage wizardPage = openContentTypeWizard();
@@ -85,5 +70,4 @@ public class ContentTypesFrame extends AbstractAdminConsolePage {
 		getLogger().info("new Content Type was not found in the Table! "+ name);
 		return false;
 	}
-	// driver.findElement(By.xpath("//table[@class='basic-table']/tbody/tr[3]/td/input")).click();
 }

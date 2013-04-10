@@ -13,7 +13,7 @@ public class ContentRepository {
 
 	private String defaultLanguage;
 
-	private List<String> alowedTypes;
+	private List<String> selectedTypes;
 
 	private TopCategory topCategory;
 
@@ -30,12 +30,12 @@ public class ContentRepository {
 		this.name = name;
 	}
 
-	public List<String> getAlowedTypes() {
-		return alowedTypes;
+	public List<String> getSelectedTypes() {
+		return selectedTypes;
 	}
 
-	public void setAlowedTypes(List<String> alowedTypes) {
-		this.alowedTypes = alowedTypes;
+	public void setSelectedTypes(List<String> alowedTypes) {
+		this.selectedTypes = alowedTypes;
 	}
 
 	public TopCategory getTopCategory() {
@@ -68,7 +68,7 @@ public class ContentRepository {
 	 */
 	public static class TopCategory {
 		private String name;
-		private String type;
+		private ContentType contentType;
 		private String description;
 
 		public String getName() {
@@ -79,12 +79,12 @@ public class ContentRepository {
 			this.name = name;
 		}
 
-		public String getType() {
-			return type;
+		public ContentType getContentType() {
+			return contentType;
 		}
 
-		public void setType(String type) {
-			this.type = type;
+		public void setContentType(ContentType type) {
+			this.contentType = type;
 		}
 
 		public String getDescription() {

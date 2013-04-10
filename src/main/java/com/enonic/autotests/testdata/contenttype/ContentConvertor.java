@@ -16,7 +16,7 @@ public class ContentConvertor {
 	 * @return {@link ContentType} instance.
 	 */
 	public static ContentType convertXmlDataToContentType(ContentTypeXml ctypeXML) {
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contenttype/"+ ctypeXML.getCfgFile());
+		
 
 		ContentType ctype = new ContentType();
 		ctype.setName(ctypeXML.getName());
@@ -24,6 +24,7 @@ public class ContentConvertor {
 		ctype.setPathToCSS(ctypeXML.getPathToCSS());
 		ctype.setContentHandler(ctypeXML.getContentHandler());
 		if(ctypeXML.getCfgFile()!=null && !ctypeXML.getCfgFile().isEmpty()){
+			InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contenttype/"+ ctypeXML.getCfgFile());
 			ctype.setConfiguration(readConfiguration(in));
 		}
 		return ctype;
@@ -38,7 +39,7 @@ public class ContentConvertor {
 		contentRepository.setName(cRepXML.getName());
 		contentRepository.setDefaultLanguage(cRepXML.getDefaultLanguage());
 		contentRepository.setTopCategory(convertXmlDataToTopCategory(cRepXML.getTopCategory()));
-		contentRepository.setAlowedTypes(cRepXML.getAllowedContentTypes());
+		contentRepository.setSelectedTypes(cRepXML.getAllowedContentTypes());
 		
 		
 		return contentRepository;
@@ -49,11 +50,11 @@ public class ContentConvertor {
 	 * @return {@link TopCategory} instance.
 	 */
 	private static TopCategory convertXmlDataToTopCategory(TopCategoryXml topCat){
-		TopCategory tc = new TopCategory();
-		tc.setName(topCat.getName());
-		tc.setType(topCat.getContentType());
-		tc.setDescription(topCat.getDescription());
-		return tc;
+		TopCategory topcategory = new TopCategory();
+		topcategory.setName(topCat.getName());
+		topcategory.setContentType(convertXmlDataToContentType(topCat.getContentType()));
+		topcategory.setDescription(topCat.getDescription());
+		return topcategory;
 	}
 	
 	/**
