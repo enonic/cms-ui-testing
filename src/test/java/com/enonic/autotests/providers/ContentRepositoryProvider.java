@@ -28,6 +28,7 @@ import com.enonic.autotests.testdata.contenttype.ContentRepositoryXml;
 public class ContentRepositoryProvider {
 
 	private static final String CONTENT_REPO_TEST_DATA = "crepo-test-data.xml";
+	private static final String CONTENT_REPO_DELETE_TEST_DATA = "crepo-delete.xml";
 	private static final String CONTENT_REPO_TEST_DATA_NEG = "crepo-test-data-negative.xml";
 	private static final String CONTENT_REPO_TEST_DATA_ALL_INPUTS = "cty-all-inputs-4-5-6.xml";
 
@@ -45,6 +46,24 @@ public class ContentRepositoryProvider {
 		ContentRepositoryTestData testdata = (ContentRepositoryTestData) unmarshaller.unmarshal(in);
 		List<ContentRepositoryXml> cases = testdata.getContentRepositories();
 		for (ContentRepositoryXml ctype : cases) {
+			casesParameters.add(new Object[] { ctype });
+		}
+		return casesParameters.toArray(new Object[casesParameters.size()][]);
+	}
+	@DataProvider(name = "deleteRepository")
+	public static Object[][] deleteRepository() throws JAXBException {
+
+		List<Object[]> casesParameters = new ArrayList<Object[]>();
+		JAXBContext context = JAXBContext.newInstance(ContentRepositoryTestData.class);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		// logger.info(message)
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contentrepository/" + CONTENT_REPO_DELETE_TEST_DATA);
+		if (in == null) {
+			throw new TestFrameworkException("test data was not found!");
+		}
+		ContentRepositoryTestData testdata = (ContentRepositoryTestData) unmarshaller.unmarshal(in);
+		List<ContentRepositoryXml> repos = testdata.getContentRepositories();
+		for (ContentRepositoryXml ctype : repos) {
 			casesParameters.add(new Object[] { ctype });
 		}
 		return casesParameters.toArray(new Object[casesParameters.size()][]);
@@ -73,6 +92,7 @@ public class ContentRepositoryProvider {
 		return casesParameters.toArray(new Object[casesParameters.size()][]);
 	}
 	
+	/////////////////////////////////////////////////////////////////////////////////////////////////
 	@DataProvider(name = "addContentToRepository")
 	public static Object[][] addContentToRepository() throws JAXBException {
 		List<Object[]> casesParameters = new ArrayList<Object[]>();
@@ -103,7 +123,8 @@ public class ContentRepositoryProvider {
 		ContentRepositoryTestData testdata = (ContentRepositoryTestData) unmarshaller.unmarshal(in2);
 		List<ContentRepositoryXml> repositories = testdata.getContentRepositories();
 		
-			casesParameters.add(new Object[] { handler.getInputs(),repositories });
+			//casesParameters.add(new Object[] { handler.getInputs(),repositories });
+			casesParameters.add(new Object[] { repositories });
 		
 		return casesParameters.toArray(new Object[casesParameters.size()][]);
 	}

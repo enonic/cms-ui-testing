@@ -7,8 +7,9 @@ import com.enonic.autotests.exceptions.ContentRepositoryException;
 import com.enonic.autotests.exceptions.ContentTypeException;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoryWizardPage;
+import com.enonic.autotests.model.FilesContent;
+import com.enonic.autotests.pages.v4.adminconsole.content.CreateContentRepositoryWizardPage;
+import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.providers.ContentRepositoryProvider;
 import com.enonic.autotests.providers.ContentTypeTestsProvider;
@@ -42,7 +43,7 @@ public class ContentTypeTests extends BaseTest{
 		logger.info(contentRepoXML.getCaseInfo());
 		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);		
 		adminConsoleServiceV4.createContentRepository(getTestSession(), cRepository);
-		ContentRepositoriesFrame repositoryFrame = new ContentRepositoriesFrame(getTestSession());
+		RepositoriesListFrame repositoryFrame = new RepositoriesListFrame(getTestSession());
 		repositoryFrame.verifyIsPresentedInTable(cRepository.getName());
 		
 	}
@@ -57,16 +58,36 @@ public class ContentTypeTests extends BaseTest{
 	public void testOpenRepositoryProperties(ContentRepositoryXml contentRepoXML){
 		
 		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
-		ContentRepositoryWizardPage page = PageNavigatorV4.openRepositoryProperties(getTestSession(), cRepository.getName());
+		CreateContentRepositoryWizardPage page = PageNavigatorV4.openRepositoryProperties(getTestSession(), cRepository.getName());
 		boolean result = page.verifyData(cRepository);
 		Assert.assertTrue(result,"expected and actual ContentRepository's properties are not equals!!!");
 	}    
 	
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//@Test(dataProvider = "addContentToRepository", dataProviderClass = ContentRepositoryProvider.class)
-	public void testAddContentToRepository(ContentRepositoryXml contentRepoXML){
+	
+	@Test(dataProvider = "deleteRepository", dataProviderClass = ContentRepositoryProvider.class)
+	public void testCreateAndDeleteContentRepository(ContentRepositoryXml contentRepoXML){		
 		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
-		adminConsoleServiceV4.addContentToRepository(getTestSession(),cRepository.getName());
+		RepositoriesListFrame repositoriesFrame = adminConsoleServiceV4.createContentRepository(getTestSession(), cRepository);
+		boolean isPresent = repositoriesFrame.verifyIsPresentedInTable(cRepository.getName());
+		Assert.assertTrue(isPresent,"new repository was not created!");
+		repositoriesFrame = adminConsoleServiceV4.deleteContentType(getTestSession(), cRepository.getName());
+		isPresent = repositoriesFrame.verifyIsPresentedInTable(cRepository.getName());
+		Assert.assertFalse(isPresent,"repository was not deleted!");
+	}   
+	
+	//@Test(dataProvider = "", dataProviderClass = ContentRepositoryProvider.class)
+	//public void testVerifyAllInputs(ContentRepositoryXml contentRepoXML){		
+	//	ContentRepositoryFrame frame = PageNavigatorV4.openContentRepositoryDashboard(getTestSession(), repName);
+	//	AddNewContentWizardPage wizardPage = frame.openAddContentWizardPage(repName);
+	//}   
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@Test(dataProvider = "deleteRepository", dataProviderClass = ContentRepositoryProvider.class)
+	public void testAddContentToRepository(ContentRepositoryXml contentRepoXML){
+		ContentRepository cRepository = null;// ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
+		//cRepository.getTopCategory().getContentType().getContentHandler();
+		FilesContent fc = null;
+		adminConsoleServiceV4.addContentToRepository(getTestSession(),cRepository,fc);
+		System.out.println("");
 	}    
 
 

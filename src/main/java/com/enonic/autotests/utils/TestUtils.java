@@ -1,8 +1,12 @@
 package com.enonic.autotests.utils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -290,6 +294,35 @@ public class TestUtils {
 		Select select = new Select(session.getDriver().findElement(by));
 		select.selectByVisibleText(text);
 	}
+	
+	public  String createTempFile(String s){
+        try{
+          File f = File.createTempFile("uploadTest","tempfile");
+          f.deleteOnExit();
+          writeStringToFile(s,f);
+          return f.getAbsolutePath();
+        }
+        catch(Exception e){
+         throw new TestFrameworkException("Error during creation TMP-file");
+          
+        }
+    }
+
+    public  void writeStringToFile(String s, File file) throws IOException{
+        FileOutputStream in = null;
+        try{
+            in = new FileOutputStream(file);
+            FileChannel fchan = in.getChannel();
+            BufferedWriter bf = new BufferedWriter(Channels.newWriter(fchan,"UTF-8"));
+            bf.write(s);
+            bf.close();
+        }
+        finally{
+            if(in != null){
+                in.close();
+            }
+        }
+    }
 
 	// driver.switch.frame(driver.findElementByXpath("//iframe[contains(@src,'forsee')]"))
 	// xpath=id('backOptionsArea')//img[contains(@src,'color/02')]/../..

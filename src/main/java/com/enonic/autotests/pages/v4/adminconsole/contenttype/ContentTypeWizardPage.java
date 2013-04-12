@@ -86,7 +86,7 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage {
 		if (ctype.getContentHandler() == null) {
 			throw new IllegalArgumentException("Content Type's handler name should be not null!");
 		}
-		String contentHandlerName = ctype.getContentHandler();
+		String contentHandlerName = ctype.getContentHandler().getName();
 		getLogger().debug("new 'Content type' creating. Content handler's name: " + contentHandlerName);
 		TestUtils.getInstance().selectByText(getSession(), By.name(CONTENT_HANDLER_SELCET_NAME), contentHandlerName);
 
@@ -217,8 +217,8 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage {
 		String actualHandler = getSession().getDriver().findElement(By.name(CONTENT_HANDLER_SELCET_NAME)).getText().trim();
 		//String actualHandler = contentHandlerInput.getText().trim();
 		String actualName = nameInput.getText().trim();
-		result &= actualHandler.equals(expected.getContentHandler().trim());
-		getLogger().debug("expected content handler is: " + expected.getContentHandler().trim() + " actual is :" + actualHandler);
+		result &= actualHandler.equals(expected.getContentHandler().getName().trim());
+		getLogger().debug("expected content handler is: " + expected.getContentHandler().getName().trim() + " actual is :" + actualHandler);
 		expected.getName();
 		getLogger().debug("expected content name is: " + expected.getName().trim() + " actual is :" + actualName);
 		expected.getConfiguration();

@@ -11,7 +11,7 @@ public class ContentType {
 	private String name;
 	
 	/** Content handler's name, 'Custom handler', by default */
-	private String contentHandler;
+	private ContentHandler contentHandler;
 
 	/** description of the Content type */
 	private String description;
@@ -28,11 +28,11 @@ public class ContentType {
 		this.name = name;
 	}
 
-	public String getContentHandler() {
+	public ContentHandler getContentHandler() {
 		return contentHandler;
 	}
 
-	public void setContentHandler(String contentHandler) {
+	public void setContentHandler(ContentHandler contentHandler) {
 		this.contentHandler = contentHandler;
 	}
 

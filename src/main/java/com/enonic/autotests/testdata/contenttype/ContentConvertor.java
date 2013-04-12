@@ -3,6 +3,7 @@ package com.enonic.autotests.testdata.contenttype;
 import java.io.InputStream;
 import java.util.Scanner;
 
+import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentRepository.TopCategory;
 import com.enonic.autotests.model.ContentType;
@@ -22,7 +23,8 @@ public class ContentConvertor {
 		ctype.setName(ctypeXML.getName());
 		ctype.setDescription(ctypeXML.getDescription());
 		ctype.setPathToCSS(ctypeXML.getPathToCSS());
-		ctype.setContentHandler(ctypeXML.getContentHandler());
+		ContentHandler chandler = ContentHandler.findByValue(ctypeXML.getContentHandler());
+		ctype.setContentHandler(chandler);
 		if(ctypeXML.getCfgFile()!=null && !ctypeXML.getCfgFile().isEmpty()){
 			InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contenttype/"+ ctypeXML.getCfgFile());
 			ctype.setConfiguration(readConfiguration(in));

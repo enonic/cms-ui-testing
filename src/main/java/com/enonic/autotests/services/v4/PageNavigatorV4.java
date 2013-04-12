@@ -11,20 +11,20 @@ import com.enonic.autotests.model.User;
 import com.enonic.autotests.pages.v4.HomePage;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesFrame;
+import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoryFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoryWizardPage;
+import com.enonic.autotests.pages.v4.adminconsole.content.CreateContentRepositoryWizardPage;
 import com.enonic.autotests.utils.TestUtils;
 
 public class PageNavigatorV4 {
 
 	private  static Logger logger = Logger.getLogger();
 	
-	 public static ContentRepositoryWizardPage openRepositoryProperties(TestSession session,String repositoryName){
+	 public static CreateContentRepositoryWizardPage openRepositoryProperties(TestSession session,String repositoryName){
 	    	PageNavigatorV4.navgateToAdminConsole(session);
 	    	LeftMenuFrame menu = new LeftMenuFrame(session);
 			menu.openContentFrame(session);
-			List<WebElement> elements = session.getDriver().findElements(By.xpath(ContentRepositoriesFrame.CONTENT_REPOSITORIES_TABLE_NAME_TD_XPATH));
+			List<WebElement> elements = session.getDriver().findElements(By.xpath(RepositoriesListFrame.CONTENT_REPOSITORIES_TABLE_NAME_TD_XPATH));
 
 			for (WebElement el : elements) {
 				if (repositoryName.equals(el.getText().trim())) {
@@ -36,8 +36,18 @@ public class PageNavigatorV4 {
 			 String xpathExpression = String.format(ContentRepositoryFrame.CONTENT_REPOSITORY_FRAME_NAME_XPATH, repositoryName);
 			 TestUtils.getInstance().waitUntilVisible(session, By.xpath(xpathExpression ));
 			 logger.info("new Content Repository was not found in the Table! " + repositoryName);
-			 return new ContentRepositoryWizardPage(session);
+			 return new CreateContentRepositoryWizardPage(session);
 	    }
+
+	public static ContentRepositoryFrame openContentRepositoryDashboard(TestSession session, String repositoryName) {
+		PageNavigatorV4.navgateToAdminConsole(session);
+		String xpath = String.format(ContentRepositoryFrame.REPOSITORY_LINK_XPATH, repositoryName);
+		ContentRepositoryFrame frame = new ContentRepositoryFrame(session);
+		frame.open(xpath);
+		logger.info("The Dashboard was opened for repository: " + repositoryName);
+		return new ContentRepositoryFrame(session);
+	}
+	
 	public static void navgateToAdminConsole(TestSession testSession) {
 		User user = testSession.getCurrentUser();
 		// if Admin-console page already loaded, return, otherwise navigate to

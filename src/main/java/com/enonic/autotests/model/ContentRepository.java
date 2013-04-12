@@ -18,9 +18,13 @@ public class ContentRepository {
 	private TopCategory topCategory;
 
 	private Map<String, Object> properties;
+	
+	private List<BaseAbstractContent> content;
 
 	// TODO add permissions:
 	// private principals
+
+	
 
 	public String getName() {
 		return name;
@@ -94,5 +98,12 @@ public class ContentRepository {
 		public void setDescription(String description) {
 			this.description = description;
 		}
+	}
+	public List<BaseAbstractContent> getContent() {
+		return content;
+	}
+
+	public void setContent(List<BaseAbstractContent> content) {
+		this.content = content;
 	}
 }

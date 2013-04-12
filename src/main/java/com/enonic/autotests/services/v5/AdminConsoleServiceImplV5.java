@@ -1,8 +1,10 @@
 package com.enonic.autotests.services.v5;
 
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.model.BaseAbstractContent;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
+import com.enonic.autotests.pages.Page;
 import com.enonic.autotests.services.IAdminConsoleService;
 
 public class AdminConsoleServiceImplV5 implements IAdminConsoleService {
@@ -15,8 +17,8 @@ public class AdminConsoleServiceImplV5 implements IAdminConsoleService {
 //	}
 
 	@Override
-	public void createContentType(TestSession testSession, ContentType ctype) {
-		// TODO Auto-generated method stub
+	public Page createContentType(TestSession testSession, ContentType ctype) {
+		return null;
 
 	}
 
@@ -27,19 +29,19 @@ public class AdminConsoleServiceImplV5 implements IAdminConsoleService {
 	}
 
 	@Override
-	public void deleteContentType(TestSession testSession, String name) {
-		// TODO Auto-generated method stub
+	public Page deleteContentType(TestSession testSession, String name) {
+		return null;
 
 	}
 
 	@Override
-	public void createContentRepository(TestSession testSession, ContentRepository ctype) {
-		// TODO Auto-generated method stub
+	public Page createContentRepository(TestSession testSession, ContentRepository ctype) {
+		return null;
 		
 	}
 
 	@Override
-	public void addContentToRepository(TestSession testSession, String repoName) {
+	public void addContentToRepository(TestSession testSession, ContentRepository ctype,BaseAbstractContent content) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,5 +1,6 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,6 +8,10 @@ import org.openqa.selenium.support.How;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.AddContentException;
+import com.enonic.autotests.exceptions.TestFrameworkException;
+import com.enonic.autotests.model.ContentHandler;
+import com.enonic.autotests.model.ContentRepository;
+import com.enonic.autotests.model.FilesContent;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.utils.TestUtils;
 
@@ -31,7 +36,7 @@ public class ContentRepositoryFrame extends AbstractAdminConsolePage{
 	private WebElement buttonDelete;
 	
 	@FindBy(xpath = CREATE_CONTENT_MENU_BUTTON_XPATH)
-	private WebElement buttonAddContent;
+	private WebElement menuItemAddContent;
 	
 	
 	/**
@@ -46,22 +51,40 @@ public class ContentRepositoryFrame extends AbstractAdminConsolePage{
 	/**
 	 * Opens CreateContentWizardPage page on the Right Frame.
 	 * 
-	 * @return {@link CreateContentWizardPage}} instance.
+	 * @return {@link AddNewContentWizardPage}} instance.
 	 */
-	public CreateContentWizardPage openAddContentWizardPage(String repName){
+	public IAddContentToRepository openAddContentWizardPage(ContentRepository cRepository){
 		buttonNew.click();
 		boolean isAddContentButtonShowed = TestUtils.getInstance().checkIfDisplayed(By.xpath(CREATE_CONTENT_MENU_BUTTON_XPATH), getSession().getDriver());
 		if(!isAddContentButtonShowed){
 			throw new AddContentException("'New Content-'Menu item was not found");
 		}
-		buttonAddContent.click();
-		String xpath = String.format("//a[text()='%s']", repName);
+		menuItemAddContent.click();
+		String xpath = String.format("//a[text()='%s']", cRepository.getName());
 		boolean isTitleLoaded = TestUtils.getInstance().checkIfDisplayed(By.xpath(xpath), getSession().getDriver());
 		if(!isTitleLoaded){
-			throw new AddContentException("Create Content Wizard was not opened! Repository: "+repName);
+			throw new AddContentException("Create Content Wizard was not opened! Repository: "+cRepository.getName());
 		}
 		TestUtils.getInstance().saveScreenshot(getSession());
-		return new CreateContentWizardPage(getSession());
+		//new AddFileContentWizard(getSession()).typeDataAndSave(new FileContent());
+		//return new AddFileContentWizard(getSession());
+		return addContentWizardFactory(cRepository);
+	}
+	
+	public  IAddContentToRepository addContentWizardFactory(ContentRepository cRepository){
+		ContentHandler handler = cRepository.getTopCategory().getContentType().getContentHandler();
+		switch (handler) {
+		case FILES:
+			return new AddFileContentWizard(getSession());
+				
+		case IMAGES:	
+			return new AddFileContentWizard(getSession());
+			
+		case CUSTOM_CONTENT:	
+			return new AddFileContentWizard(getSession());
+		default:
+			return null;
+		}
 	}
 	
 	@Override
@@ -82,6 +105,24 @@ public class ContentRepositoryFrame extends AbstractAdminConsolePage{
 		getSession().getDriver().switchTo().window(whandle);
 		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
 		
+	}
+	
+	/**
+	 * @param repositoryName
+	 * @return
+	 */
+	public RepositoriesListFrame deleteContentRepository(String repositoryName){
+		buttonDelete.click();
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession());
+		if(isAlertPresent){
+			  Alert alert = getSession().getDriver().switchTo().alert();		        
+		        //Get the Text displayed on Alert:
+		        String textOnAlert = alert.getText();
+		        getLogger().info("Deleting of the repository, alert message:"+textOnAlert);
+		        //Click OK button, by calling accept() method of Alert Class:
+		        alert.accept();
+		}
+		return new RepositoriesListFrame(getSession());
 	}
 
 }
