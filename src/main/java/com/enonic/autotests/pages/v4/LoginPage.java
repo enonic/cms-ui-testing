@@ -51,6 +51,7 @@ public class LoginPage extends Page {
 	public void doLogin(String username, String password)
     {
         TestUtils.getInstance().selectByText(getSession(), By.name("lang"), "English");
+        // TODO: Add wait statement and verify English prompts
 		usernameInput.sendKeys(username);
 		passwordInput.sendKeys(password);
 		// TestUtils.saveScreenshot( getSession().getDriver());
