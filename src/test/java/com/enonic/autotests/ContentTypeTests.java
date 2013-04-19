@@ -29,7 +29,7 @@ public class ContentTypeTests extends BaseTest{
 		boolean isCreated = frame.verifyIsCreated(ctype.getName());
 		Assert.assertTrue(isCreated,"new Content Type was not found on the Content Types page! ");
 	}
-	
+
 	@Test(dependsOnMethods="testCreateContentTypePositive",description = "negative tests",expectedExceptions=ContentTypeException.class,dataProvider = "createContentTypeNegative", dataProviderClass = ContentTypeTestsProvider.class)
 	public void createContentTypeNegative(ContentTypeXml ctypeXML){
 		logger.info(ctypeXML.getCaseInfo());
@@ -47,6 +47,7 @@ public class ContentTypeTests extends BaseTest{
 		repositoryFrame.verifyIsPresentedInTable(cRepository.getName());
 		
 	}
+
 	@Test(description="negative test",expectedExceptions = ContentRepositoryException.class,dependsOnMethods="testCreateContentTypePositive",dataProvider = "createContentRepositoryNegative", dataProviderClass = ContentRepositoryProvider.class)
 	public void createContentRepositoryNegative(ContentRepositoryXml contentRepoXML){
 		logger.info(contentRepoXML.getCaseInfo());
@@ -54,7 +55,7 @@ public class ContentTypeTests extends BaseTest{
 		adminConsoleServiceV4.createContentRepository(getTestSession(), cRepository);		
 	}       
 	
-	@Test(dataProvider = "createContentRepositoryPositive", dataProviderClass = ContentRepositoryProvider.class)
+	//@Test(dataProvider = "createContentRepositoryPositive", dataProviderClass = ContentRepositoryProvider.class,dependsOnMethods="createContentRepository")
 	public void testOpenRepositoryProperties(ContentRepositoryXml contentRepoXML){
 		
 		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
@@ -81,9 +82,10 @@ public class ContentTypeTests extends BaseTest{
 	//	AddNewContentWizardPage wizardPage = frame.openAddContentWizardPage(repName);
 	//}   
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	@Test(dataProvider = "deleteRepository", dataProviderClass = ContentRepositoryProvider.class)
+//	@Test(dataProvider = "deleteRepository", dataProviderClass = ContentRepositoryProvider.class)
 	public void testAddContentToRepository(ContentRepositoryXml contentRepoXML){
-		ContentRepository cRepository = null;// ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
+		ContentRepository cRepository = null;
+		//ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
 		//cRepository.getTopCategory().getContentType().getContentHandler();
 		FilesContent fc = null;
 		adminConsoleServiceV4.addContentToRepository(getTestSession(),cRepository,fc);

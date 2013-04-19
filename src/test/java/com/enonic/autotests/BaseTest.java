@@ -22,7 +22,7 @@ public class BaseTest {
 	public void readDesiredCapabilities(ITestContext context) {
 		testSession = new TestSession();
 		String browser = (String) context.getCurrentXmlTest().getParameter("browser");
-		if(browser == null){
+		if (browser == null) {
 			throw new IllegalArgumentException("parameter browser was not specified! ");
 		}
 		String browserVersion = (String) context.getCurrentXmlTest().getParameter("browserVersion");
