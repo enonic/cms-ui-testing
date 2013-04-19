@@ -31,7 +31,9 @@ public class LoginPage extends Page {
 	@FindBy(how = How.NAME, using = "password")
 	private WebElement passwordInput;
 	@FindBy(how = How.NAME, using = "login")
-	private WebElement loginButton;
+    private WebElement loginButton;
+
+
 
 	/**
 	 * @param session
@@ -46,8 +48,9 @@ public class LoginPage extends Page {
 		});
 	}
 
-	public void doLogin(String username, String password) {
-
+	public void doLogin(String username, String password)
+    {
+        TestUtils.getInstance().selectByText(getSession(), By.name("lang"), "English");
 		usernameInput.sendKeys(username);
 		passwordInput.sendKeys(password);
 		// TestUtils.saveScreenshot( getSession().getDriver());
