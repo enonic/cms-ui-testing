@@ -6,7 +6,7 @@
 	<artifactId>ui-testing</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
-
+<!-- -->
 	<name>ui-testing</name>
 	<url>http://maven.apache.org</url>
 
