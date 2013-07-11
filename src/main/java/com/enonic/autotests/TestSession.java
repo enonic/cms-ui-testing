@@ -70,15 +70,20 @@ public class TestSession {
 	}
 
 	public Object setDriver(WebDriver driver) {
-		return session.put(TestSession.WEBDRIVER, driver);
+		return session.put(WEBDRIVER, driver);
 	}
 
 	public void setUser(User user) {
-		session.put(TestSession.CURRENT_USER, user);
+		session.put(CURRENT_USER, user);
 	}
 
 	public User getCurrentUser() {
-		return (User) session.get(TestSession.CURRENT_USER);
+		return (User) session.get(CURRENT_USER);
 	}
+	
+	public Boolean getIsRemote() {
+		return (Boolean) session.get(IS_REMOTE);
+	}
+
 
 }

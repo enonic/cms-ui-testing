@@ -1,10 +1,13 @@
 package com.enonic.autotests.testdata.contenttype;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "contentTypes")
-@XmlType(propOrder = { "name", "contentHandler","description","pathToCSS","cfgFile","caseInfo" }, name = "contentType")
 public class ContentTypeXml {
 	private String name;
 	
@@ -20,6 +23,19 @@ public class ContentTypeXml {
 	
 	private String cfgFile;
 	
+	@XmlJavaTypeAdapter(value = CDATAAdapter.class)
+	private String configdata;
+	
+
+	public String getConfigdata()
+	{
+		return configdata;
+	}
+
+	public void setConfigdata1(String configdata)
+	{
+		this.configdata = configdata;
+	}
 
 	public String getName() {
 		return name;

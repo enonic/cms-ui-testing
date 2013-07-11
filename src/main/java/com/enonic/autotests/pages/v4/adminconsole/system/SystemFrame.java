@@ -14,4 +14,11 @@ public class SystemFrame extends AbstractAdminConsolePage {
 		super(session);
 	}
 
+	@Override
+	public void waituntilPageLoaded(long timeout)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 }

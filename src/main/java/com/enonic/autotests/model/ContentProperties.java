@@ -1,116 +1,142 @@
 package com.enonic.autotests.model;
 
 /**
-
- *
+ * This class representation of a 'Properties Tab'
+ * 
  * 12.04.2013
  */
-public class ContentProperties {
+public class ContentProperties
+{
 
 	private String name;
-	
+
 	private String created;
-	
+
 	private String owner;
-	
+
 	private String language;
-	
+
 	private String priority;
-	
+
 	private String key;
-	
-	private String contentType;
-	
+
+	private String contentTypeName;
+
 	private Assignment assignment;
-	
-		
-	public String getCreated() {
+
+	public String getCreated()
+	{
 		return created;
 	}
 
-	public void setCreated(String created) {
+	public void setCreated(String created)
+	{
 		this.created = created;
 	}
 
-	public String getOwner() {
+	public String getOwner()
+	{
 		return owner;
 	}
 
-	public void setOwner(String owner) {
+	public void setOwner(String owner)
+	{
 		this.owner = owner;
 	}
 
-	public String getLanguage() {
+	public String getLanguage()
+	{
 		return language;
 	}
 
-	public void setLanguage(String language) {
+	public void setLanguage(String language)
+	{
 		this.language = language;
 	}
 
-	public String getPriority() {
+	public String getPriority()
+	{
 		return priority;
 	}
 
-	public void setPriority(String priority) {
+	public void setPriority(String priority)
+	{
 		this.priority = priority;
 	}
 
-	public String getKey() {
+	public String getKey()
+	{
 		return key;
 	}
 
-	public void setKey(String key) {
+	public void setKey(String key)
+	{
 		this.key = key;
 	}
-	public String getContentType() {
-		return contentType;
+
+	public String getContentTypeName()
+	{
+		return contentTypeName;
 	}
 
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
+	public void setContentTypeName(String contentTypeName)
+	{
+		this.contentTypeName = contentTypeName;
 	}
 
-
-	public Assignment getAssignment() {
+	public Assignment getAssignment()
+	{
 		return assignment;
 	}
 
-	public void setAssignment(Assignment assignment) {
+	public void setAssignment(Assignment assignment)
+	{
 		this.assignment = assignment;
 	}
 
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	
-	
-	public static class Assignment {
+	public static class Assignment
+	{
 		private String assignee;
 		private String assigner;
 		private String dueDate;
-		
-		public String getAssignee() {
+
+		public String getAssignee()
+		{
 			return assignee;
 		}
-		public void setAssignee(String assignee) {
+
+		public void setAssignee(String assignee)
+		{
 			this.assignee = assignee;
 		}
-		public String getAssigner() {
+
+		public String getAssigner()
+		{
 			return assigner;
 		}
-		public void setAssigner(String assigner) {
+
+		public void setAssigner(String assigner)
+		{
 			this.assigner = assigner;
 		}
-		public String getDueDate() {
+
+		public String getDueDate()
+		{
 			return dueDate;
 		}
-		public void setDueDate(String dueDate) {
+
+		public void setDueDate(String dueDate)
+		{
 			this.dueDate = dueDate;
 		}
 	}

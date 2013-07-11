@@ -12,8 +12,6 @@ public abstract class Page {// extends LoadableComponent<Page>{
 	private  Logger logger = Logger.getLogger();
 	
 
-	public abstract String getTitle();
-
 	public Page(TestSession session) {
 		this.session = session;
 		PageFactory.initElements(session.getDriver(), this);

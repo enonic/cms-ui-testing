@@ -6,21 +6,20 @@
 	<artifactId>ui-testing</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
-<!-- -->
+	<!-- -->
 	<name>ui-testing</name>
 	<url>http://maven.apache.org</url>
 
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>3.1.1.RELEASE</org.springframework.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			<version>2.31.0</version>
+			<version>2.32.0</version>
 		</dependency>
 
 		<dependency>
@@ -36,21 +35,82 @@
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
-
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.0-alpha-2</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>read-project-properties</goal>
+						</goals>
+						<configuration>
+							<files>
+								<file>${basedir}/tests.properties</file>
+							</files>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 	<profiles>
+		<profile>
+			<id>notest</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+			<resources>
+					<resource>
+						<directory>${basedir}/src/test/resources</directory>
+						<filtering>true</filtering>
+						<includes>
+							<include>**</include>
+						</includes>
+						<excludes>
+							<exclude>**/*.java</exclude>
+						</excludes>
+					</resource>
+				</resources>
+				<plugins>
+					<plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>2.3</version>
+						<configuration>
+							<source>1.7</source>
+							<target>1.7</target>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<excludes>
+								<exclude>com/enonic/autotests/**</exclude>
+							</excludes>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
 		<!-- Profile to enable integration test execution Should be enabled given 
 			a -Dintegration.test option when running the build -->
 		<profile>
-			<id>auto-test</id>
+			<id>local</id>
 			<activation>
 				<property>
-					<name>auto.test</name>
+					<name>local.test</name>
 				</property>
 			</activation>
 			<build>
-				<resources>
+			<resources>
 					<resource>
-						<directory>${basedir}/src/main/resources</directory>
+						<directory>${basedir}/src/test/resources</directory>
 						<filtering>true</filtering>
 						<includes>
 							<include>**</include>
@@ -63,6 +123,15 @@
 				<plugins>
 
 					<plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>2.3</version>
+						<configuration>
+							<source>1.7</source>
+							<target>1.7</target>
+						</configuration>
+					</plugin>
+					<plugin>
+
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
@@ -71,9 +140,7 @@
 							<skip>true</skip>
 							<excludes>
 							</excludes>
-							<includes>
-								<include>com/test/**</include>
-							</includes>
+
 						</configuration>
 						<executions>
 
@@ -86,7 +153,7 @@
 								<configuration>
 
 									<suiteXmlFiles>
-										<suiteXmlFile>${basedir}/src/main/resources/template.xml</suiteXmlFile>
+										<suiteXmlFile>${basedir}/src/test/resources/local/${${local.template.name}}</suiteXmlFile>
 									</suiteXmlFiles>
 
 									<skip>false</skip>
@@ -102,27 +169,16 @@
 				</plugins>
 			</build>
 		</profile>
+		
 		<profile>
-			<!-- Added a micro/unit test profile that is run by default so that we 
-				can override the surefire excludes in an integration test build -->
-			<id>micro-test</id>
+			<id>remote</id>
 			<activation>
 				<property>
-					<name>!auto.test</name>
+					<name>remote.test</name>
 				</property>
 			</activation>
 			<build>
 				<resources>
-					<resource>
-						<directory>${basedir}/src/main/resources</directory>
-						<filtering>true</filtering>
-						<includes>
-							<include>**</include>
-						</includes>
-						<excludes>
-							<exclude>**/*.java</exclude>
-						</excludes>
-					</resource>
 					<resource>
 						<directory>${basedir}/src/test/resources</directory>
 						<filtering>true</filtering>
@@ -135,63 +191,53 @@
 					</resource>
 				</resources>
 				<plugins>
-					<plugin>
+				  <plugin>
 						<artifactId>maven-compiler-plugin</artifactId>
-						<version>2.3.2</version>
+						<version>2.3</version>
 						<configuration>
-							<source>1.6</source>
-							<target>1.6</target>
+							<source>1.7</source>
+							<target>1.7</target>
 						</configuration>
 					</plugin>
-
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
 						<configuration>
+							<!-- Skip the normal tests, we'll run the integration-tests only -->
+
+							<skip>true</skip>
 							<excludes>
-								<exclude>com/enonic/autotests/**</exclude>
 							</excludes>
-						</configuration>
-					</plugin>
-
-					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<configuration>
-							<descriptorRefs>
-								<descriptorRef>jar-with-dependencies</descriptorRef>
-							</descriptorRefs>
-							<archive>
-								<manifest>
-
-								</manifest>
-							</archive>
+							
 						</configuration>
 						<executions>
+
 							<execution>
-								<id>jar-with-dependencies</id>
+								<id>package</id>
 								<phase>package</phase>
 								<goals>
-									<goal>single</goal>
+									<goal>test</goal>
 								</goals>
-							</execution>
+								<configuration>
 
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jar-plugin</artifactId>
-						<version>2.2</version>
-						<executions>
-							<execution>
-								<goals>
-									<goal>test-jar</goal>
-								</goals>
+									<suiteXmlFiles>
+										<suiteXmlFile>${basedir}/src/test/resources/remote/${remote.template.name}</suiteXmlFile>
+									</suiteXmlFiles>
+
+									<skip>false</skip>
+									<includes>
+										<include>com/enonic/autotests/**</include>
+									</includes>
+									<excludes>
+									</excludes>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
+		
 	</profiles>
 </project>
 

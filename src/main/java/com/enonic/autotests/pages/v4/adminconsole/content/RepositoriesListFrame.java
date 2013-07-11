@@ -5,7 +5,11 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
@@ -16,68 +20,103 @@ import com.enonic.autotests.utils.TestUtils;
  * 
  * This Frame contains a table with list of Content Repositories.
  * 
- * <br>Page Object for 'Content Repositories ' frame. Version 4.7
+ * <br>
+ * Page Object for 'Content Repositories ' frame. Version 4.7
  * 
  * 02.04.2013
  */
-public class RepositoriesListFrame extends AbstractAdminConsolePage {
+public class RepositoriesListFrame extends AbstractAdminConsolePage
+{
 
-	public static final String CONTENT_REPOSITORIES_TABLE_NAME_TD_XPATH = "//td[@class='browsetablecell' or @class='browsetablecell row-last'][1]";
-
+	public static final String CONTENT_REPOSITORIES_TABLE_NAME_TD_XPATH = "//td[contains(@class,'browsetablecell'  ) and text()='%s']";
 	public static final String CONTENT_FRAME_NAME_XPATH = "//a[text()='Content']";
-	
-	public static  String CONTENT_REPOSITORY_FRAME_NAME_XPATH = "//span[@id='titlename' and contains(.,'%s')]";
+
+	public static String CONTENT_REPOSITORY_FRAME_NAME_XPATH = "//span[@id='titlename' and contains(.,'%s')]";
+
+	@FindBy(how = How.NAME, using = "searchtext")
+	private WebElement searchtext;
+	@FindBy(how = How.NAME, using = "search")
+	private WebElement searchButton;
+
+	@FindBy(xpath = "//button[text()='New']")
+	private WebElement buttonNew;
 
 	/**
 	 * The Constructor.
 	 * 
 	 * @param session {@link TestSession} instance.
 	 */
-	public RepositoriesListFrame(TestSession session) {
+	public RepositoriesListFrame( TestSession session )
+	{
 		super(session);
 	}
 
-	@FindBy(xpath = "//button[text()='New']")
-	private WebElement buttonNew;
+	/**
+	 * Types a content name to the 'searchtext' and click by the "Search" button.
+	 * 
+	 * @param contentName
+	 * @param repositoryName
+	 */
+	public void doSearchContent(String contentName, String repositoryName)
+	{
+		searchtext.sendKeys(contentName);
+		searchButton.click();
 
-
-  
+	}
 
 	/**
-	 * Opens 'Create Content Repository'-wizard page, types test-data and clicks
-	 * a 'Save' button.
+	 * Opens 'Create Content Repository'-wizard page, types test-data and clicks a 'Save' button.
 	 * 
-	 * @param cRepository
-	 *            {@link ContentRepository} instance.
+	 * @param cRepository {@link ContentRepository} instance.
 	 */
-	public void createContentRepository(ContentRepository cRepository) {
-		CreateContentRepositoryWizardPage wizardPage = openContentRepositoryWizard();
-		wizardPage.verifyWizardOpened(getSession());
+	public void createContentRepository(ContentRepository cRepository)
+	{
+		CreateContentRepositoryWizard wizardPage = openContentRepositoryWizard();
 		wizardPage.doTypeDataAndSave(cRepository);
-		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(CONTENT_FRAME_NAME_XPATH));
+		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(CONTENT_FRAME_NAME_XPATH), AppConstants.PAGELOAD_TIMEOUT);
 		getLogger().info("Content Repository with name: " + cRepository.getName() + " was created!");
 
 	}
 
 	/**
-	 * @return {@link CreateContentRepositoryWizardPage} instance
+	 * Opens wizard for creation new 'Content Repository'
+	 * 
+	 * @return {@link CreateContentRepositoryWizard} instance
 	 */
-	private CreateContentRepositoryWizardPage openContentRepositoryWizard() {
+	private CreateContentRepositoryWizard openContentRepositoryWizard()
+	{
 		buttonNew.click();
-		return new CreateContentRepositoryWizardPage(getSession());
+		CreateContentRepositoryWizard wizardPage = new CreateContentRepositoryWizard(getSession());
+		wizardPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return wizardPage;
 	}
 
-	public boolean verifyIsPresentedInTable(String repositoryName) {
-		List<WebElement> elements = getSession().getDriver().findElements(By.xpath(CONTENT_REPOSITORIES_TABLE_NAME_TD_XPATH));
-
-		for (WebElement el : elements) {
-			if (repositoryName.equals(el.getText().trim())) {
-				getLogger().info("new Content Repository was found in the Table! " + el.getText());
-				TestUtils.getInstance().saveScreenshot(getSession());
-				return true;
-			}
+	/**
+	 * Verifies is present repository in the table.
+	 * 
+	 * @param repositoryName the name of the repository.
+	 * @return true if repository is present, otherwise false.
+	 */
+	public boolean verifyIsRepositoryPresentedInTable(String repositoryName)
+	{
+		String repoXpath = String.format(CONTENT_REPOSITORIES_TABLE_NAME_TD_XPATH, repositoryName);
+		List<WebElement> elements = getSession().getDriver().findElements(By.xpath(repoXpath));
+		if (elements.size() == 0)
+		{
+			getLogger().info("new Content Repository was not found in the Table! " + repositoryName);
+			return false;
 		}
-		getLogger().info("new Content Repository was not found in the Table! " + repositoryName);
-		return false;
+
+		return true;
+	}
+
+	/**
+	 * @param timeout
+	 */
+	@Override
+	public void waituntilPageLoaded(long timeout)
+	{
+		new WebDriverWait(getSession().getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(CONTENT_FRAME_NAME_XPATH)));
+
 	}
 }

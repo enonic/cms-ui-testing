@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
@@ -14,23 +13,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Platform;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
@@ -38,7 +26,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.enonic.autotests.BrowserName;
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.logger.Logger;
@@ -50,7 +38,7 @@ public class TestUtils {
 
 	private static TestUtils instance;
 
-	public static final long TIMEOUT_IMPLICIT = 10;
+	public static final long TIMEOUT_IMPLICIT = 4;
 
 	/**
 	 * @return
@@ -73,8 +61,8 @@ public class TestUtils {
 
 	}
 
-	public void waitUntilVisible(final TestSession testSession, final By by) {
-		new WebDriverWait(testSession.getDriver(), TIMEOUT_IMPLICIT).until(ExpectedConditions.visibilityOfElementLocated(by));
+	public void waitUntilVisible(final TestSession testSession, final By by,long timeout) {
+		new WebDriverWait(testSession.getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(by));
 	}
 
 	public void waitUntilTitleVisible(final TestSession testSession, final String title) {
@@ -84,16 +72,35 @@ public class TestUtils {
 			}
 		});
 	}
-
-	public boolean alertIsPresent(final TestSession testSession) {
-		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), 1);
+	public boolean waitUntilVisibleNoException(final TestSession testSession, By by, long timeout) {
+		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
 		try {
-
-			wait.until(ExpectedConditions.alertIsPresent());
-			System.out.println("alert was present");
+			wait.until(ExpectedConditions.visibilityOfElementLocated(by));			
 			return true;
 		} catch (Exception e) {
-			System.out.println("alert was not present");
+			
+			return false;
+		}
+	}
+	public boolean waitUntilClickableNoException(final TestSession testSession, By by, long timeout) {
+		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
+		try {
+			wait.until(ExpectedConditions.elementToBeClickable(by));			
+			return true;
+		} catch (Exception e) {
+			
+			return false;
+		}
+	}
+	
+
+	public boolean alertIsPresent(final TestSession testSession,long timeout) {
+		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
+		try {
+			wait.until(ExpectedConditions.alertIsPresent());	
+			return true;
+		} catch (Exception e) {
+			
 			return false;
 
 		}
@@ -155,7 +162,7 @@ public class TestUtils {
 	 */
 	public void clickByLocator(final By locator, final WebDriver driver) {
 		final long startTime = System.currentTimeMillis();
-		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(90000, TimeUnit.MILLISECONDS).pollingEvery(5500,
 				TimeUnit.MILLISECONDS);
 		// .ignoring( StaleElementReferenceException.class );
@@ -184,9 +191,23 @@ public class TestUtils {
 	 * @param driver
 	 * @return
 	 */
-	public boolean checkIfDisplayed(final By by, final WebDriver driver) {
+	public boolean waitAndFind(final By by, final WebDriver driver) {
+	
+		driver.manage().timeouts().implicitlyWait(AppConstants.IMPLICITLY_WAIT, TimeUnit.SECONDS);
 		List<WebElement> elements = driver.findElements(by);
 		return ((elements.size() > 0) && (elements.get(0).isDisplayed()));
+	}
+	
+	public boolean waitIsDispalyedElement(WebElement elem,final WebDriver driver)
+	{
+		WebDriverWait wait = new WebDriverWait(driver, 2l, 500);
+		try {
+			wait.until(ExpectedConditions.visibilityOf(elem));			
+			return true;
+		} catch (Exception e) {
+			
+			return false;
+		}
 	}
 	
 	/**
@@ -203,95 +224,16 @@ public class TestUtils {
 		 }
 	}
 
-	/**
-	 * @param browser
-	 * @return
-	 */
-	public void createDriverAndOpenBrowser(final TestSession testSession) throws IOException {
-		WebDriver driver = null;
-
-		String browserName = (String) testSession.get(TestSession.BROWSER_NAME);
-		BrowserName cfgBrowser = BrowserName.findByValue(browserName);
-		Boolean isRemote = (Boolean) testSession.get(TestSession.IS_REMOTE);
-
-		if (isRemote != null && isRemote) {
-			String hubUrl = (String) testSession.get(TestSession.HUB_URL);
-			Capabilities desiredCapabilities = createDesiredCapabilities(testSession);
-			driver = new RemoteWebDriver(new URL(hubUrl), desiredCapabilities);
-			testSession.put(TestSession.WEBDRIVER, driver);
-			return;
-		}
-
-		if (cfgBrowser == null) {
-			throw new RuntimeException("browser was not specified in the suite file!");
-		}
-		if (cfgBrowser.equals(BrowserName.FIREFOX)) {
-			// ProfilesIni allProfiles = new ProfilesIni();
-			FirefoxProfile myProfile = new FirefoxProfile();
-			myProfile.setPreference("capability.policy.default.Window.frameElement.get", "allAccess");
-			driver = new FirefoxDriver(myProfile);
-			driver.manage().window().maximize();
-		} else if (cfgBrowser.equals(BrowserName.CHROME)) {
-			ChromeOptions options = new ChromeOptions();
-			options.addExtensions(new File("c:/path/to/extension.crx"));
-			driver = new ChromeDriver(options);
-			
-		} else if (cfgBrowser.equals(BrowserName.IE)) {
-			driver = new InternetExplorerDriver();
-		} else if (cfgBrowser.equals(BrowserName.HTMLUNIT)) {
-			driver = new HtmlUnitDriver();
-		} else {
-			throw new RuntimeException("Driver not supported:" + cfgBrowser.getName());
-		}
-
-		testSession.put(TestSession.WEBDRIVER, driver);
-
-	}
-
-	private static Capabilities createDesiredCapabilities(final TestSession testSession) {
-		String browserName = (String) testSession.get(TestSession.BROWSER_NAME);
-
-		String browserVersion = (String) testSession.get(TestSession.BROWSER_VERSION);
-		String platform = (String) testSession.get(TestSession.PLATFORM);
-
-		BrowserName cfgBrowser = BrowserName.findByValue(browserName);
-		DesiredCapabilities capability = null;
-
-		if (cfgBrowser.equals(BrowserName.FIREFOX)) {
-			capability = DesiredCapabilities.firefox();
-			capability.setPlatform(getPLatform(platform));
-			capability.setVersion(browserVersion);
-			FirefoxBinary firefoxBinary = new FirefoxBinary();
-			// capability.setCapability(FirefoxDriver.BINARY, firefoxBinary);
-
-		} else if (cfgBrowser.equals(BrowserName.CHROME)) {
-			capability = DesiredCapabilities.chrome();
-			capability.setPlatform(getPLatform(platform));
-			capability.setVersion(browserVersion);
-		} else if (cfgBrowser.equals(BrowserName.IE)) {
-			capability = DesiredCapabilities.internetExplorer();
-			capability.setPlatform(Platform.WINDOWS);
-			capability.setVersion(browserVersion);
-		} else {
-			throw new TestFrameworkException("support of browser " + cfgBrowser.getName() + " not implemented yet");
-		}
-		logger.info("DesiredCapabilities for RemoteWebDriver uses:  platform:"+platform+" browser:"+browserName+ "version:"+browserVersion+" created");
-		return capability;
-	}
-
-	private static Platform getPLatform(String platform) {
-		if (platform.equalsIgnoreCase("windows")) {
-			return Platform.WINDOWS;
-		} else if (platform.equalsIgnoreCase("linux")) {
-			return Platform.LINUX;
-		} else if (platform.equalsIgnoreCase("mac")) {
-			return Platform.MAC;
-		} else
-			return Platform.ANY;
-	}
+	
+	
 
 	public void selectByText(TestSession session, By by, String text) {
-		Select select = new Select(session.getDriver().findElement(by));
+		 List<WebElement> elems = session.getDriver().findElements(by);//session.getDriver().findElements(By.name("//input[@name='name']"))
+		 if(elems.size() == 0)
+		 {
+			 throw new TestFrameworkException("wrong xpath for select: "+ text);
+		 }
+		Select select = new Select(elems.get(0));
 		select.selectByVisibleText(text);
 	}
 	

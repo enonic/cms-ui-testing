@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.pages.Page;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
@@ -14,7 +15,7 @@ import com.enonic.autotests.utils.TestUtils;
  *
  */
 public class HomePage extends Page {
-	public static String TITLE = "Enonic CMS - Boot Page";
+	public static String TITLE = "Enonic CMS - Login";
 
 	@FindBy(xpath = "//span[text()='Admin Console']")
 	private WebElement admConsoleLink;
@@ -30,15 +31,11 @@ public class HomePage extends Page {
 	public void open() {
 		// open page via the driver.get(BASE_URL)
 		getSession().getDriver().get(getSession().getBaseUrl());
-		TestUtils.getInstance().waitUntilTitleVisible(getSession(), getTitle().trim());
+		TestUtils.getInstance().waitUntilTitleVisible(getSession(), TITLE);
 
 	}
 
-	@Override
-	public String getTitle() {
 
-		return TITLE;
-	}
 
 	/**
 	 * @param username
@@ -46,7 +43,7 @@ public class HomePage extends Page {
 	 * @return
 	 */
 	public void openAdminConsole(String username, String password) {
-		admConsoleLink.click();
+		//admConsoleLink.click();
 		if (!getSession().isLoggedIn()) {
 			getLogger().info("try to login with userName:" + username + " password: " + password);
 			long start = System.currentTimeMillis();
@@ -56,8 +53,8 @@ public class HomePage extends Page {
 			getLogger().perfomance("user logged in " + username + "  password:" + password, start);
 			getSession().setLoggedIn(true);
 		}
-		TestUtils.getInstance().waitUntilVisible(getSession(), By.className(AbstractAdminConsolePage.LEFT_FRAME_CLASSNAME));
-		TestUtils.getInstance().waitUntilVisible(getSession(), By.name(AbstractAdminConsolePage.MAIN_FRAME_NAME));
+		TestUtils.getInstance().waitUntilVisible(getSession(), By.className(AbstractAdminConsolePage.LEFT_FRAME_CLASSNAME),AppConstants.PAGELOAD_TIMEOUT);
+		TestUtils.getInstance().waitUntilVisible(getSession(), By.name(AbstractAdminConsolePage.MAIN_FRAME_NAME), AppConstants.PAGELOAD_TIMEOUT);
 		TestUtils.getInstance().saveScreenshot(getSession());
 	}
 

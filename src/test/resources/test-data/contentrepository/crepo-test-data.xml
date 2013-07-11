@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<contentRepositoryTestData>
+	<contentRepositories>
+	<!-- *********************************ALL-INPUTS************************************** -->
+	<!--  	<contentRepository>
+			<name>c-repository1</name>
+			<caseInfo>create new Content Repository with content type =all-inputs and Files</caseInfo>
+			<defaultLanguage>English</defaultLanguage>
+			<topCategory>
+				<name></name>
+				<description>description for Top Category</description>
+				<contentType>
+					<name>cty-all-inputs</name>
+					<contentHandler>Custom content</contentHandler>
+				</contentType>
+			</topCategory>
+			<allowedContentTypes>cty-all-inputs</allowedContentTypes>
+		</contentRepository>
+		-->
+		<!-- ******************************Files HANDLER************************************************ -->
+		<contentRepository>
+			<name>repo-files</name>
+			<caseInfo>create new Content Repository  with Top Category, content handler = Files</caseInfo>
+			<defaultLanguage>English</defaultLanguage>
+			<categories>
+                <category>
+                    <contentTypeName>File</contentTypeName>
+                    <name>cat1</name>
+                    <parentName>parent</parentName>
+                </category>
+            </categories>
+			<topCategory>
+				<name></name>
+				<description>description for Top Category</description>
+				<contentType>
+					<name>File</name>
+					<contentHandler>Files</contentHandler>
+				</contentType>
+			</topCategory>
+			<!-- <allowedContentTypes>files-ctype</allowedContentTypes> -->
+		</contentRepository>
+		<!-- *****************************IMAGES HANDLER************************************************* -->
+		<contentRepository>
+			<name>repo-images</name>
+			<caseInfo>create new Content Repository with Top Category, content handler =Images</caseInfo>
+			<defaultLanguage>English</defaultLanguage>
+			<categories>
+                <category>
+                    <contentTypeName>Image</contentTypeName>
+                    <name>cat1</name>
+                    <parentName>parent</parentName>
+                </category>
+            </categories>
+			<topCategory>
+				<name></name>
+				<description>description for Top Category</description>
+				<contentType>
+					<name>Image</name>
+					<contentHandler>Images</contentHandler>
+				</contentType>
+			</topCategory>
+			<!-- <allowedContentTypes>images-ctype</allowedContentTypes>  -->
+		</contentRepository>
+		<!-- ******************************************************************************* -->
+		<contentRepository>
+			<name>nocategory</name>
+			<caseInfo>create new Content Repository without Top Category</caseInfo>
+			<defaultLanguage>English</defaultLanguage>
+			<categories>
+                <category>
+                    <contentTypeName>ctypename</contentTypeName>
+                    <name>cat1</name>
+                    <parentName>parent</parentName>
+                </category>
+            </categories>
+			
+			<!-- <allowedContentTypes>images-ctype</allowedContentTypes>  -->
+		</contentRepository>
+	</contentRepositories>
+</contentRepositoryTestData>

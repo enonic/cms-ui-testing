@@ -2,12 +2,14 @@ package com.enonic.autotests.model;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Locale.Category;
 
 /**
  * 
  * 02.04.2013
  */
-public class ContentRepository {
+public class ContentRepository
+{
 
 	private String name;
 
@@ -18,51 +20,84 @@ public class ContentRepository {
 	private TopCategory topCategory;
 
 	private Map<String, Object> properties;
-	
-	private List<BaseAbstractContent> content;
+	private List<ContentCategory> categories;
+
+	// private List<Content<T>> content;
 
 	// TODO add permissions:
 	// private principals
 
-	
+	public List<ContentCategory> getCategories()
+	{
+		return categories;
+	}
 
-	public String getName() {
+	public void setCategories(List<ContentCategory> categories)
+	{
+		this.categories = categories;
+	}
+
+	public void setContentTypeName(String contentTypeName)
+	{
+		if (getTopCategory() != null)
+		{
+			getTopCategory().getContentType().setName(contentTypeName);
+		}
+
+	}
+
+	public String getContentTypeName()
+	{
+		return getTopCategory().getContentType().getName();
+	}
+
+	public String getName()
+	{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setName(String name)
+	{
 		this.name = name;
 	}
 
-	public List<String> getSelectedTypes() {
+	public List<String> getSelectedTypes()
+	{
 		return selectedTypes;
 	}
 
-	public void setSelectedTypes(List<String> alowedTypes) {
+	public void setSelectedTypes(List<String> alowedTypes)
+	{
 		this.selectedTypes = alowedTypes;
 	}
 
-	public TopCategory getTopCategory() {
+	public TopCategory getTopCategory()
+	{
 		return topCategory;
 	}
 
-	public void setTopCategory(TopCategory topCategory) {
+	public void setTopCategory(TopCategory topCategory)
+	{
 		this.topCategory = topCategory;
 	}
 
-	public Map<String, Object> getProperties() {
+	public Map<String, Object> getProperties()
+	{
 		return properties;
 	}
 
-	public void setProperties(Map<String, Object> properties) {
+	public void setProperties(Map<String, Object> properties)
+	{
 		this.properties = properties;
 	}
 
-	public String getDefaultLanguage() {
+	public String getDefaultLanguage()
+	{
 		return defaultLanguage;
 	}
 
-	public void setDefaultLanguage(String defaultLanguage) {
+	public void setDefaultLanguage(String defaultLanguage)
+	{
 		this.defaultLanguage = defaultLanguage;
 	}
 
@@ -70,40 +105,50 @@ public class ContentRepository {
 	 * 
 	 *
 	 */
-	public static class TopCategory {
+	public static class TopCategory
+	{
 		private String name;
 		private ContentType contentType;
-		private String description;
 
-		public String getName() {
-			return name;
-		}
+		// private String contentTypeName;
 
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public ContentType getContentType() {
+		public ContentType getContentType()
+		{
 			return contentType;
 		}
 
-		public void setContentType(ContentType type) {
-			this.contentType = type;
+		public void setContentType(ContentType contentType)
+		{
+			this.contentType = contentType;
 		}
 
-		public String getDescription() {
+		private String description;
+
+		public String getName()
+		{
+			return name;
+		}
+
+		public void setName(String name)
+		{
+			this.name = name;
+		}
+
+		public String getDescription()
+		{
 			return description;
 		}
 
-		public void setDescription(String description) {
+		public void setDescription(String description)
+		{
 			this.description = description;
 		}
 	}
-	public List<BaseAbstractContent> getContent() {
-		return content;
-	}
-
-	public void setContent(List<BaseAbstractContent> content) {
-		this.content = content;
-	}
+	// public List<Content<T>> getContent() {
+	// return content;
+	// }
+	//
+	// public void setContent(List<Content<T>> content) {
+	// this.content = content;
+	// }
 }

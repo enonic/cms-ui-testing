@@ -1,10 +1,9 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
-import com.enonic.autotests.model.BaseAbstractContent;
+import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentRepository;
 
-public interface IAddContentToRepository {
+public interface IAddContentToRepository<T> {
 
-	 <T extends BaseAbstractContent> void typeDataAndSave(T content);
-	  //void typeDataAndSave(ContentRepository content);
+	 void typeDataAndSave(Content<T> content);
 }

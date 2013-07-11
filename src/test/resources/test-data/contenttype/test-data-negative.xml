@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<contentTypeTestData>
+    <contentTypes>
+         <contentType>
+            <caseInfo>creation of Content Type with name, which contains white spaces</caseInfo>
+            <name>white space ctype</name>
+            <contentHandler>Images</contentHandler>
+            <description>creation of Content Type with name, which contains white spaces</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+        </contentType>
+
+      
+        <contentType>
+            <caseInfo>Creation of Content Type with invalid XML, missing display name in input</caseInfo>
+            <name>validname</name>
+            <contentHandler>Custom content</contentHandler>
+            <description>Creation of Content Type with invalid XML, missing display name in input</description>
+            <pathToCSS></pathToCSS>
+            <configdata>
+          <![CDATA[	
+			<contenttype>
+  				<config name="Absence" version="1.0">
+    			<form>
+      				<title name="resource" />
+      				<block name="Fraværsmelding">
+        				<input name="resource" required="true" type="text">
+          					<xpath>contentdata/resource</xpath>
+        				</input>
+      				</block>
+    			</form>
+ 				 </config>
+			</contenttype>
+         ]]>         
+            </configdata>
+            <cfgFile></cfgFile>
+        </contentType>
+
+        <contentType>
+            <caseInfo>Creation of Content Type with invalid XML, missing xpath name in input</caseInfo>
+            <name>validname</name>
+            <contentHandler>Custom content</contentHandler>
+            <description>Creation of Content Type with invalid XML, missing xpath name in input</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+            <configdata>
+             <![CDATA[	
+					<contenttype>
+  						<config name="Absence" version="1.0">
+    						<form>
+      							<title name="resource" />
+      							<block name="Fraværsmelding">
+        							<input name="resource" required="true" type="text">
+          								<display>Initialer</display>
+        							</input>
+      							</block>
+    						</form>
+  						</config>
+					</contenttype>
+               ]]>
+            </configdata>
+        </contentType>
+
+        <contentType>
+            <caseInfo>Creation of Content Type with invalid XML, missing title element</caseInfo>
+            <name>validname</name>
+            <contentHandler>Custom content</contentHandler>
+            <description>Creation of Content Type with invalid XML, missing title element</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+            <configdata>
+            
+           
+
+           <![CDATA[	
+				<contenttype>
+  					<config name="Absence" version="1.0">
+    					<form>
+      						<block name="Fraværsmelding">
+        					<input name="resource" required="true" type="text">
+          						<display>Initialer</display>
+          						<xpath>contentdata/resource</xpath>
+       						 </input>
+      						</block>
+    					</form>
+  					</config>
+				</contenttype>
+           ]]>
+          </configdata>
+        </contentType>
+
+        <contentType>
+            <caseInfo>Creation of Content Type with invalid XML, missing name attribute of input element</caseInfo>
+            <name>validname</name>
+            <contentHandler>Custom content</contentHandler>
+            <description>Creation of Content Type with invalid XML, missing name attribute of input element</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+             <configdata>
+           		<![CDATA[	
+					<contenttype>
+  						<config name="Absence" version="1.0">
+    						<form>
+     							<title name="resource" />
+      							<block name="Fraværsmelding">
+        							<input required="true" type="text">
+          								<display>Initialer</display>
+          								<xpath>contentdata/resource</xpath>
+        							</input>
+      							</block>
+    						</form>
+  						</config>
+					</contenttype>
+           		]]>
+             </configdata>
+        </contentType>
+
+        <contentType>
+            <caseInfo>Creation of Content Type with invalid XML, missing type attribute of input element</caseInfo>
+            <name>ValidContentTypeName</name>
+            <contentHandler>Custom content</contentHandler>
+            <description>Creation of Content Type with invalid XML, missing type attribute of input element</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+            <configdata>
+          		<![CDATA[	
+					<contenttype>
+  						<config name="Absence" version="1.0">
+    						<form>
+      							<title name="resource" />
+      							<block name="Fraværsmelding">
+        							<input name="resource" required="true">
+          								<display>Initialer</display>
+          								<xpath>contentdata/resource</xpath>
+        							</input>
+      							</block>
+    						</form>
+  						</config>
+					</contenttype>
+           ]]>
+           </configdata>
+        </contentType>
+
+        <contentType>
+            <caseInfo>Creation of Content Type with invalid XML, missing required attribute of title input element</caseInfo>
+            <name>ValidContentTypeName</name>
+            <contentHandler>Custom content</contentHandler>
+            <description>Creation of Content Type with invalid XML, missing required attribute of title input element</description>
+            <pathToCSS></pathToCSS>
+            <cfgFile></cfgFile>
+            <configdata>
+           <![CDATA[	
+				<contenttype>
+  					<config name="Absence" version="1.0">
+    				<form>
+      					<title name="resource" />
+      					<block name="Fraværsmelding">
+        					<input name="resource" type="text">
+          						<display>Initialer</display>
+          						<xpath>contentdata/resource</xpath>
+        					</input>
+      					</block>
+   					</form>
+  				</config>
+			</contenttype>
+           ]]>
+            </configdata>
+        </contentType>     
+     
+    </contentTypes>
+</contentTypeTestData>

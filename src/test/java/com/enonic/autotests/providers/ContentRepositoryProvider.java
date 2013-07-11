@@ -1,6 +1,7 @@
 package com.enonic.autotests.providers;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -16,9 +17,11 @@ import org.testng.annotations.DataProvider;
 
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.CustomContent.InputModel;
+import com.enonic.autotests.testdata.content.AbstractContentXml;
+import com.enonic.autotests.testdata.content.ContentRepositoryTestData;
+import com.enonic.autotests.testdata.content.ContentRepositoryXml;
+import com.enonic.autotests.testdata.content.ContentTestData;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
-import com.enonic.autotests.testdata.contenttype.ContentRepositoryTestData;
-import com.enonic.autotests.testdata.contenttype.ContentRepositoryXml;
 
 /**
  * Provider for creating 
@@ -31,6 +34,7 @@ public class ContentRepositoryProvider {
 	private static final String CONTENT_REPO_DELETE_TEST_DATA = "crepo-delete.xml";
 	private static final String CONTENT_REPO_TEST_DATA_NEG = "crepo-test-data-negative.xml";
 	private static final String CONTENT_REPO_TEST_DATA_ALL_INPUTS = "cty-all-inputs-4-5-6.xml";
+	private static final String ADD_CONTENT = "file-image-contents.xml";
 
 	@DataProvider(name = "createContentRepositoryPositive")
 	public static Object[][] createContentRepository() throws JAXBException {
@@ -39,7 +43,7 @@ public class ContentRepositoryProvider {
 		JAXBContext context = JAXBContext.newInstance(ContentRepositoryTestData.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		// logger.info(message)
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contentrepository/" + CONTENT_REPO_TEST_DATA);
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("test-data/contentrepository/" + CONTENT_REPO_TEST_DATA);
 		if (in == null) {
 			throw new TestFrameworkException("test data was not found!");
 		}
@@ -57,7 +61,7 @@ public class ContentRepositoryProvider {
 		JAXBContext context = JAXBContext.newInstance(ContentRepositoryTestData.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		// logger.info(message)
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contentrepository/" + CONTENT_REPO_DELETE_TEST_DATA);
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("test-data/contentrepository/" + CONTENT_REPO_DELETE_TEST_DATA);
 		if (in == null) {
 			throw new TestFrameworkException("test data was not found!");
 		}
@@ -75,7 +79,7 @@ public class ContentRepositoryProvider {
 		JAXBContext context = JAXBContext.newInstance(ContentRepositoryTestData.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("contentrepository/" + CONTENT_REPO_TEST_DATA_NEG);
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("test-data/contentrepository/" + CONTENT_REPO_TEST_DATA_NEG);
 		if (in == null) {
 			throw new TestFrameworkException("test data was not found!");
 		}
@@ -93,40 +97,45 @@ public class ContentRepositoryProvider {
 	}
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////
-	@DataProvider(name = "addContentToRepository")
+	@DataProvider(name = "addContent")
 	public static Object[][] addContentToRepository() throws JAXBException {
+		
+		
 		List<Object[]> casesParameters = new ArrayList<Object[]>();
 		
-
-		InputStream in1 = ContentConvertor.class.getClassLoader().getResourceAsStream("contenttype/" + CONTENT_REPO_TEST_DATA_ALL_INPUTS);
-		if (in1 == null) {
-			throw new TestFrameworkException("test data was not found!");
-		}
-		InputHandler handler = null;
-		SAXParserFactory factory = SAXParserFactory.newInstance();
-		try {
-			SAXParser saxParser = factory.newSAXParser();
-			handler = new InputHandler();
-			saxParser.parse(in1, handler);
-			
-		} catch (Throwable t) {
-			throw new TestFrameworkException("Error during parsing test-dtata!");
-		}
-		
-		JAXBContext context = JAXBContext.newInstance(ContentRepositoryTestData.class);
+		JAXBContext context = JAXBContext.newInstance(ContentTestData.class);
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		// logger.info(message)
-		InputStream in2 = ContentConvertor.class.getClassLoader().getResourceAsStream("contentrepository/" + CONTENT_REPO_TEST_DATA);
-		if (in2 == null) {
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("test-data/contentrepository/" + ADD_CONTENT);
+		if (in == null) {
 			throw new TestFrameworkException("test data was not found!");
 		}
-		ContentRepositoryTestData testdata = (ContentRepositoryTestData) unmarshaller.unmarshal(in2);
-		List<ContentRepositoryXml> repositories = testdata.getContentRepositories();
-		
-			//casesParameters.add(new Object[] { handler.getInputs(),repositories });
-			casesParameters.add(new Object[] { repositories });
-		
+		ContentTestData testdata = (ContentTestData) unmarshaller.unmarshal(in);
+		List<AbstractContentXml> cases = testdata.getContentList();
+		for (AbstractContentXml ctype : cases) {
+			casesParameters.add(new Object[] { ctype });
+		}
 		return casesParameters.toArray(new Object[casesParameters.size()][]);
+
+//		ContentTestData testdata = (ContentTestData) unmarshaller.unmarshal(in);
+//		List<AbstractContentXml> list = testdata.getContentList();
+//        casesParameters.add(new Object[] { list });
+//		
+//		return casesParameters.toArray(new Object[casesParameters.size()][]);
+	}
+	
+	public static void main(String[] args) throws JAXBException
+	{
+		JAXBContext context = JAXBContext.newInstance(ContentTestData.class);
+		Unmarshaller unmarshaller = context.createUnmarshaller();
+		//File data = new File("d:\\qqq.xml");
+		//InputStream in = new FileInputStream(data);
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("test-data/contentrepository/" + ADD_CONTENT);
+		if (in == null) {
+			throw new TestFrameworkException("test data was not found!");
+		}
+
+		ContentTestData testdata = (ContentTestData) unmarshaller.unmarshal(in);
+		List<AbstractContentXml> list = testdata.getContentList();
 	}
 	
 }

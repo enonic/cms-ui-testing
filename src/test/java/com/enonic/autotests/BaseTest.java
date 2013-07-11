@@ -4,76 +4,110 @@ import java.io.IOException;
 
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 import com.enonic.autotests.logger.Logger;
-import com.enonic.autotests.services.IAdminConsoleService;
-import com.enonic.autotests.services.v4.AdminConsoleServiceImplV4;
-import com.enonic.autotests.utils.TestUtils;
+import com.enonic.autotests.utils.BrowserUtils;
 
-public class BaseTest {
+public class BaseTest
+{
+	protected Logger logger = Logger.getLogger();
 
-	protected  Logger logger = Logger.getLogger();
-	protected IAdminConsoleService adminConsoleServiceV4 = new AdminConsoleServiceImplV4();
-	private TestSession testSession;
+	private ThreadLocal<TestSession> sessionRef = new ThreadLocal<TestSession>();
 
-	@BeforeClass
-	public void readDesiredCapabilities(ITestContext context) {
-		testSession = new TestSession();
+	@BeforeClass(alwaysRun = true)
+	public void readDesiredCapabilities(ITestContext context)
+	{
+		logger.info("############### method readDesiredCapabilities started    ###################");
+		TestSession testSession = new TestSession();
+
 		String browser = (String) context.getCurrentXmlTest().getParameter("browser");
-		if (browser == null) {
+		if (browser == null)
+		{
 			throw new IllegalArgumentException("parameter browser was not specified! ");
 		}
+		logger.info("browser is  "+ browser );
 		String browserVersion = (String) context.getCurrentXmlTest().getParameter("browserVersion");
-		if(browserVersion == null){
-			throw new IllegalArgumentException("parameter browserVersion was not specified! ");
+		if (browserVersion == null)
+		{
+			logger.info("browserVersion was not specified! ");
+		}else
+		{
+			logger.info("browser version  is:  "+ browserVersion );
 		}
 		String platform = (String) context.getCurrentXmlTest().getParameter("platform");
-		if(platform == null){
+		if (platform == null)
+		{
 			throw new IllegalArgumentException("parameter platform was not specified! ");
 		}
+		logger.info("platform   is:  "+ platform );
 		testSession.put(TestSession.BROWSER_NAME, browser);
 		testSession.put(TestSession.BROWSER_VERSION, browserVersion);
 		testSession.put(TestSession.PLATFORM, platform);
 		String url = (String) context.getCurrentXmlTest().getParameter("base.url");
-		if(url == null){
+		if (url == null)
+		{
 			throw new IllegalArgumentException("parameter base url was not specified! ");
 		}
+		logger.info("base.url   is:  "+ url );
 		testSession.put(TestSession.START_URL, url);
 		String remoteParam = context.getCurrentXmlTest().getParameter("isRemote");
-		if(remoteParam == null){
+		if (remoteParam == null)
+		{
 			throw new IllegalArgumentException("parameter isRemote was not specified! ");
 		}
+		logger.info("isRemote   is:  "+ remoteParam );
 		Boolean isRemote = Boolean.valueOf(remoteParam);
-		if (isRemote != null) {
+		if (isRemote != null)
+		{
 			testSession.put(TestSession.IS_REMOTE, isRemote);
-			if (isRemote) {
+			if (isRemote)
+			{
 				String hubUrl = (String) context.getCurrentXmlTest().getParameter("hub.url");
-				if(hubUrl == null){
+				if (hubUrl == null)
+				{
 					throw new IllegalArgumentException("parameter hubUrl was not specified! ");
 				}
+				logger.info("hubUrl   is:  "+ hubUrl );
 				testSession.put(TestSession.HUB_URL, hubUrl);
 			}
 		}
+		sessionRef.set(testSession);
+		logger.info("############### method readDesiredCapabilities finished    ###################");
+	}
+
+	@BeforeMethod
+	public void openBrowser() throws IOException
+	{
+		BrowserUtils.createDriverAndOpenBrowser(getTestSession());
 
 	}
-	@BeforeMethod
-	public void openBrowser() throws IOException {
-		TestUtils.getInstance().createDriverAndOpenBrowser(getTestSession());
-		
-		
 
+	@AfterTest
+	public  void clearSession()
+	{
+		logger.info("end of test:"+ this.getClass().getName()+ "try to clear session "+sessionRef.get().getBrowserName());
+		System.out.println("end of test:"+ this.getClass().getName()+ "try to clear session "+sessionRef.get().getBrowserName());
+		sessionRef.set(null);
 	}
 
 	@AfterMethod
-	public void closeBrowser() {
+	public void closeBrowser()
+	{
 		getTestSession().closeBrowser();
-	
+
 	}
 
-	public TestSession getTestSession() {
-		return testSession;
+	public TestSession getTestSession()
+	{
+		TestSession sess = sessionRef.get();
+		if(sess == null)
+		{
+			logger.info("BaseTest: testsession is null!" );
+		}
+		return sess;
 	}
 
 }

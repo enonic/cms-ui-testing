@@ -1,7 +1,11 @@
 package com.enonic.autotests.pages.v4.adminconsole;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.logger.Logger;
@@ -22,27 +26,26 @@ public abstract class AbstractAdminConsolePage extends Page {
 		super(session);
 	}
 
-	@Override
-	public String getTitle() {
-		return TITLE;
-	}
+	
 	/**
 	 * Selects desirable link from left frame-menu and opens the required page in
 	 * the right frame. 
 	 * 
 	 */
-	public void open(String itemXpath) {
-		String whandle = getSession().getDriver().getWindowHandle();
-		getSession().getDriver().switchTo().window(whandle);
-		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
-
-		TestUtils.getInstance().clickByLocator(By.xpath(itemXpath), getSession().getDriver());
-
-		getSession().getDriver().switchTo().window(whandle);
-		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
-
-	}
+//	public void open(String itemXpath) {
+//		String whandle = getSession().getDriver().getWindowHandle();
+//		getSession().getDriver().switchTo().window(whandle);
+//		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
+//
+//		TestUtils.getInstance().clickByLocator(By.xpath(itemXpath), getSession().getDriver());
+//
+//		getSession().getDriver().switchTo().window(whandle);
+//		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
+//
+//	}
 	
+
+	abstract public void waituntilPageLoaded(long timeout);
 
 	/**
 	 * Waits until expected Title visible,
@@ -53,10 +56,10 @@ public abstract class AbstractAdminConsolePage extends Page {
 	public  static boolean verify(TestSession session) {
 		boolean result = true;
 		result &= session.getDriver().getTitle().contains(TITLE);
-		logger.debug("");
+		
 		// 1 verify all WebElements in the  dashboard
 		// 2 verify all links in the LeftFrame Menu.
-		return true;
+		return result;
 	}
 
 }
