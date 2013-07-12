@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
@@ -59,6 +60,13 @@ public class TestUtils {
 	 */
 	private TestUtils() {
 
+	}
+	public  void clearAndType(TestSession session,WebElement input,String text){
+		String os = System.getProperty("os.name").toLowerCase();
+		logger.info("clearAndType: OS System is " + os);
+		logger.info("Windows or linux. type Text:: " + text);
+		input.sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
+		
 	}
 
 	public void waitUntilVisible(final TestSession testSession, final By by,long timeout) {

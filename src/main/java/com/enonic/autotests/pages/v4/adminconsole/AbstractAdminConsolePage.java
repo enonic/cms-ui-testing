@@ -47,19 +47,5 @@ public abstract class AbstractAdminConsolePage extends Page {
 
 	abstract public void waituntilPageLoaded(long timeout);
 
-	/**
-	 * Waits until expected Title visible,
-	 * @param session{@link TestSession}instance.
-	 * @return true if all {@link WebElement} instances are present, otherwise return false,
-	 * 
-	 */
-	public  static boolean verify(TestSession session) {
-		boolean result = true;
-		result &= session.getDriver().getTitle().contains(TITLE);
-		
-		// 1 verify all WebElements in the  dashboard
-		// 2 verify all links in the LeftFrame Menu.
-		return result;
-	}
-
+	
 }

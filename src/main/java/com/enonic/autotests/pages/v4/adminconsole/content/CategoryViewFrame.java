@@ -14,6 +14,8 @@ import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
+ * Page Object for 'Category View'
+ * 
  * When category selected from the left menu, this Frame will appears.
  *
  */

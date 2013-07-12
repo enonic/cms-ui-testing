@@ -106,13 +106,15 @@ public class LeftMenuFrame extends Page
 	 */
 	public CategoryViewFrame openCategoryViewFrame(String... names)
 	{
-		String whandle = getSession().getDriver().getWindowHandle();
-		getSession().getDriver().switchTo().window(whandle);
-		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		if(names.length == 0)
+		{
+			throw new TestFrameworkException("repository name or category name shhould be specified! ");
+		}
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
 		// 1. check out if Expanded or Rolled up the 'Content' folder: try to  find '+' icon near the 'Content' link in the left-menu:
 		expandContentFolder();
 
-		// 2. find required category for add content: find Repository and expand it.
+		// 2. find required category(repository) for add content: find Repository and expand it.
 		for (int i = 0; i < names.length - 1; i++)
 		{
 			expandCategory(names[i]);
@@ -127,13 +129,43 @@ public class LeftMenuFrame extends Page
 			throw new TestFrameworkException("category with name" + categoryName);
 		}
 
+		//4.click by categoryName:
 		getSession().getDriver().findElement(By.xpath(categoryXpath)).click();
-		getSession().getDriver().switchTo().window(whandle);
-		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
-
+	
+		//5. switch to the main frame
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
 		CategoryViewFrame view = new CategoryViewFrame(getSession());
 		view.waituntilPageLoaded(2L);
 		return view;
+	}
+
+	public WebElement findCategoryInContentFolder(String categoryToSearch, String... parentNames)
+	{
+		if(parentNames.length == 0)
+		{
+			throw new TestFrameworkException("repository name or category name shhould be specified! ");
+		}
+		// 1. check out if Expanded or Rolled up the 'Content' folder: try to  find '+' icon near the 'Content' link in the left-menu:
+		expandContentFolder();
+
+		// 2. find required category(repository) for add content: find Repository and expand it.
+		for (int i = 0; i < parentNames.length; i++)
+		{
+			//expand repository and all categories
+			expandCategory(parentNames[i]);
+		}
+
+		// 3. click by category and open category-view, where 'New/add' button should present.		
+		String categoryXpath = String.format(CATEGORY_XPATH, categoryToSearch);
+		boolean isCategoryPresent = TestUtils.getInstance().waitAndFind(By.xpath(categoryXpath), getSession().getDriver());
+		if (!isCategoryPresent)
+		{
+			return null;
+		}else{
+			return getSession().getDriver().findElement(By.xpath(categoryXpath));
+		}
+		
+
 	}
 
 	/**

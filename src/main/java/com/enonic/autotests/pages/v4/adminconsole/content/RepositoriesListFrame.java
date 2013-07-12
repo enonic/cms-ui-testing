@@ -1,5 +1,6 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -41,6 +42,9 @@ public class RepositoriesListFrame extends AbstractAdminConsolePage
 	@FindBy(xpath = "//button[text()='New']")
 	private WebElement buttonNew;
 
+	private String SPAN_CONTENT_FULL_NAME_XPATH ="//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//span[contains(@style,'color: gray')]";
+	
+
 	/**
 	 * The Constructor.
 	 * 
@@ -57,10 +61,18 @@ public class RepositoriesListFrame extends AbstractAdminConsolePage
 	 * @param contentName
 	 * @param repositoryName
 	 */
-	public void doSearchContent(String contentName, String repositoryName)
+	public List<String> doSearchContent(String contentName)
 	{
 		searchtext.sendKeys(contentName);
 		searchButton.click();
+		List<String> contentNames = new ArrayList<>();
+		List<WebElement> names = getSession().getDriver().findElements(By.xpath(SPAN_CONTENT_FULL_NAME_XPATH));
+		for(WebElement name:names)
+		{
+			contentNames.add(name.getText());
+		}
+		
+		return contentNames;
 
 	}
 

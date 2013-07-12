@@ -20,7 +20,7 @@ public class AbstractAddContentWizard extends AbstractAdminConsolePage
 	protected WebElement commentInput;
 
 	// 2. description text area
-	@FindBy(how = How.ID, using = "description")
+	@FindBy(how = How.NAME, using = "description")
 	protected WebElement descriptionTextarea;
 
 	// 3. key words input text
@@ -32,6 +32,9 @@ public class AbstractAddContentWizard extends AbstractAdminConsolePage
 	//5. close wizard button
 	@FindBy(how = How.ID, using = "closebtn")
 	protected WebElement closeButton;
+
+	@FindBy(how = How.ID, using = "name")
+	protected WebElement nameInput;
 
 	/**
 	 * Constructor

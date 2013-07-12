@@ -10,8 +10,8 @@ import com.enonic.autotests.model.ContentInfo;
 import com.enonic.autotests.model.FileContentInfo;
 
 /**
+ * Page Object for 'Add File-content Wizard'
  * 
- * Add File-content Wizard.
  */
 public class AddFileContentWizard extends AbstractAddContentWizard implements IAddContentToRepository<FileContentInfo>
 {

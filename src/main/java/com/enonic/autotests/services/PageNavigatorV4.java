@@ -57,8 +57,7 @@ public class PageNavigatorV4
 	{
 		PageNavigatorV4.navgateToAdminConsole(session);
 		LeftMenuFrame leftMenu = new LeftMenuFrame(session);
-		// expand the "Content" folder, click by RepositoryName, open repository
-		// view and click by 'New-Category' button
+		// expand the "Content" folder, click by RepositoryName, open repositoryview and click by 'New-Category' button
 		if (names.length == 1)
 		{
 			String repositoryName = names[0];
@@ -84,6 +83,7 @@ public class PageNavigatorV4
 		} else
 		{
 			openAdminConsole(testSession, "admin", "password");
+			testSession.setWindowHandle(testSession.getDriver().getWindowHandle());
 		}
 	}
 
@@ -104,6 +104,14 @@ public class PageNavigatorV4
 
 		session.getDriver().switchTo().window(whandle);
 		session.getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
+
+	}
+
+	public static void switchToFrame(TestSession session, String frameName)
+	{
+		String whandle = session.getDriver().getWindowHandle();
+		session.getDriver().switchTo().window(whandle);
+		session.getDriver().switchTo().frame(frameName);
 
 	}
 

@@ -1,5 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="test suite" verbose="1" parallel="tests" thread-count="2">
+<suite name="test suite" verbose="1" parallel="tests"
+	thread-count="2">
 
 	<listeners>
 		<listener class-name="com.enonic.autotests.TestListener"></listener>
@@ -7,25 +8,27 @@
 
 	<parameter name="isRemote" value="true" />
 	<parameter name="hub.url" value="http://10.0.6.77:4444/wd/hub" />
-<!--	<parameter name="base.url" value="http://10.10.9.152:8080/cms-webapp-4.7.2-SNAPSHOT/" /> -->
-<parameter name="base.url" value="http://10.0.6.43:8080/cms-46ce-unstable-enonic/admin/" />
+
 	<test verbose="2" name="FirefoxTests-grid1">
+		<parameter name="base.url" value="http://10.0.6.79:8080/admin/" />
 		<parameter name="platform" value="windows" />
 		<parameter name="browser" value="firefox" />
-		<parameter name="browserVersion" value="21.0" />
+		<parameter name="browserVersion" value="22.0" />
 		<classes>	
-		 		<class name="com.enonic.autotests.SpaceAdminTest" /> 
+			<class name="com.enonic.autotests.ContentTypeTests" />
+			<class name="com.enonic.autotests.ContentRepositoryTests" />
 		</classes>
 	</test>
 		<!-- TEST 2 -->
 	  <test verbose="2" name="ChromeTests-grid2">
       <parameter name="platform" value="windows" />
       	<parameter name="browser" value="firefox" />
-		   <parameter name="browserVersion" value="21.0" />
+		<parameter name="browserVersion" value="22.0" />
       <!-- <parameter name="browser" value="chrome" /> -->
       <!--  <parameter name="browserVersion" value="27.0" /> -->
 		<classes>
-			<class name="com.enonic.autotests.SpaceAdminTest" /> 	
+			<class name="com.enonic.autotests.ContentTypeTests" />
+			<class name="com.enonic.autotests.ContentRepositoryTests" />
 		</classes>
 	</test>
 	

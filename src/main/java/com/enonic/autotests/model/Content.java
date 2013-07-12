@@ -8,6 +8,9 @@ package com.enonic.autotests.model;
 public class Content<T>
 {
 
+	private String [] parents;
+	
+
 	private ContentInfo<T> contentTab;
 
 	private ContentProperties propertiesTab;
@@ -52,6 +55,14 @@ public class Content<T>
 		return fileContent;
 	}
 	
+	public String[] getParents()
+	{
+		return parents;
+	}
 
+	public void setParents(String[] parents)
+	{
+		this.parents = parents;
+	}
 
 }

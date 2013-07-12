@@ -18,8 +18,6 @@ import com.enonic.autotests.utils.TestUtils;
 
 public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 {
-	
-
 	// drop down menu, Content Item:
 	public static final String CREATE_CONTENT_MENU_BUTTON_XPATH = "//a[@class='cms-menu-item-icon-create-content' ]";
 	// drop down menu, Category Item
@@ -30,6 +28,8 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 
 	@FindBy(how = How.ID, using = "cmdNewMenuButtonbutton")
 	protected  WebElement buttonNew;
+
+	String CONTENT_FULLNAME_XPATH = "//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//span[contains(@style,'color: gray') and text()='%s']";
 
 	/**
 	 * @param session
@@ -80,6 +80,12 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 
 		return addContentWizardFactory(cRepository);
 	}
+	public boolean verifyContentInTableByName(String fullContentName)
+	{
+		String contentXpath = String.format(CONTENT_FULLNAME_XPATH, fullContentName);
+		boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(contentXpath), getSession().getDriver());
+		return isPresent;
+	}
 	/**
 	 * @param cRepository
 	 * @return
@@ -96,7 +102,8 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 			return new AddImageContentWizard(getSession());
 
 		case CUSTOM_CONTENT:
-			return new AddFileContentWizard(getSession());
+			//TODO NOT implemented
+			return null;
 		default:
 			return null;
 		}

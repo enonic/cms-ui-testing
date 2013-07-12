@@ -12,6 +12,7 @@ import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
+import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 import com.enonic.autotests.providers.ContentRepositoryProvider;
 import com.enonic.autotests.services.ContentTypeService;
@@ -85,15 +86,19 @@ public class ContentRepositoryTests extends BaseTest
 	{
 
 		List<ContentRepository> repositoryList = (List) getTestSession().get(REPOSITORY_LIST);
-		logger.info("add category to the repository. repository name is  " + repositoryList.get(0).getName());
-		ContentRepository repository = findRepositoryByName("nocategory");
+		logger.info("add category to the repository. repsitory has no a TopCategory. Repository name is  " + repositoryList.get(0).getName());
+		ContentRepository repository = findRepositoryByName("notopcategory");
 		ContentCategory newcategory = new ContentCategory();
 		newcategory.setName("testCategory");
 		newcategory.setContentTypeName("File");
 		newcategory.setDescription("Files category.");
-		newcategory.setParentName(repository.getName());
+		String[] names = {repository.getName()};
+		newcategory.setParentNames(names);
 
 		repositoryService.addCategory(getTestSession(), newcategory);
+		boolean isCreated = repositoryService.findCategoryByPath(getTestSession(),"testCategory", names);
+		Assert.assertTrue(isCreated,"new added category was not found!"+ newcategory.getName());
+		
 	}
 
 	///==================================================================================================
@@ -107,17 +112,47 @@ public class ContentRepositoryTests extends BaseTest
 		ContentRepository repository = findRepositoryByHandler(repositoryList, xmlContent.getContentHandler());
 
 		String ctypeName = repository.getContentTypeName();
-		ContentCategory category = findCategoryByContentTypeName(ctypeName, repository.getCategories());
-		repositoryService.addCategory(getTestSession(), category, repository.getName());
-		repositoryService.addContent(getTestSession(), repository, category.getName(), content);
-		repositoryService.doSearchContentRelatedToRepository(getTestSession(), xmlContent.getDisplayName(), repository.getName());
-		//TODO check content in the table.
+		ContentCategory category = extractCategoryFromTestData(ctypeName, repository.getCategories());
+		String[] parents = new String[]{repository.getName()};
+		category.setParentNames(parents);
+		repositoryService.addCategory(getTestSession(), category);
+		String[] pathToContent = new String[]{repository.getName(),category.getName()};
+		content.setParents(pathToContent );
+		AbstractContentTableView frame = repositoryService.addContent(getTestSession(), repository, content);
+		String fullContentName = buildFullContentName(xmlContent, pathToContent);
+		boolean result = frame.verifyContentInTableByName(fullContentName );
+		logger.info("case-info: Content visible in category view:"+result );
+		List<String> contentNames = repositoryService.doSearchContentByName(getTestSession(), xmlContent.getDisplayName());
+		
+		String fullName = buildFullContentName(xmlContent, repository.getName(),category.getName());
+		result = contentNames.contains(fullName);
+		logger.info("case-info: Content searchable: "+ result);
+		Assert.assertTrue(result,"new added content is not searchable");
 	}
 
 	
+	private String buildFullContentName(AbstractContentXml xmlContent,String ...parentCategories)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		for(String s:parentCategories)
+		{
+			sb.append(s).append("/");
+		}
+		
+		sb.append(xmlContent.getDisplayName());
+		return sb.toString(); 
+	}
 
 
-	private ContentCategory findCategoryByContentTypeName(String ctypeName, List<ContentCategory> categories)
+	/**
+	 * Finds category in the test-data
+	 * 
+	 * @param ctypeName
+	 * @param categories
+	 * @return
+	 */
+	private ContentCategory extractCategoryFromTestData(String ctypeName, List<ContentCategory> categories)
 	{
 		for (ContentCategory cc : categories)
 		{

@@ -48,7 +48,7 @@
                 <category>
                     <contentTypeName>Image</contentTypeName>
                     <name>cat1</name>
-                    <parentName>parent</parentName>
+                    <parentName></parentName>
                 </category>
             </categories>
 			<topCategory>
@@ -63,14 +63,14 @@
 		</contentRepository>
 		<!-- ******************************************************************************* -->
 		<contentRepository>
-			<name>nocategory</name>
+			<name>notopcategory</name>
 			<caseInfo>create new Content Repository without Top Category</caseInfo>
 			<defaultLanguage>English</defaultLanguage>
 			<categories>
                 <category>
-                    <contentTypeName>ctypename</contentTypeName>
+                    <contentTypeName>File</contentTypeName>
                     <name>cat1</name>
-                    <parentName>parent</parentName>
+                    <parentName>notopcategory</parentName>
                 </category>
             </categories>
 			

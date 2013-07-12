@@ -2,6 +2,7 @@ package com.enonic.autotests.testdata.contenttype;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,7 +32,8 @@ public class ContentConvertor
 			FileContentInfo fileContentTabInfo = new FileContentInfo();
 			fileContentTabInfo.setComment(((FileContentXml) xmlContent).getComments());
 			fileContentTabInfo.setDescription(((FileContentXml) xmlContent).getDescription());
-			fileContentTabInfo.setPathToFile(((FileContentXml) xmlContent).getPathToFile());fileContentTabInfo.setPathToFile(((FileContentXml) xmlContent).getPathToFile());
+			fileContentTabInfo.setPathToFile(((FileContentXml) xmlContent).getPathToFile());
+			fileContentTabInfo.setDisplayName(((FileContentXml) xmlContent).getDisplayName());
 			
 			fileContent.setContentTab(fileContentTabInfo);
 			
@@ -48,6 +50,7 @@ public class ContentConvertor
 			imageContentTabInfo.setPathToFile(((ImageContentXml) xmlContent).getPathToFile());
 			imageContentTabInfo.setPhotographerEmail(((ImageContentXml) xmlContent).getPhotographerEmail());
 			imageContentTabInfo.setPhotographerName(((ImageContentXml) xmlContent).getPhotographerName());
+			imageContentTabInfo.setDisplayName(((ImageContentXml) xmlContent).getDisplayName());
 			
 			
 			imageContent.setContentTab(imageContentTabInfo);
@@ -128,7 +131,8 @@ public class ContentConvertor
 		cat.setContentTypeName(catXml.getContentTypeName());
 		cat.setName(catXml.getName());
 		cat.setDescription(catXml.getDescription());
-		cat.setParentName(catXml.getParentName());
+		String[] names = catXml.getParentName().split("/");
+		cat.setParentNames(names);
 		return cat;
 	}
 	public static List<ContentCategory>convertListXmlCategories(List<ContentCategoryXml> cats)

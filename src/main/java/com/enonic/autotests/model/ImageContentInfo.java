@@ -3,7 +3,10 @@ package com.enonic.autotests.model;
 public class ImageContentInfo implements ContentInfo<ImageContentInfo>
 {
 
+	private String displayName;
+
 	private String description;
+
 	private String comment;// unsaved draft
 
 	private String pathToFile;
@@ -14,6 +17,16 @@ public class ImageContentInfo implements ContentInfo<ImageContentInfo>
 
 	private String copyright;
 	private String keyWords;
+
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName)
+	{
+		this.displayName = displayName;
+	}
 
 	public String getDescription()
 	{

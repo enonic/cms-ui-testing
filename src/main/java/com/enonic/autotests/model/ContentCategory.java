@@ -1,8 +1,12 @@
 package com.enonic.autotests.model;
 
+import java.util.List;
+
 public class ContentCategory
 {
-	private String parentName;
+	private String[] parentNames;
+	
+	
 	
 	private String name;
 	private String description;
@@ -32,13 +36,13 @@ public class ContentCategory
 	{
 		this.contentTypeName = contentTypeName;
 	}
+	public String[] getParentNames()
+	{
+		return parentNames;
+	}
+	public void setParentNames(String[] parentNames)
+	{
+		this.parentNames = parentNames;
+	}
 	
-	public String getParentName()
-	{
-		return parentName;
-	}
-	public void setParentName(String parentName)
-	{
-		this.parentName = parentName;
-	}
 }

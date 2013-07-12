@@ -7,6 +7,8 @@ package com.enonic.autotests.model;
 public class FileContentInfo implements ContentInfo<FileContentInfo>
 {
 
+	private String displayName;	
+
 	private String description;
 
 	private String pathToFile;
@@ -41,6 +43,16 @@ public class FileContentInfo implements ContentInfo<FileContentInfo>
 	public void setPathToFile(String pathToFile)
 	{
 		this.pathToFile = pathToFile;
+	}
+
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName)
+	{
+		this.displayName = displayName;
 	}
 
 	@Override

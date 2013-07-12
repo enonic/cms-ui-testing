@@ -21,6 +21,10 @@ public class TestSession {
 
 	private Map<String, Object> session = new HashMap<String, Object>();
 
+	private String windowHandle;
+
+	
+
 	private boolean loggedIn;
 
 	public boolean isLoggedIn() {
@@ -84,6 +88,14 @@ public class TestSession {
 	public Boolean getIsRemote() {
 		return (Boolean) session.get(IS_REMOTE);
 	}
+	public String getWindowHandle()
+	{
+		return windowHandle;
+	}
 
+	public void setWindowHandle(String windowHandle)
+	{
+		this.windowHandle = windowHandle;
+	}
 
 }
