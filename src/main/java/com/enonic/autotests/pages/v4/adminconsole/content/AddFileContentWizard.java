@@ -6,14 +6,15 @@ import org.openqa.selenium.By;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
-import com.enonic.autotests.model.ContentInfo;
+import com.enonic.autotests.model.IContentInfo;
 import com.enonic.autotests.model.FileContentInfo;
+import com.enonic.autotests.utils.TestUtils;
 
 /**
  * Page Object for 'Add File-content Wizard'
  * 
  */
-public class AddFileContentWizard extends AbstractAddContentWizard implements IAddContentToRepository<FileContentInfo>
+public class AddFileContentWizard extends AbstractAddContentWizard implements IUpdateOrCreateContent<FileContentInfo>
 {
 
 	/**
@@ -30,14 +31,32 @@ public class AddFileContentWizard extends AbstractAddContentWizard implements IA
 	@Override
 	public void typeDataAndSave(Content<FileContentInfo> newcontent)
 	{
-		ContentInfo<FileContentInfo> contentTab = newcontent.getContentTab();
-		contentTab.getContentTabInfo().getComment();
+		IContentInfo<FileContentInfo> contentTab = newcontent.getContentTab();
+		String comment = contentTab.getContentTabInfo().getComment();
+		if(comment !=null &&!commentInput.getAttribute("value").equals(comment))
+		{
 		commentInput.sendKeys(contentTab.getContentTabInfo().getComment());
+		}
+		if(contentTab.getContentTabInfo().getDescription()!=null && !descriptionTextarea.getAttribute("value").equals(contentTab.getContentTabInfo().getDescription()))
+		{
 		descriptionTextarea.sendKeys(contentTab.getContentTabInfo().getDescription());
+		}
+		
 		// getSession().getDriver().findElement(By.id("newfile")).sendKeys("d:\\bel.gif");
 		File file = new File(newcontent.getContentTab().getContentTabInfo().getPathToFile());
 		String pathTofile = file.getAbsolutePath();
+		if(!getSession().getDriver().findElement(By.id("newfile")).getText().equals(pathTofile))
+		{
 		getSession().getDriver().findElement(By.id("newfile")).sendKeys(pathTofile);
+		}
+		//fill the display name:
+		if(!nameInput.getAttribute("value").equals( newcontent.getDisplayName()))
+		{
+			TestUtils.getInstance().clearAndType(getSession(), nameInput, newcontent.getDisplayName());
+			
+		}
+		
+				
 		saveButton.click();
 		waituntilPageLoaded(4l);
 		closeButton.click();

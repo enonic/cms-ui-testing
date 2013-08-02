@@ -26,7 +26,7 @@
                 <category>
                     <contentTypeName>File</contentTypeName>
                     <name>cat1</name>
-                    <parentName>parent</parentName>
+                   <!--  <parentName>parent</parentName>  -->
                 </category>
             </categories>
 			<topCategory>

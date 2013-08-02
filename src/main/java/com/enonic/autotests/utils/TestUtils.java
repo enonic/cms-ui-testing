@@ -33,7 +33,8 @@ import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 
-public class TestUtils {
+public class TestUtils
+{
 	public static Logger logger = Logger.getLogger();
 	public static final String DATE_FORMAT_NOW = "yyyy-MM-dd-HH-mm-ss";
 
@@ -44,10 +45,14 @@ public class TestUtils {
 	/**
 	 * @return
 	 */
-	public static TestUtils getInstance() {
-		if (instance == null) {
-			synchronized (TestUtils.class) {
-				if (instance == null) {
+	public static TestUtils getInstance()
+	{
+		if (instance == null)
+		{
+			synchronized (TestUtils.class)
+			{
+				if (instance == null)
+				{
 					instance = new TestUtils();
 				}
 			}
@@ -58,57 +63,101 @@ public class TestUtils {
 	/**
 	 * The Default constructor.
 	 */
-	private TestUtils() {
+	private TestUtils()
+	{
 
 	}
-	public  void clearAndType(TestSession session,WebElement input,String text){
+
+	/**
+	 * Types text in input field.
+	 * 
+	 * @param session
+	 * @param input input type=text
+	 * @param text text for input.
+	 */
+	public void clearAndType(TestSession session, WebElement input, String text)
+	{
 		String os = System.getProperty("os.name").toLowerCase();
 		logger.info("clearAndType: OS System is " + os);
-		logger.info("Windows or linux. type Text:: " + text);
 		input.sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
-		
+
 	}
 
-	public void waitUntilVisible(final TestSession testSession, final By by,long timeout) {
+	/**
+	 * @param testSession
+	 * @param by
+	 * @param timeout
+	 */
+	public void waitUntilVisible(final TestSession testSession, final By by, long timeout)
+	{
 		new WebDriverWait(testSession.getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(by));
 	}
 
-	public void waitUntilTitleVisible(final TestSession testSession, final String title) {
-		(new WebDriverWait(testSession.getDriver(), TestUtils.TIMEOUT_IMPLICIT)).until(new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver d) {
+	/**
+	 * @param testSession
+	 * @param title
+	 */
+	public void waitUntilTitleVisible(final TestSession testSession, final String title)
+	{
+		(new WebDriverWait(testSession.getDriver(), TestUtils.TIMEOUT_IMPLICIT)).until(new ExpectedCondition<Boolean>()
+		{
+			public Boolean apply(WebDriver d)
+			{
 				return d.getTitle().trim().contains(title);
 			}
 		});
 	}
-	public boolean waitUntilVisibleNoException(final TestSession testSession, By by, long timeout) {
-		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
-		try {
-			wait.until(ExpectedConditions.visibilityOfElementLocated(by));			
-			return true;
-		} catch (Exception e) {
-			
-			return false;
-		}
-	}
-	public boolean waitUntilClickableNoException(final TestSession testSession, By by, long timeout) {
-		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
-		try {
-			wait.until(ExpectedConditions.elementToBeClickable(by));			
-			return true;
-		} catch (Exception e) {
-			
-			return false;
-		}
-	}
-	
 
-	public boolean alertIsPresent(final TestSession testSession,long timeout) {
+	/**
+	 * @param testSession
+	 * @param by
+	 * @param timeout
+	 * @return
+	 */
+	public boolean waitUntilVisibleNoException(final TestSession testSession, By by, long timeout)
+	{
 		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
-		try {
-			wait.until(ExpectedConditions.alertIsPresent());	
+		try
+		{
+			wait.until(ExpectedConditions.visibilityOfElementLocated(by));
 			return true;
-		} catch (Exception e) {
-			
+		} catch (Exception e)
+		{
+
+			return false;
+		}
+	}
+
+	public boolean waitUntilClickableNoException(final TestSession testSession, By by, long timeout)
+	{
+		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
+		try
+		{
+			wait.until(ExpectedConditions.elementToBeClickable(by));
+			return true;
+		} catch (Exception e)
+		{
+
+			return false;
+		}
+	}
+
+	/**
+	 * Checks if alert dialog present.
+	 * @param testSession
+	 * @param timeout
+	 * @return
+	 */
+	public boolean alertIsPresent(final TestSession testSession, long timeout)
+	{
+		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
+		try
+		{
+			wait.until(ExpectedConditions.alertIsPresent());
+			return true;
+		} catch (Exception e)
+		{
+
 			return false;
 
 		}
@@ -119,47 +168,57 @@ public class TestUtils {
 	 * @param screenshotFileName
 	 * @param driver
 	 */
-	public String saveScreenshot(final TestSession testSession) {
+	public String saveScreenshot(final TestSession testSession)
+	{
 		WebDriver driver = testSession.getDriver();
 		String fileName = timeNow() + ".png";
 		File folder = new File(System.getProperty("user.dir") + File.separator + "snapshots");
 
-		if (!folder.exists()) {
-			if (!folder.mkdir()) {
+		if (!folder.exists())
+		{
+			if (!folder.mkdir())
+			{
 				System.out.println("Folder for snapshots was not created ");
-			} else {
+			} else
+			{
 				System.out.println("Folder for snapshots was created " + folder.getAbsolutePath());
 			}
 		}
 		File screenshot = null;
 
-		if ((Boolean) testSession.get(TestSession.IS_REMOTE)) {
+		if ((Boolean) testSession.get(TestSession.IS_REMOTE))
+		{
 
 			WebDriver augmentedDriver = new Augmenter().augment(driver);
 			screenshot = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
-		} else {
+		} else
+		{
 			screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		}
 
 		String fullFileName = folder.getAbsolutePath() + File.separator + fileName;
 
-		try {
+		try
+		{
 			FileUtils.copyFile(screenshot, new File(fullFileName));
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			// TODO Auto-generated catch block
 
 		}
 		return fileName;
 	}
 
-	public String timeNow() {
+	public String timeNow()
+	{
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
 		return sdf.format(cal.getTime());
 
 	}
 
-	public void clickByLocator1(final By locator, WebDriver driver) {
+	public void clickByLocator1(final By locator, WebDriver driver)
+	{
 		WebElement myDynamicElement = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(locator));
 		myDynamicElement.click();
 	}
@@ -168,19 +227,23 @@ public class TestUtils {
 	 * @param locator
 	 * @param driver
 	 */
-	public void clickByLocator(final By locator, final WebDriver driver) {
+	public void clickByLocator(final By locator, final WebDriver driver)
+	{
 		final long startTime = System.currentTimeMillis();
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(90000, TimeUnit.MILLISECONDS).pollingEvery(5500,
-				TimeUnit.MILLISECONDS);
+		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(90000, TimeUnit.MILLISECONDS).pollingEvery(5500, TimeUnit.MILLISECONDS);
 		// .ignoring( StaleElementReferenceException.class );
-		wait.until(new ExpectedCondition<Boolean>() {
+		wait.until(new ExpectedCondition<Boolean>()
+		{
 			@Override
-			public Boolean apply(WebDriver webDriver) {
-				try {
+			public Boolean apply(WebDriver webDriver)
+			{
+				try
+				{
 					webDriver.findElement(locator).click();
 					return true;
-				} catch (StaleElementReferenceException e) {
+				} catch (StaleElementReferenceException e)
+				{
 					// staticlogger.info( e.getMessage() + "\n");
 					// staticlogger.info("Trying again...");
 					return false;
@@ -199,81 +262,90 @@ public class TestUtils {
 	 * @param driver
 	 * @return
 	 */
-	public boolean waitAndFind(final By by, final WebDriver driver) {
-	
+	public boolean waitAndFind(final By by, final WebDriver driver)
+	{
+
 		driver.manage().timeouts().implicitlyWait(AppConstants.IMPLICITLY_WAIT, TimeUnit.SECONDS);
 		List<WebElement> elements = driver.findElements(by);
 		return ((elements.size() > 0) && (elements.get(0).isDisplayed()));
 	}
-	
-	public boolean waitIsDispalyedElement(WebElement elem,final WebDriver driver)
+
+	public boolean waitIsDispalyedElement(WebElement elem, final WebDriver driver)
 	{
 		WebDriverWait wait = new WebDriverWait(driver, 2l, 500);
-		try {
-			wait.until(ExpectedConditions.visibilityOf(elem));			
+		try
+		{
+			wait.until(ExpectedConditions.visibilityOf(elem));
 			return true;
-		} catch (Exception e) {
-			
+		} catch (Exception e)
+		{
+
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Refresh Left Frame Menu.
-	 * @param driver {@link WebDriver} instance.
+	 * 
+	 * @param driver
+	 *            {@link WebDriver} instance.
 	 * 
 	 */
-	public static void refreshLeftFrame(final WebDriver driver){
+	public static void refreshLeftFrame(final WebDriver driver)
+	{
 		List<WebElement> elements = driver.findElements(By.xpath(AbstractAdminConsolePage.REFRESH_IMAGE_XPATH));
-		if (elements.size() > 0) {
+		if (elements.size() > 0)
+		{
 			elements.get(0).click();
-		 }else{
-			 throw new TestFrameworkException("Refresh left Frame Action was failed");
-		 }
+		} else
+		{
+			throw new TestFrameworkException("Refresh left Frame Action was failed");
+		}
 	}
 
-	
-	
-
-	public void selectByText(TestSession session, By by, String text) {
-		 List<WebElement> elems = session.getDriver().findElements(by);//session.getDriver().findElements(By.name("//input[@name='name']"))
-		 if(elems.size() == 0)
-		 {
-			 throw new TestFrameworkException("wrong xpath for select: "+ text);
-		 }
+	public void selectByText(TestSession session, By by, String text)
+	{
+		List<WebElement> elems = session.getDriver().findElements(by);// session.getDriver().findElements(By.name("//input[@name='name']"))
+		if (elems.size() == 0)
+		{
+			throw new TestFrameworkException("wrong xpath for select: " + text);
+		}
 		Select select = new Select(elems.get(0));
 		select.selectByVisibleText(text);
 	}
-	
-	public  String createTempFile(String s){
-        try{
-          File f = File.createTempFile("uploadTest","tempfile");
-          f.deleteOnExit();
-          writeStringToFile(s,f);
-          return f.getAbsolutePath();
-        }
-        catch(Exception e){
-         throw new TestFrameworkException("Error during creation TMP-file");
-          
-        }
-    }
 
-    public  void writeStringToFile(String s, File file) throws IOException{
-        FileOutputStream in = null;
-        try{
-            in = new FileOutputStream(file);
-            FileChannel fchan = in.getChannel();
-            BufferedWriter bf = new BufferedWriter(Channels.newWriter(fchan,"UTF-8"));
-            bf.write(s);
-            bf.close();
-        }
-        finally{
-            if(in != null){
-                in.close();
-            }
-        }
-    }
+	public String createTempFile(String s)
+	{
+		try
+		{
+			File f = File.createTempFile("uploadTest", "tempfile");
+			f.deleteOnExit();
+			writeStringToFile(s, f);
+			return f.getAbsolutePath();
+		} catch (Exception e)
+		{
+			throw new TestFrameworkException("Error during creation TMP-file");
 
-	// driver.switch.frame(driver.findElementByXpath("//iframe[contains(@src,'forsee')]"))
-	// xpath=id('backOptionsArea')//img[contains(@src,'color/02')]/../..
+		}
+	}
+
+	public void writeStringToFile(String s, File file) throws IOException
+	{
+		FileOutputStream in = null;
+		try
+		{
+			in = new FileOutputStream(file);
+			FileChannel fchan = in.getChannel();
+			BufferedWriter bf = new BufferedWriter(Channels.newWriter(fchan, "UTF-8"));
+			bf.write(s);
+			bf.close();
+		} finally
+		{
+			if (in != null)
+			{
+				in.close();
+			}
+		}
+	}
+
 }

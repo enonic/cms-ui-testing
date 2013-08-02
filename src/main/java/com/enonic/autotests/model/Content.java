@@ -7,24 +7,24 @@ package com.enonic.autotests.model;
  */
 public class Content<T>
 {
+	private ContentHandler contentHandler;
 
-	private String [] parents;
+	private String[] parentNames;
 	
+	private String displayName;
 
-	private ContentInfo<T> contentTab;
+	private IContentInfo<T> contentTab;
 
 	private ContentProperties propertiesTab;
 
 	private Publishing publishingTab;
 	
-
-	
-	public ContentInfo<T> getContentTab()
+	public IContentInfo<T> getContentTab()
 	{
 		return contentTab;
 	}
 
-	public void setContentTab(ContentInfo<T> contentTab)
+	public void setContentTab(IContentInfo<T> contentTab)
 	{
 		this.contentTab = contentTab;
 	}
@@ -55,14 +55,51 @@ public class Content<T>
 		return fileContent;
 	}
 	
-	public String[] getParents()
+	public String[] getParentNames()
 	{
-		return parents;
+		return parentNames;
 	}
 
-	public void setParents(String[] parents)
+	public void setParentNames(String[] parentsNames)
 	{
-		this.parents = parents;
+		this.parentNames = parentsNames;
+	}
+
+	public String getDisplayName()
+	{
+		return displayName;
+	}
+
+	public void setDisplayName(String displayName)
+	{
+		this.displayName = displayName;
+	}
+
+	public ContentHandler getContentHandler()
+	{
+		return contentHandler;
+	}
+
+	public void setContentHandler(ContentHandler contentHandler)
+	{
+		this.contentHandler = contentHandler;
+	}
+
+	public String buildContentNameWithPath()
+	{
+		StringBuilder sb = new StringBuilder();
+		if(parentNames != null)
+		{
+			sb.append("/");
+			for (String s : parentNames)
+			{
+				sb.append(s).append("/");
+			}
+		}
+		
+
+		sb.append(displayName);
+		return sb.toString();
 	}
 
 }

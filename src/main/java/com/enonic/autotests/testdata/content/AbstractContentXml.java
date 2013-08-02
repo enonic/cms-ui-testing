@@ -7,6 +7,7 @@ package com.enonic.autotests.testdata.content;
 public class AbstractContentXml
 {
 	private String caseInfo;
+	
 	private String comments;// Unsaved draft
 
 	private String contentHandler;

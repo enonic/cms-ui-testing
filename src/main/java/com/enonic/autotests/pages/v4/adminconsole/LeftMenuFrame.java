@@ -9,8 +9,8 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.pages.Page;
-import com.enonic.autotests.pages.v4.adminconsole.content.CategoryViewFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoryViewFrame;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.services.PageNavigatorV4;
@@ -69,12 +69,9 @@ public class LeftMenuFrame extends Page
 	 * @param repoName
 	 * @return
 	 */
-	public ContentRepositoryViewFrame openRepositoryViewFrame(String repoName)
+	public ContentRepositoriesTableFrame openRepositoryViewFrame(String repoName)
 	{
-
-		String whandle = getSession().getDriver().getWindowHandle();
-		getSession().getDriver().switchTo().window(whandle);
-		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
 		// 1. expand a 'Content' folder
 		expandContentFolder();
 
@@ -82,9 +79,8 @@ public class LeftMenuFrame extends Page
 		// 2. Try to Find Repository by Name and click:
 		TestUtils.getInstance().clickByLocator(By.xpath(xpathString), getSession().getDriver());
 
-		getSession().getDriver().switchTo().window(whandle);
-		getSession().getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
-		ContentRepositoryViewFrame view = new ContentRepositoryViewFrame(getSession());
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+		ContentRepositoriesTableFrame view = new ContentRepositoriesTableFrame(getSession());
 		view.waituntilPageLoaded(2L);
 		String repoNameXpath = String.format("//h1/a[text()='%s']", repoName);
 		List<WebElement> elems = getSession().getDriver().findElements(By.xpath(repoNameXpath));
@@ -104,7 +100,7 @@ public class LeftMenuFrame extends Page
 	 * @param names
 	 * @return
 	 */
-	public CategoryViewFrame openCategoryViewFrame(String... names)
+	public ContentsTableFrame openCategoryViewFrame(String... names)
 	{
 		if(names.length == 0)
 		{
@@ -134,7 +130,7 @@ public class LeftMenuFrame extends Page
 	
 		//5. switch to the main frame
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
-		CategoryViewFrame view = new CategoryViewFrame(getSession());
+		ContentsTableFrame view = new ContentsTableFrame(getSession());
 		view.waituntilPageLoaded(2L);
 		return view;
 	}
@@ -192,6 +188,9 @@ public class LeftMenuFrame extends Page
 		}
 	}
 
+	/**
+	 * Clicks by 'expand' icon and expands the 'Content' folder in the 'Left Menu' frame
+	 */
 	private void expandContentFolder()
 	{
 		String expanderPlusXpath = String.format(CONTENTFOLDER_EXPANDER_XPATH, AppConstants.PLUS_ICON_PNG);

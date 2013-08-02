@@ -13,7 +13,6 @@ import com.enonic.autotests.utils.TestUtils;
 public class CreateCategoryWizard extends AbstractAdminConsoleWizardPage
 
 {
-
 	private final String SELECT_XPATH = "//select[@name='contenttypekey']";
 	@FindBy(how = How.ID, using = "name")
 	private WebElement nameInput;
@@ -37,15 +36,16 @@ public class CreateCategoryWizard extends AbstractAdminConsoleWizardPage
 	{
 		nameInput.sendKeys(category.getName());
 		getSession().getDriver().findElements(By.xpath("//input[@name='name']"));
+		if(category.getDescription()!=null)
+		{
 		descriptionTextArea.sendKeys(category.getDescription());
+		}
+		
 		String contentTypeName = category.getContentTypeName();
 		if (contentTypeName != null) {
 			TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_XPATH), contentTypeName);
 		}
 		buttonSave.click();
-		checkAlerts(getSession());
-		
-	}
-
-	
+		checkAlerts(getSession());		
+	}	
 }

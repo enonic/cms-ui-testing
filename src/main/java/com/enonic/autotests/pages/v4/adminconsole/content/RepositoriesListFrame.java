@@ -42,7 +42,7 @@ public class RepositoriesListFrame extends AbstractAdminConsolePage
 	@FindBy(xpath = "//button[text()='New']")
 	private WebElement buttonNew;
 
-	private String SPAN_CONTENT_FULL_NAME_XPATH ="//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//span[contains(@style,'color: gray')]";
+	private String SPAN_CONTENTS_NAME_XPATH ="//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//div[contains(@style,'font-weight: bold')]";
 	
 
 	/**
@@ -66,7 +66,7 @@ public class RepositoriesListFrame extends AbstractAdminConsolePage
 		searchtext.sendKeys(contentName);
 		searchButton.click();
 		List<String> contentNames = new ArrayList<>();
-		List<WebElement> names = getSession().getDriver().findElements(By.xpath(SPAN_CONTENT_FULL_NAME_XPATH));
+		List<WebElement> names = getSession().getDriver().findElements(By.xpath(SPAN_CONTENTS_NAME_XPATH));
 		for(WebElement name:names)
 		{
 			contentNames.add(name.getText());

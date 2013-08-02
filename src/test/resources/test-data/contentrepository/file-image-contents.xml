@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <contentTestData>
     <image>
-       <caseInfo>add image</caseInfo>
+       <caseInfo>add image to the category and check out searchable content</caseInfo>
         <comments>upload content, content-handler is 'Images'</comments>
-        <contentHandler>Images</contentHandler>
+        <contentHandler>IMAGES</contentHandler>
         <categoryName>category1</categoryName>
-        <displayName>bel.gif</displayName>
+        <displayName>image.gif</displayName>
         <copyright>copyright</copyright>
         <pathToFile>c:/GRID/res/bel.gif</pathToFile>
         <photographerEmail>aa@gmail.com</photographerEmail>
         <photographerName>Joan</photographerName>
     </image>
     <file>
-    	<caseInfo>add file</caseInfo>
+    	<caseInfo>add file to the category and check out searchable content</caseInfo>
         <comments>upload content, content-handler is 'Files'</comments>
         <categoryName>category1</categoryName>
-        <contentHandler>Files</contentHandler>
-        <displayName>bel.gif</displayName>
+        <contentHandler>FILES</contentHandler>
+        <displayName>file.gif</displayName>
         <pathToFile>c:/GRID/res/bel.gif</pathToFile>
     </file>
 </contentTestData>

@@ -4,13 +4,15 @@ package com.enonic.autotests.model;
  * Info for 'Content Tab'
  *
  */
-public class FileContentInfo implements ContentInfo<FileContentInfo>
+public class FileContentInfo implements IContentInfo<FileContentInfo>
 {
 
 	private String displayName;	
 
+	/** description for File-content */
 	private String description;
 
+	/** absolute pathname string    */
 	private String pathToFile;
 
 	private String comment;

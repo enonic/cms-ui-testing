@@ -36,6 +36,9 @@ public class ContentConvertor
 			fileContentTabInfo.setDisplayName(((FileContentXml) xmlContent).getDisplayName());
 			
 			fileContent.setContentTab(fileContentTabInfo);
+			fileContent.setDisplayName(((FileContentXml) xmlContent).getDisplayName());
+			String contentHandler = xmlContent.getContentHandler();
+			fileContent.setContentHandler(ContentHandler.valueOf(contentHandler));
 			
 			
             return fileContent;
@@ -43,6 +46,7 @@ public class ContentConvertor
 		if (xmlContent instanceof ImageContentXml)
 		{
 			Content<ImageContentInfo> imageContent = new Content<>();
+			imageContent.setDisplayName(((ImageContentXml) xmlContent).getDisplayName());
 			
 			ImageContentInfo imageContentTabInfo = new ImageContentInfo();
 			imageContentTabInfo.setComment(((ImageContentXml) xmlContent).getComments());
@@ -50,8 +54,9 @@ public class ContentConvertor
 			imageContentTabInfo.setPathToFile(((ImageContentXml) xmlContent).getPathToFile());
 			imageContentTabInfo.setPhotographerEmail(((ImageContentXml) xmlContent).getPhotographerEmail());
 			imageContentTabInfo.setPhotographerName(((ImageContentXml) xmlContent).getPhotographerName());
-			imageContentTabInfo.setDisplayName(((ImageContentXml) xmlContent).getDisplayName());
-			
+			//imageContentTabInfo.setDisplayName(((ImageContentXml) xmlContent).getDisplayName());
+			String contentHandler = xmlContent.getContentHandler();
+			imageContent.setContentHandler(ContentHandler.valueOf(contentHandler));
 			
 			imageContent.setContentTab(imageContentTabInfo);
             return imageContent;
@@ -131,8 +136,12 @@ public class ContentConvertor
 		cat.setContentTypeName(catXml.getContentTypeName());
 		cat.setName(catXml.getName());
 		cat.setDescription(catXml.getDescription());
+		if(catXml.getParentName()!=null)
+		{
 		String[] names = catXml.getParentName().split("/");
 		cat.setParentNames(names);
+		}
+		
 		return cat;
 	}
 	public static List<ContentCategory>convertListXmlCategories(List<ContentCategoryXml> cats)

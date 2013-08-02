@@ -1,7 +1,6 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
 import java.util.List;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -11,11 +10,16 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.AddContentException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
+import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.utils.TestUtils;
 
+/**
+ * Base class for frames, that contains table with content: 'Content View'
+ *
+ */
 public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 {
 	// drop down menu, Content Item:
@@ -28,8 +32,12 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 
 	@FindBy(how = How.ID, using = "cmdNewMenuButtonbutton")
 	protected  WebElement buttonNew;
-
-	String CONTENT_FULLNAME_XPATH = "//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//span[contains(@style,'color: gray') and text()='%s']";
+	//span  color: gray
+	protected String CONTENT_NAME_XPATH = "//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//div[contains(@style,'font-weight: bold') and text()='%s']";//font-weight: bold
+	
+	protected String EDIT_CONTENT_LINK = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]//img[@src='images/icon_edit.gif']";
+	protected String DELETE_CONTENT_LINK = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]//img[@src='images/icon_delete.gif']";
+	protected String MOVE_CONTENT_LINK = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]//img[@src='images/icon_content_move.gif']";
 
 	/**
 	 * @param session
@@ -39,6 +47,27 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 		super(session);
 		
 	}
+	
+	/**
+	 * @param pathName content name with absolute path name.
+	 */
+	public  IUpdateOrCreateContent openEditContentWizard(Content content)
+	{
+		//String pathName = content.buildContentNameWithPath();
+		String nameXpath = String.format(EDIT_CONTENT_LINK, content.getDisplayName() );
+		boolean isEditButtonPresent = TestUtils.getInstance().waitAndFind(By.xpath(nameXpath), getSession().getDriver());
+		if (!isEditButtonPresent)
+		{
+			throw new AddContentException("'Edit Content' link was not found");
+		}
+		WebElement element = getSession().getDriver().findElement(By.xpath(nameXpath));
+		element.click();
+		return updateOrCreateWizardFactory(content.getContentHandler());
+	}
+	
+	/**
+	 * @return
+	 */
 	public CreateCategoryWizard openAddCategoryWizard()
 	{
 		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
@@ -56,14 +85,13 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	/**
 	 * Opens CreateContentWizardPage page on the Right Frame.
 	 * 
-	 * @return {@link AddNewContentWizardPage} instance.
+	 * @return {@link IUpdateOrCreateContent} instance.
 	 */
-	public IAddContentToRepository openAddContentWizardPage(ContentRepository cRepository)
+	public IUpdateOrCreateContent openAddContentWizardPage(ContentRepository cRepository)
 	{
 		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
 		buttonNew.click();
-		boolean isAddContentButtonShowed = TestUtils.getInstance().waitAndFind(By.xpath(CREATE_CONTENT_MENU_BUTTON_XPATH),
-				getSession().getDriver());
+		boolean isAddContentButtonShowed = TestUtils.getInstance().waitAndFind(By.xpath(CREATE_CONTENT_MENU_BUTTON_XPATH),getSession().getDriver());
 		if (!isAddContentButtonShowed)
 		{
 			throw new AddContentException("'New Content-'Menu item was not found");
@@ -78,21 +106,24 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 			throw new AddContentException("Create Content Wizard was not opened! Repository: " + cRepository.getName());
 		}
 
-		return addContentWizardFactory(cRepository);
+		return updateOrCreateWizardFactory(cRepository.getTopCategory().getContentType().getContentHandler());
 	}
-	public boolean verifyContentInTableByName(String fullContentName)
+	/**
+	 * @param displayName
+	 * @return
+	 */
+	public boolean findContentInTableByName(String displayName)
 	{
-		String contentXpath = String.format(CONTENT_FULLNAME_XPATH, fullContentName);
+		String contentXpath = String.format(CONTENT_NAME_XPATH, displayName);
 		boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(contentXpath), getSession().getDriver());
 		return isPresent;
 	}
 	/**
-	 * @param cRepository
+	 * @ContentHandler handler
 	 * @return
 	 */
-	public IAddContentToRepository addContentWizardFactory(ContentRepository cRepository)
+	public IUpdateOrCreateContent updateOrCreateWizardFactory(ContentHandler handler)
 	{
-		ContentHandler handler = cRepository.getTopCategory().getContentType().getContentHandler();
 		switch (handler)
 		{
 		case FILES:

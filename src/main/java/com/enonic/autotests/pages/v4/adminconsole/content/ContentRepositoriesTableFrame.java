@@ -8,8 +8,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.TestSession;
-import com.enonic.autotests.exceptions.AddContentException;
-import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
@@ -21,7 +19,7 @@ import com.enonic.autotests.utils.TestUtils;
  * 
  * 09.04.2013
  */
-public class ContentRepositoryViewFrame extends AbstractContentTableView
+public class ContentRepositoriesTableFrame extends AbstractContentTableView
 {
 
 	public static final String EDIT_REPOSITORY_BUTTON_XPATH = "//button[text()='Edit content repository']";
@@ -37,13 +35,12 @@ public class ContentRepositoryViewFrame extends AbstractContentTableView
 	 * 
 	 * @param session {@link TestSession} instance.
 	 */
-	public ContentRepositoryViewFrame( TestSession session )
+	public ContentRepositoriesTableFrame( TestSession session )
 	{
 		super(session);
 
 	}
 
-	
 
 
 	
@@ -74,5 +71,11 @@ public class ContentRepositoryViewFrame extends AbstractContentTableView
 				.xpath(EDIT_REPOSITORY_BUTTON_XPATH)));
 
 	}
+
+
+
+
+
+	
 
 }

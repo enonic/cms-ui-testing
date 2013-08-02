@@ -7,17 +7,22 @@ import org.openqa.selenium.WebElement;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.model.User;
 import com.enonic.autotests.pages.v4.HomePage;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoryViewFrame;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.CreateContentRepositoryWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 import com.enonic.autotests.utils.TestUtils;
 
+/**
+ * Navigation Utils
+ *
+ */
 public class PageNavigatorV4
 {
 
@@ -40,7 +45,7 @@ public class PageNavigatorV4
 				break;
 			}
 		}
-		String xpathExpression = String.format(ContentRepositoryViewFrame.CONTENT_REPOSITORY_FRAME_NAME_XPATH, repositoryName);
+		String xpathExpression = String.format(ContentRepositoriesTableFrame.CONTENT_REPOSITORY_FRAME_NAME_XPATH, repositoryName);
 		TestUtils.getInstance().waitUntilVisible(session, By.xpath(xpathExpression), AppConstants.PAGELOAD_TIMEOUT);
 		logger.info("new Content Repository was not found in the Table! " + repositoryName);
 		return new CreateContentRepositoryWizard(session);
@@ -57,7 +62,7 @@ public class PageNavigatorV4
 	{
 		PageNavigatorV4.navgateToAdminConsole(session);
 		LeftMenuFrame leftMenu = new LeftMenuFrame(session);
-		// expand the "Content" folder, click by RepositoryName, open repositoryview and click by 'New-Category' button
+		// expand the "Content" folder, click by RepositoryName, open repository view and click by 'New-Category' button
 		if (names.length == 1)
 		{
 			String repositoryName = names[0];
@@ -69,10 +74,15 @@ public class PageNavigatorV4
 
 	}
 
+	/**
+	 * Navigates to the 'Admin Console' page.
+	 * 
+	 * @param testSession
+	 */
 	public static void navgateToAdminConsole(TestSession testSession)
 	{
 		User user = testSession.getCurrentUser();
-		// if Admin-console page already loaded, return, otherwise navigate to the console
+		// if Admin-console page already loaded, return, otherwise navigate to  the console
 		if (testSession.getDriver().getTitle().contains(AbstractAdminConsolePage.TITLE))
 		{
 			return;
@@ -94,25 +104,46 @@ public class PageNavigatorV4
 		home.openAdminConsole(userName, password);
 	}
 
+	/**
+	 * Select a menu item from the Left frame and opens view in the right Frame
+	 * @param session
+	 * @param itemXpath
+	 */
 	public static void clickMenuItemAndSwitchToRightFrame(TestSession session, String itemXpath)
 	{
 		String whandle = session.getDriver().getWindowHandle();
 		session.getDriver().switchTo().window(whandle);
-		session.getDriver().switchTo().frame(AbstractAdminConsolePage.LEFT_FRAME_NAME);
-
+		List<WebElement> frames = session.getDriver().findElements(By.name(AbstractAdminConsolePage.LEFT_FRAME_NAME));
+		if (frames.size() == 0)
+		{
+			throw new TestFrameworkException("Unable to switch to the iframe" + AbstractAdminConsolePage.MAIN_FRAME_NAME);
+		}
+		session.getDriver().switchTo().frame(frames.get(0));
 		TestUtils.getInstance().clickByLocator(By.xpath(itemXpath), session.getDriver());
 
 		session.getDriver().switchTo().window(whandle);
-		session.getDriver().switchTo().frame(AbstractAdminConsolePage.MAIN_FRAME_NAME);
+		frames = session.getDriver().findElements(By.name(AbstractAdminConsolePage.MAIN_FRAME_NAME));
+		session.getDriver().switchTo().frame(frames.get(0));
 
 	}
 
-	public static void switchToFrame(TestSession session, String frameName)
+	/**
+	 * @param testSession {@link TestSession} instance.
+	 *            
+	 * @param iframeXpath  frame's xpath.
+	 *           
+	 */
+	public static void switchToFrame(TestSession testSession, String frameName)
 	{
-		String whandle = session.getDriver().getWindowHandle();
-		session.getDriver().switchTo().window(whandle);
-		session.getDriver().switchTo().frame(frameName);
+		String whandle = testSession.getDriver().getWindowHandle();
+		testSession.getDriver().switchTo().window(whandle);
+		List<WebElement> frames = testSession.getDriver().findElements(By.name(frameName));
+		if (frames.size() == 0)
+		{
+			throw new TestFrameworkException("Unable to switch to the iframe" + frameName);
+		}
 
+		testSession.getDriver().switchTo().frame(frames.get(0));
 	}
 
 }

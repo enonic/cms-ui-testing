@@ -8,6 +8,11 @@ import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 public class ContentTypeService
 {
 
+	/**
+	 * @param testSession
+	 * @param ctype
+	 * @return
+	 */
 	public ContentTypesFrame createContentType(TestSession testSession, ContentType ctype)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
@@ -18,6 +23,11 @@ public class ContentTypeService
 		return new ContentTypesFrame(testSession);
 
 	}
+	/**
+	 * @param testSession
+	 * @param typename
+	 * @return
+	 */
 	public boolean findContentType(TestSession testSession, String typename)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
@@ -28,6 +38,11 @@ public class ContentTypeService
 
 	}
 
+	/**
+	 * @param testSession
+	 * @param contentTypeName
+	 * @return
+	 */
 	public ContentTypesFrame deleteContentType(TestSession testSession, String contentTypeName)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);

@@ -1,7 +1,7 @@
 package com.enonic.autotests.model;
 
 
-public interface  ContentInfo<T>
+public interface  IContentInfo<T>
 {
 	public  T getContentTabInfo();
 }
