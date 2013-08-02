@@ -42,7 +42,7 @@ public abstract class AbstractAdminConsoleWizardPage extends AbstractAdminConsol
 	 */
 	public String getAlertMessage(TestSession session) {
 		if (!TestUtils.getInstance().alertIsPresent(getSession(), 1l)) {
-			getLogger().debug("alert was not present during creation the Content type");
+			getLogger().debug("alert was not present during creation");
 			return null;
 		} else {
 			Alert alert = getSession().getDriver().switchTo().alert();
@@ -59,7 +59,7 @@ public abstract class AbstractAdminConsoleWizardPage extends AbstractAdminConsol
 	{
 		if (!TestUtils.getInstance().alertIsPresent(getSession(), 1l))
 		{
-			getLogger().debug("alert was not present during creation the Content type");
+			getLogger().debug("alert was not present during creation");
 		} else
 		{
 			Alert alert = getSession().getDriver().switchTo().alert();
