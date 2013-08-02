@@ -41,27 +41,31 @@ public class AddImageContentWizard extends AbstractAddContentWizard implements I
 	{
 		IContentInfo<ImageContentInfo> contentTab = newcontent.getContentTab();
 		String comment = contentTab.getContentTabInfo().getComment();
+		//1. fill a comments field
 		if (comment != null && !commentInput.getAttribute("value").equals(comment))
 		{
 		commentInput.sendKeys(contentTab.getContentTabInfo().getComment());
 		}
 		String description = contentTab.getContentTabInfo().getDescription();
+		//2. fill a description field
 		if (description != null && !descriptionTextarea.getAttribute("value").equals(description))
 		{
 		descriptionTextarea.sendKeys(contentTab.getContentTabInfo().getDescription());
 		}
-
+                //3. fill a photographername field.
 		String phName = contentTab.getContentTabInfo().getPhotographerName();
 		if (phName != null && !photographername.getAttribute("value").equals(phName))
 		{
 			photographername.sendKeys(newcontent.getContentTab().getContentTabInfo().getPhotographerName());
 		}
+		//4. fill a photographeremail field.
 		String phEmail = contentTab.getContentTabInfo().getPhotographerEmail();
 		if (!photographeremail.getAttribute("value").equals(phEmail))
 		{
 			photographeremail.sendKeys(newcontent.getContentTab().getContentTabInfo().getPhotographerEmail());
 		}
 	
+		//5. specify a path to the file: 
 		File file = new File(newcontent.getContentTab().getContentTabInfo().getPathToFile());
 		String pathTofile = file.getAbsolutePath();
 
@@ -70,7 +74,7 @@ public class AddImageContentWizard extends AbstractAddContentWizard implements I
 		getSession().getDriver().findElement(By.id("origimagefilename")).sendKeys(pathTofile);
 		}
 
-		//fill the display name:
+		//6.  fill the display name:
 		if (!nameInput.getAttribute("value").equals(newcontent.getDisplayName()))
 		{
 			TestUtils.getInstance().clearAndType(getSession(), nameInput, newcontent.getDisplayName());
