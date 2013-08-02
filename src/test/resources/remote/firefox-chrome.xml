@@ -1,6 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="test suite" verbose="1" parallel="tests"
-	thread-count="2">
+<suite name="test suite" verbose="1" parallel="tests" thread-count="2">
 
 	<listeners>
 		<listener class-name="com.enonic.autotests.TestListener"></listener>
@@ -15,19 +14,20 @@
 		<parameter name="browser" value="firefox" />
 		<parameter name="browserVersion" value="22.0" />
 		<classes>	
-			<class name="com.enonic.autotests.ContentTypeTests" />
+			<!-- <class name="com.enonic.autotests.ContentTypeTests" />  -->
 			<class name="com.enonic.autotests.ContentRepositoryTests" />
 		</classes>
 	</test>
 		<!-- TEST 2 -->
 	  <test verbose="2" name="ChromeTests-grid2">
       <parameter name="platform" value="windows" />
-      	<parameter name="browser" value="firefox" />
-		<parameter name="browserVersion" value="22.0" />
-      <!-- <parameter name="browser" value="chrome" /> -->
-      <!--  <parameter name="browserVersion" value="27.0" /> -->
+		<!-- <parameter name="browser" value="firefox" />  -->
+		<parameter name="browserVersion" value="28.0" />
+		<parameter name="browser" value="chrome" />
+		<parameter name="base.url" value="http://10.0.6.80:8080/admin/" />
+		
 		<classes>
-			<class name="com.enonic.autotests.ContentTypeTests" />
+			<!-- <class name="com.enonic.autotests.ContentTypeTests" />  -->
 			<class name="com.enonic.autotests.ContentRepositoryTests" />
 		</classes>
 	</test>
