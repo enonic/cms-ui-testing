@@ -60,7 +60,7 @@ public class PageNavigatorV4
 	 */
 	public static AbstractContentTableView openContentsTableView(TestSession session, String... names)
 	{
-		PageNavigatorV4.navgateToAdminConsole(session);
+		navgateToAdminConsole(session);
 		LeftMenuFrame leftMenu = new LeftMenuFrame(session);
 		// expand the "Content" folder, click by RepositoryName, open repository view and click by 'New-Category' button
 		if (names.length == 1)

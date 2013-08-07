@@ -101,5 +101,15 @@ public class Content<T>
 		sb.append(displayName);
 		return sb.toString();
 	}
+	 public  Content<T> cloneContent()
+	 {
+		 Content<T> clon = new Content<>();
+		 clon.setContentHandler(this.getContentHandler());
+		 clon.setContentTab(this.getContentTab());
+		 clon.setDisplayName(this.getDisplayName());
+		 clon.setParentNames(this.getParentNames());
+		 
+		return clon;
+	 }
 
 }

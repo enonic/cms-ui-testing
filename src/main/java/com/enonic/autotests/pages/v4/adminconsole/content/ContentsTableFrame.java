@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.AddContentException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.services.PageNavigatorV4;
@@ -27,18 +28,23 @@ import com.enonic.autotests.utils.TestUtils;
  */
 public class ContentsTableFrame extends AbstractContentTableView
 {
-    private final String MOVE_CONTENT_POPUP_WINDOW_TITLE = "Choose destination category";
+	private final String MOVE_CONTENT_POPUP_WINDOW_TITLE = "Choose destination category";
 	private static final String CHECKALL_XPATH = "//img[@id='batch_operation_image']";
 	private String POPUP_WINDOW_DESTINATION_CATEGORY_XPATH = "//a[contains(@title,'%s')]";
 	private final String DELETE_CATEGORY_BUTTON = "//a[@class='button_link']/button[text()='Delete']";
-	
-	private String POPUP_WINDOW_DESTINATION_REPO_EXPANDER_XPATH ="//tr[contains(@id,'tr-category') and descendant::td[contains(.,'%s')]]/td[1]/a";
+
+	private String POPUP_WINDOW_DESTINATION_REPO_EXPANDER_XPATH = "//tr[contains(@id,'tr-category') and descendant::td[contains(.,'%s')]]/td[1]/a";
 
 	@FindBy(how = How.ID, using = "batch_operation_image")
 	protected WebElement checkAllcheckbox;
 
 	@FindBy(how = How.ID, using = "movecategorybtn")
 	protected WebElement moveButton;
+	
+	/** this button appears during add content to section */
+	private final String ADD_CONTENT_TO_SECTION_XPATH = "//button[text()='Add']";
+	@FindBy(how = How.XPATH, using = ADD_CONTENT_TO_SECTION_XPATH)
+	protected WebElement addButton;
 
 	private final String SELECT_TOP_XPATH = "//table[@class='operation-top']//select[@name='batchSelector']";
 
@@ -52,6 +58,20 @@ public class ContentsTableFrame extends AbstractContentTableView
 		super(session);
 
 	}
+	
+	public void doAddContentToSection(String contentName)
+	{
+		//1. select checkbox for content
+		String checkboxXpath = String.format(SELECT_CONTENT_CHECKBOX, contentName);
+		boolean result = TestUtils.getInstance().waitAndFind(By.xpath(checkboxXpath), getSession().getDriver());
+		if(!result)
+		{
+			throw new AddContentException("Content with name:"+ contentName + "was not found!");
+		} 
+		getSession().getDriver().findElement(By.xpath(checkboxXpath)).click();
+		//2. press the 'Add' button
+		addButton.click();
+	}
 
 	@Override
 	public void waituntilPageLoaded(long timeout)
@@ -61,6 +81,12 @@ public class ContentsTableFrame extends AbstractContentTableView
 
 	}
 
+	/**
+	 * Move content to the destination folder.
+	 * @param contentName
+	 * @param repoName
+	 * @param destinationFolderName
+	 */
 	public void doMoveContent(String contentName, String repoName, String destinationFolderName)
 	{
 		String moveLinkXpath = String.format(MOVE_CONTENT_LINK, contentName);
@@ -69,59 +95,61 @@ public class ContentsTableFrame extends AbstractContentTableView
 			throw new TestFrameworkException("move link was not found or wrong xpath");
 		}
 		getSession().getDriver().findElement(By.xpath(moveLinkXpath)).click();
-		//wait
+		// wait
 		Set<String> allWindows = getSession().getDriver().getWindowHandles();
-		
-	    if(!allWindows.isEmpty()) {
-	    	String whandle = getSession().getDriver().getWindowHandle();
-	        for (String windowId : allWindows)
-	        {
-	        
-	            try {
-	                if(getSession().getDriver().switchTo().window(windowId).getTitle().equals(MOVE_CONTENT_POPUP_WINDOW_TITLE)) {
-	                	clickByDestinationFolder(repoName, destinationFolderName);
-	                    //popup window closed, need to switch to the main window
-	                	getSession().getDriver().switchTo().window(whandle);
-	                	PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
-	                    break;
-	                }
-	            }
-	            catch(NoSuchWindowException e) {
-	                throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
-	            }
-	        }
-	    }
-	        
-	        
-		
+
+		if (!allWindows.isEmpty())
+		{
+			String whandle = getSession().getDriver().getWindowHandle();
+			for (String windowId : allWindows)
+			{
+
+				try
+				{
+					if (getSession().getDriver().switchTo().window(windowId).getTitle().equals(MOVE_CONTENT_POPUP_WINDOW_TITLE))
+					{
+						clickByDestinationFolder(repoName, destinationFolderName);
+						// popup window closed, need to switch to the main  window
+						getSession().getDriver().switchTo().window(whandle);
+						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+						break;
+					}
+				} catch (NoSuchWindowException e)
+				{
+					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
+				}
+			}
+		}
+
 	}
-	private void clickByDestinationFolder(String repoName,String destinationFolderName)
+
+	private void clickByDestinationFolder(String repoName, String destinationFolderName)
 	{
 		System.out.println("START clickByDestinationFolder");
-		//1. expand the Repository Folder.
+		// 1. expand the Repository Folder.
 		String repoExpanderPath = String.format(POPUP_WINDOW_DESTINATION_REPO_EXPANDER_XPATH, repoName);
 		if (!TestUtils.getInstance().waitAndFind(By.xpath(repoExpanderPath), getSession().getDriver()))
 		{
 			throw new TestFrameworkException("destination Repository does not exists or wrong xpath");
 		}
 		getSession().getDriver().findElement(By.xpath(repoExpanderPath)).click();
-		
-		//2. click by destination: Category Folder.
-		String destinationFolderXpath = String.format(POPUP_WINDOW_DESTINATION_CATEGORY_XPATH,destinationFolderName);
+
+		// 2. click by destination: Category Folder.
+		String destinationFolderXpath = String.format(POPUP_WINDOW_DESTINATION_CATEGORY_XPATH, destinationFolderName);
 		if (!TestUtils.getInstance().waitAndFind(By.xpath(destinationFolderXpath), getSession().getDriver()))
 		{
 			throw new TestFrameworkException("destination folder does not exists or wrong xpath");
 		}
-		
-		
+
 		try
 		{
-		getSession().getDriver().findElement(By.xpath(destinationFolderXpath)).click();
-		}catch(Exception e){
+			getSession().getDriver().findElement(By.xpath(destinationFolderXpath)).click();
+		} catch (Exception e)
+		{
 			System.out.println("move content popup window was closed");
 		}
-		
-		System.out.println("#########################################################  clickByDestinationFolder finished");
+
+		System.out.println("#####  clickByDestinationFolder finished");
 
 	}
 
@@ -142,7 +170,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 		// 2. click by 'Delete' icon
 		WebElement elem = getSession().getDriver().findElement(By.xpath(deleteContenIcon));
 		elem.click();
-		// 3.confirm deletion
+		// 3.confirm the deletion
 		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
 		if (isAlertPresent)
 		{
@@ -163,12 +191,10 @@ public class ContentsTableFrame extends AbstractContentTableView
 	public void doDeleteAllContent()
 	{
 		checkAllcheckbox.click();
-		//TestUtils.getInstance().waitIsDispalyedElement(elem, getSession().getDriver())
-		boolean isClickable = TestUtils.getInstance().waitUntilClickableNoException(getSession(), By.xpath(SELECT_TOP_XPATH),
-				AppConstants.IMPLICITLY_WAIT);
+		// TestUtils.getInstance().waitIsDispalyedElement(elem, getSession().getDriver())
+		boolean isClickable = TestUtils.getInstance().waitUntilClickableNoException(getSession(), By.xpath(SELECT_TOP_XPATH), AppConstants.IMPLICITLY_WAIT);
 		if (!isClickable)
 		{
-			//throw new TestFrameworkException("The 'select-All' element is disabled or wrong xpath");
 			getLogger().info("The category is empty");
 			return;
 		}
@@ -185,11 +211,15 @@ public class ContentsTableFrame extends AbstractContentTableView
 		}
 
 	}
-	
+
+	/**
+	 * Click by 'Delete' button on the  toolbar, confirm and delete an empty category.
+	 * <br>Button 'Delete' is not visible if category is not empty.
+	 */
 	public void doDeleteEmptyCategory()
 	{
 		boolean isDeleteButtonPresent = TestUtils.getInstance().waitUntilClickableNoException(getSession(), By.xpath(DELETE_CATEGORY_BUTTON), 2l);
-		if(!isDeleteButtonPresent)
+		if (!isDeleteButtonPresent)
 		{
 			throw new TestFrameworkException("Delete category button is not clickable! Wrong xpath or category is not empty!");
 		}
@@ -203,7 +233,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 			getLogger().info("Deletion of category, alert message:" + textOnAlert);
 			alert.accept();
 		}
-		
+
 	}
 
 }

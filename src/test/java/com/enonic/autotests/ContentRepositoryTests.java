@@ -12,13 +12,21 @@ import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
+import com.enonic.autotests.model.FileContentInfo;
+import com.enonic.autotests.model.Section;
+import com.enonic.autotests.model.Site;
+import com.enonic.autotests.model.Site.AllowedPageTypes;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
+import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
+import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
+import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
 import com.enonic.autotests.providers.ContentRepositoryProvider;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.services.RepositoryService;
+import com.enonic.autotests.services.SiteService;
 import com.enonic.autotests.testdata.content.AbstractContentXml;
 import com.enonic.autotests.testdata.content.ContentRepositoryXml;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
@@ -29,6 +37,8 @@ public class ContentRepositoryTests extends BaseTest
 	private final String REPOSITORY_LIST = "repository_list";
 	private final String IMAGE_CONTENT = "image_content";
 	private final String FILE_CONTENT = "file_content";
+	private final String TEST_SITE = "test_site";
+	private final String TEST_SECTION_FILE_CTYPE = "test_section";
 	private final String EDITTEST_CONTENT_NAME = "edited.gif";
 	
 	private final String TEST_REPO_NAME =  "notopcategory";
@@ -37,9 +47,10 @@ public class ContentRepositoryTests extends BaseTest
 	private ContentTypeService contentTypeService = new ContentTypeService();
 	private RepositoryService repositoryService = new RepositoryService();
 	private ContentService contentService = new ContentService();
+	private SiteService siteService = new SiteService();
 
 	@Test(description="set up: create content types: Image and File")
-	public synchronized void settings()
+	public  void settings()
 	{
 		logger.info("checks for the existance  of Content type, creates new content type if it does not exist");
 		ContentType imagesType = new ContentType();
@@ -105,13 +116,13 @@ public class ContentRepositoryTests extends BaseTest
 		newcategory.setName(TEST_FILE_CATEGORY_NAME);
 		newcategory.setContentTypeName("File");
 		newcategory.setDescription("Files category.");
-		String[] absolutePathName = { repository.getName() };
-		newcategory.setParentNames(absolutePathName);
+		String[] pathName = { repository.getName() };
+		newcategory.setParentNames(pathName);
 		
 		//2. add category with content type === "File"
 		repositoryService.addCategory(getTestSession(), newcategory);
 		//3.verify: category created
-		boolean isCreated = repositoryService.findCategoryByPath(getTestSession(), TEST_FILE_CATEGORY_NAME, absolutePathName);
+		boolean isCreated = repositoryService.findCategoryByPath(getTestSession(), TEST_FILE_CATEGORY_NAME, pathName);
 		Assert.assertTrue(isCreated, "new added category was not found!" + newcategory.getName());
 
 	}
@@ -128,24 +139,25 @@ public class ContentRepositoryTests extends BaseTest
 	{
 		logger.info(xmlContent.getCaseInfo());
 		Content<?> content = ContentConvertor.convertXmlDataToContent(xmlContent);
-
+        //1. find repository for test in the testsession :
 		ContentRepository repository = findRepositoryByHandler( xmlContent.getContentHandler());
-
 		String ctypeName = repository.getContentTypeName();
 		ContentCategory category = extractCategoryFromTestData(ctypeName, repository.getCategories());
 		String[] pathName = new String[] { repository.getName() };
 		category.setParentNames(pathName);
-		// 1. add category to the Content-Reposotry
+		// 2. add category to the Content-Reposotry
 		repositoryService.addCategory(getTestSession(), category);
 		String[] pathToContent = new String[] { repository.getName(), category.getName() };
 		content.setParentNames(pathToContent);
 
-		// 2. add content to the category.
+		// 3. add content to the category.
 		AbstractContentTableView frame = contentService.addContent(getTestSession(), repository, content);
-		// 3. verify content is present in the table.(Content visible in the category view)
+		// 4. verify content is present in the table.(Content visible in the category view)
 		boolean result = frame.findContentInTableByName(content.getDisplayName());
 		logger.info("case-info: Content visible in category view:" + result);
+		logger.info("addContentToCategoryTest finished" );
 
+		//5. put objects to the test-session for re use.
 		if(content.getContentHandler().equals(ContentHandler.IMAGES))
 		{
 			getTestSession().put(IMAGE_CONTENT, content);	
@@ -272,6 +284,116 @@ public class ContentRepositoryTests extends BaseTest
 		table.doDeleteEmptyCategory();
 		boolean ispresent = repositoryService.findCategoryByPath(getTestSession(), newcategory.getName(), pathName);
 		Assert.assertFalse(ispresent, "new added category was not found!" + newcategory.getName());
+	}
+	
+	
+	@Test(description = "create new site and verify: site present in the table",dependsOnMethods="addContentToCategoryTest")
+	public void createNewSiteTest()
+	{
+		logger.info("Case-info: create new site and verify: site present in the table.");
+		Site site = new Site();
+		String siteName = "site" + Math.abs(new Random().nextInt());
+		site.setDispalyName(siteName);
+		site.setLanguage("English");
+		SitesTableFrame table = siteService.createSite(getTestSession(), site );
+		boolean result = table.verifyIsPresent(site.getDispalyName());
+		Assert.assertTrue(result,"new site was not found in the table");		
+		getTestSession().put(TEST_SITE, site);	
+	}
+	
+	/**
+	 * Case-info: Edit site, allow Section page type.
+	 */
+	@Test(dependsOnMethods ="createNewSiteTest",description = "edit site and allow section page type")
+	public void allowSectionPageTypeTest()
+	{
+		logger.info("Case-info: Edit site, allow Section page type.");
+		Site site = (Site)getTestSession().get(TEST_SITE);	
+		AllowedPageTypes[] allowedPageTypes = {AllowedPageTypes.SECTION};
+		site.setAllowedPageTypes(allowedPageTypes );
+		siteService.editSite(getTestSession(), site.getDispalyName(), site);
+		logger.info("Edit site-test finished,  Section page type allowed.");
+	}
+	/**
+	 * Case-info: add to Site new section menu item.
+	 */
+	@Test(dependsOnMethods ="allowSectionPageTypeTest",description ="add to Site new section menu item")
+	public void addSectionTest()
+	{
+		logger.info("case-info: add to Site new section menu item ");
+		Site site = (Site)getTestSession().get(TEST_SITE);			
+		Section section = new Section();
+		section.setDisplayName("section1");
+		section.setShowInMenu(true);
+		section.setMenuName("section1");
+		List<String> list = new ArrayList<>();
+		list.add("File");
+		section.setAvailableContentTypes(list );
+		SiteMenuItemsTablePage siteItems = siteService.addSection(getTestSession(), site.getDispalyName(), section );
+		boolean result = siteItems.verifyIsPresent(section.getDisplayName());
+		Assert.assertTrue(result,"section was not found in the table!");
+		getTestSession().put(TEST_SECTION_FILE_CTYPE, section);	
+		
+	}
+	/**
+	 * Case info:
+	 * 
+	 * Add content to section in admin, verify:
+	 * <br> -content visible in section view. 	
+	 */
+	@Test(dependsOnMethods ="addSectionTest")
+	public void addContentToSectionTest()
+	{
+		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);
+		Site site = (Site)getTestSession().get(TEST_SITE);
+		
+		Content<FileContentInfo> content = (Content<FileContentInfo>)getTestSession().get(FILE_CONTENT);
+		ContentRepository repository = findRepositoryByHandler( content.getContentHandler().toString());
+		
+		Content<FileContentInfo> sectionContent = content.cloneContent();
+		sectionContent.setDisplayName("sectioncontent.gif");
+		
+//		ContentCategory newcategory = new ContentCategory();
+//		newcategory.setName(TEST_FILE_CATEGORY_NAME);
+//		newcategory.setContentTypeName("File");
+//		newcategory.setDescription("Files category.");
+//		String[] categoryPathName = { repository.getName() };
+//		String[] contentPathName = { repository.getName(), newcategory.getName() };
+//		newcategory.setParentNames(categoryPathName);
+//		
+//		sectionContent.setParentNames(contentPathName);
+//		//2. add category with content type === "File"
+//		repositoryService.addCategory(getTestSession(), newcategory);
+//		contentService.addContent(getTestSession(), repository, sectionContent);
+		addCategoryAndContent(sectionContent, repository);
+		
+		SectionContentsTablePage table = siteService.addContentToSection(getTestSession(), site.getDispalyName(), section, sectionContent);
+		boolean result = table.verifyIsPresent(sectionContent.getDisplayName());
+		Assert.assertTrue(result,"content was not added to Section!");
+		
+	}
+	
+	// ==================================================================================================
+	/**
+	 * Creates preconditions for addContentToSectionTest.
+	 * @param sectionContent
+	 * @param repository
+	 */
+	private void addCategoryAndContent(Content<FileContentInfo>sectionContent,ContentRepository repository)
+	{
+		
+		
+		ContentCategory newcategory = new ContentCategory();
+		newcategory.setName(TEST_FILE_CATEGORY_NAME);
+		newcategory.setContentTypeName("File");
+		newcategory.setDescription("Files category.");
+		String[] categoryPathName = { repository.getName() };
+		String[] contentPathName = { repository.getName(), newcategory.getName() };
+		newcategory.setParentNames(categoryPathName);
+		sectionContent.setParentNames(contentPathName);
+		// add category with content type === "File"
+		repositoryService.addCategory(getTestSession(), newcategory);
+		contentService.addContent(getTestSession(), repository, sectionContent);
 	}
 	
 	/**

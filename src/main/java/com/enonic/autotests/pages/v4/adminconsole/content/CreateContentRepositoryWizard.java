@@ -9,14 +9,11 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.Select;
-
-import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.ContentRepositoryException;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentRepository.TopCategory;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsoleWizardPage;
-import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypeWizardPage;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
@@ -111,7 +108,7 @@ public class CreateContentRepositoryWizard extends AbstractAdminConsoleWizardPag
 			getLogger().debug(String.format("option was found : %s", option.getText()));
 			if (option.getText().equals(optionText)) {
 				Actions builder = new Actions(getSession().getDriver());
-				builder.doubleClick(option).build().perform();
+				builder.doubleClick(option).perform();
 				isFound = true;
 				break;
 			}

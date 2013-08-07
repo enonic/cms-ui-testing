@@ -39,6 +39,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	protected String DELETE_CONTENT_LINK = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]//img[@src='images/icon_delete.gif']";
 	protected String MOVE_CONTENT_LINK = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]//img[@src='images/icon_content_move.gif']";
 
+	protected String SELECT_CONTENT_CHECKBOX = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]/td/input[@name='batch_operation']";
 	/**
 	 * @param session
 	 */

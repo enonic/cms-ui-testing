@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
@@ -19,6 +20,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -29,9 +31,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.ContentRepositoryException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.logger.Logger;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
+import com.enonic.autotests.services.PageNavigatorV4;
 
 public class TestUtils
 {
@@ -65,6 +69,29 @@ public class TestUtils
 	 */
 	private TestUtils()
 	{
+
+	}
+	
+	public void doubleClickActionByOption(final TestSession testSession, List<WebElement> allOptions , String optionText) {
+		
+		boolean isFound = false;
+		for (WebElement option : allOptions) {
+			logger.debug(String.format("option was found : %s", option.getText()));
+			if (option.getText().equals(optionText)) {
+				Actions builder = new Actions(testSession.getDriver());
+				//builder.doubleClick(option).perform();
+				//builder.doubleClick(option).build().perform();
+				builder.moveToElement(option).click().perform();
+				builder.moveToElement(option).doubleClick().perform();
+				
+				isFound = true;
+				break;
+			}
+
+		}
+		if (!isFound) {
+			throw new ContentRepositoryException("The " + optionText + " content type was not found among available content types        ");
+		}
 
 	}
 
@@ -305,13 +332,33 @@ public class TestUtils
 
 	public void selectByText(TestSession session, By by, String text)
 	{
-		List<WebElement> elems = session.getDriver().findElements(by);// session.getDriver().findElements(By.name("//input[@name='name']"))
+		List<WebElement> elems = session.getDriver().findElements(by);
 		if (elems.size() == 0)
 		{
 			throw new TestFrameworkException("wrong xpath for select: " + text);
 		}
 		Select select = new Select(elems.get(0));
 		select.selectByVisibleText(text);
+	}
+	
+	public void expandFolder(TestSession session,String expanderXpath)
+	{
+		PageNavigatorV4.switchToFrame(session, AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		List<WebElement> elems = session.getDriver().findElements(By.xpath(expanderXpath));
+		
+		if (elems.size() == 0)
+		{
+			throw new TestFrameworkException("xpath for Expander  is wrong or this folder has no one item!");
+		}
+		// check if category has + expander:
+		WebElement img = elems.get(0);
+		if (img.getAttribute("src").contains(AppConstants.PLUS_ICON_PNG))
+		{
+			elems.get(0).click();
+		} else if (img.getAttribute("src").contains(AppConstants.MINUS_ICON_PNG))
+		{
+			logger.info("the folder with name  already expanded");
+		}
 	}
 
 	public String createTempFile(String s)
@@ -346,6 +393,14 @@ public class TestUtils
 				in.close();
 			}
 		}
+	}
+	
+	public String getAlertMessage(TestSession session)
+	{
+		Alert alert = session.getDriver().switchTo().alert();
+		String msg = alert.getText();
+		alert.dismiss();
+		return msg;
 	}
 
 }
