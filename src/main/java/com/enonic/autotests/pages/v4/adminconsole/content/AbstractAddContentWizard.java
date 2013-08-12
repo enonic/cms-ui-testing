@@ -50,7 +50,7 @@ public class AbstractAddContentWizard extends AbstractAdminConsolePage
 	@Override
 	public void waituntilPageLoaded(long timeout)
 	{
-		new WebDriverWait(getSession().getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(GENERAL_TAB_LINK_XPATH)));
+		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(GENERAL_TAB_LINK_XPATH)));
 
 	}
 }

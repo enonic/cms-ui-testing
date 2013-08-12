@@ -15,6 +15,7 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.AddContentException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
+import com.enonic.autotests.model.Section;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.services.PageNavigatorV4;
 import com.enonic.autotests.utils.TestUtils;
@@ -58,17 +59,88 @@ public class ContentsTableFrame extends AbstractContentTableView
 		super(session);
 
 	}
+	/**
+	 * Clicks by 'approve and publish' and publish content to section.
+	 * 
+	 * @param contentDisplayName
+	 */
+	public void doPublishToSection(String contentDisplayName, Section section)
+	{
+		String publishIcon = String.format(PUBLISH_CONTENT_LINK, contentDisplayName);
+		// 1. verify 'approve and publish'-icon is present.
+		if (!TestUtils.getInstance().waitAndFind(By.xpath(publishIcon), getDriver()))
+		{
+			throw new TestFrameworkException("publish link was not found or wrong xpath");
+		}
+		// 2. click by 'approve and publish' icon
+		WebElement elemPublish = findElement(By.xpath(publishIcon));
+		elemPublish.click();
+		ContentPublishingWizardPage1 page1 = new ContentPublishingWizardPage1(getSession());
+		page1.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		ContentPublishingWizardPage2 page2 = page1.doSelectSiteAndNext(section.getSiteName());
+		page2.doSelectSectionAndNext(section.getDisplayName(),section.isOrdered());
+		if(section.isOrdered())
+		{
+			ContentPublishingWizardPageOrderPosition orderPosition = new ContentPublishingWizardPageOrderPosition(getSession());
+			orderPosition.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+			orderPosition.doNext();
+		}
 	
+		ContentPublishingWizardPage3 page3 = new ContentPublishingWizardPage3(getSession());
+		page3.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+	    page3.doFinish();
+	    waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+			
+		
+	}
+	public void doPublishToSectionAndMoveToEnd(String contentDisplayName, Section section)
+	{
+		if(!section.isOrdered())
+		{
+			throw new IllegalArgumentException();
+		}
+		String publishIcon = String.format(PUBLISH_CONTENT_LINK, contentDisplayName);
+		// 1. verify 'approve and publish'-icon is present.
+		if (!TestUtils.getInstance().waitAndFind(By.xpath(publishIcon), getDriver()))
+		{
+			throw new TestFrameworkException("publish link was not found or wrong xpath");
+		}
+		// 2. click by 'approve and publish' icon
+		WebElement elemPublish = findElement(By.xpath(publishIcon));
+		elemPublish.click();
+		ContentPublishingWizardPage1 page1 = new ContentPublishingWizardPage1(getSession());
+		page1.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		ContentPublishingWizardPage2 page2 = page1.doSelectSiteAndNext(section.getSiteName());
+		page2.doSelectSectionAndNext(section.getDisplayName(),section.isOrdered());
+		if(section.isOrdered())
+		{
+			ContentPublishingWizardPageOrderPosition orderPosition = new ContentPublishingWizardPageOrderPosition(getSession());
+			orderPosition.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+			orderPosition.moveToEnd(contentDisplayName);
+			orderPosition.doNext();
+		}
+	
+		ContentPublishingWizardPage3 page3 = new ContentPublishingWizardPage3(getSession());
+		page3.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+	    page3.doFinish();
+	    waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+			
+		
+	}
+	
+	/**
+	 * @param contentName
+	 */
 	public void doAddContentToSection(String contentName)
 	{
 		//1. select checkbox for content
 		String checkboxXpath = String.format(SELECT_CONTENT_CHECKBOX, contentName);
-		boolean result = TestUtils.getInstance().waitAndFind(By.xpath(checkboxXpath), getSession().getDriver());
+		boolean result = TestUtils.getInstance().waitAndFind(By.xpath(checkboxXpath), getDriver());
 		if(!result)
 		{
 			throw new AddContentException("Content with name:"+ contentName + "was not found!");
 		} 
-		getSession().getDriver().findElement(By.xpath(checkboxXpath)).click();
+		findElement(By.xpath(checkboxXpath)).click();
 		//2. press the 'Add' button
 		addButton.click();
 	}
@@ -76,8 +148,8 @@ public class ContentsTableFrame extends AbstractContentTableView
 	@Override
 	public void waituntilPageLoaded(long timeout)
 	{
-		getSession().getDriver().findElements(By.xpath(SELECT_TOP_XPATH));
-		new WebDriverWait(getSession().getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@class='browsetable']")));
+		findElements(By.xpath(SELECT_TOP_XPATH));
+		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table[@class='browsetable']")));
 
 	}
 
@@ -191,7 +263,6 @@ public class ContentsTableFrame extends AbstractContentTableView
 	public void doDeleteAllContent()
 	{
 		checkAllcheckbox.click();
-		// TestUtils.getInstance().waitIsDispalyedElement(elem, getSession().getDriver())
 		boolean isClickable = TestUtils.getInstance().waitUntilClickableNoException(getSession(), By.xpath(SELECT_TOP_XPATH), AppConstants.IMPLICITLY_WAIT);
 		if (!isClickable)
 		{

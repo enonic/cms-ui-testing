@@ -39,6 +39,9 @@ public class AddSectionWizardPage extends AbstractAdminConsolePage
 	@FindBy(name = "save")
 	private WebElement saveButton;
 	
+	@FindBy(name = "section_ordered")
+	private WebElement orderedRadio;
+	
 	/**
 	 *The Constructor
 	 */
@@ -73,6 +76,11 @@ public class AddSectionWizardPage extends AbstractAdminConsolePage
 		{
 			showInMenuCheckBox.click();
 		}
+		if(section.isOrdered())
+		{
+			orderedRadio.click();
+		}
+		
 		List<WebElement> allOptions = avaiableContentTypeNames.findElements(By.tagName("option"));
 		List<String> expectedCTNames = section.getAvailableContentTypes();
 		for(String name: expectedCTNames)

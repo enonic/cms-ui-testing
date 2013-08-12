@@ -168,6 +168,20 @@ public class TestUtils
 			return false;
 		}
 	}
+	public boolean waitUntilInvisibleNoException(final TestSession testSession, By by, long timeout)
+	{
+		WebDriverWait wait = new WebDriverWait(testSession.getDriver(), timeout);
+		try
+		{
+			wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+			return true;
+		} catch (Exception e)
+		{
+
+			return false;
+		}
+	}
+
 
 	/**
 	 * Checks if alert dialog present.

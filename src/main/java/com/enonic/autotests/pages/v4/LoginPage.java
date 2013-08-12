@@ -54,10 +54,9 @@ public class LoginPage extends Page {
         // TODO: Add wait statement and verify English prompts
 		usernameInput.sendKeys(username);
 		passwordInput.sendKeys(password);
-		// TestUtils.saveScreenshot( getSession().getDriver());
 		loginButton.submit();
 
-		if (TestUtils.getInstance().waitAndFind(By.className("cms-error"), getSession().getDriver())) {
+		if (TestUtils.getInstance().waitAndFind(By.className("cms-error"), getDriver())) {
 			String erMess = getSession().getDriver().findElement(By.className("cms-error")).getText();
 			logger.info("could not to login " + erMess);
 			TestUtils.getInstance().saveScreenshot(getSession());

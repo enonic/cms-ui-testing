@@ -8,12 +8,16 @@ import java.util.List;
  */
 public class Section
 {
+   /** site's name, where section will be located. */
+	private String siteName;
 
 	private String menuName;
 
 	private String displayName;
 
 	private boolean showInMenu;
+
+	private boolean isOrdered;
 
 	/** names of available contentTypes */
 	private List<String> availableContentTypes;
@@ -58,5 +62,24 @@ public class Section
 	public void setAvailableContentTypes(List<String> availableContentTypes)
 	{
 		this.availableContentTypes = availableContentTypes;
+	}
+
+	public boolean isOrdered()
+	{
+		return isOrdered;
+	}
+
+	public void setOrdered(boolean isOrdered)
+	{
+		this.isOrdered = isOrdered;
+	}
+	public String getSiteName()
+	{
+		return siteName;
+	}
+
+	public void setSiteName(String siteName)
+	{
+		this.siteName = siteName;
 	}
 }

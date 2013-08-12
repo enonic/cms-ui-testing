@@ -14,13 +14,14 @@ import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesTab
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
+import com.enonic.autotests.pages.v4.adminconsole.site.SiteInfoPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
 import com.enonic.autotests.services.PageNavigatorV4;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
- * Representation of the Left Menu Frame
+ * Page object for Left Menu Frame.
  * 
  */
 public class LeftMenuFrame extends Page
@@ -73,6 +74,11 @@ public class LeftMenuFrame extends Page
 
 	}
 	
+	
+	/**
+	 * @param testSession
+	 * @return
+	 */
 	public ContentTypesFrame openContentTypesFrame(TestSession testSession)
 	{
 		ContentTypesFrame frame = new ContentTypesFrame(testSession);
@@ -82,6 +88,9 @@ public class LeftMenuFrame extends Page
 
 	}
 
+	/**
+	 * @return
+	 */
 	public RepositoriesListFrame openRepositoriesTableFrame()
 	{
 		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(getSession(), CONTENT_LOCATOR_XPATH);
@@ -107,19 +116,44 @@ public class LeftMenuFrame extends Page
 
 		String xpathString = String.format("//tr[@id='id-categories']/child::td[2]//table[@class='menuItem']//tr[1]//span[text()='%s']", repoName);
 		// 2. Try to Find Repository by Name and click:
-		TestUtils.getInstance().clickByLocator(By.xpath(xpathString), getSession().getDriver());
+		TestUtils.getInstance().clickByLocator(By.xpath(xpathString), getDriver());
 
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
 		ContentRepositoriesTableFrame view = new ContentRepositoriesTableFrame(getSession());
-		view.waituntilPageLoaded(2L);
+		view.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		String repoNameXpath = String.format("//h1/a[text()='%s']", repoName);
-		List<WebElement> elems = getSession().getDriver().findElements(By.xpath(repoNameXpath));
+		List<WebElement> elems = findElements(By.xpath(repoNameXpath));
 		if (elems.size() == 0)
 		{
 			throw new TestFrameworkException("The name of repository should be present! Name:" + repoName);
 		}
 		return view;
 
+	}
+	/**
+	 * Expands 'Sites' folder in Admin Console and click by site-name and opens Info page.
+	 * 
+	 * @param siteName site for opening.
+	 * @return info-page for site, which contains buttons 'Delete', 'Edit', 'Open in ICE' .....
+	 */
+	public SiteInfoPage openSiteInfoPage(String siteName)
+	{
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		//1. expand 'Sites' folder
+		expandSitesFolder();
+		//2.click by site
+		String siteXpath = String.format(SITENAME_LINK_XPATH, siteName);
+		boolean isSitePresent = TestUtils.getInstance().waitAndFind(By.xpath(siteXpath), getDriver());
+		if(!isSitePresent)
+		{
+			throw new TestFrameworkException("Site with name: "+ siteName+ " was not found!");
+		}
+		findElement(By.xpath(siteXpath)).click();
+        //3. switch to 'Right Frame'
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+		SiteInfoPage info = new SiteInfoPage(getSession());
+		info.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return info;
 	}
 	/**
 	 * @param siteName
@@ -136,13 +170,13 @@ public class LeftMenuFrame extends Page
 		TestUtils.getInstance().expandFolder(getSession(), siteExpanderXpath);
 		//3. click by 'Menu' link, located under the Site.
 		String menuXpath = String.format(SITE_MENU_LINK_XPATH, siteName);
-		boolean isPresentMenuLink = TestUtils.getInstance().waitAndFind(By.xpath(menuXpath), getSession().getDriver());
+		boolean isPresentMenuLink = TestUtils.getInstance().waitAndFind(By.xpath(menuXpath), getDriver());
 		if(!isPresentMenuLink)
 		{
 			throw new TestFrameworkException("Menu link for Site "+siteName +" was not found!, probably wrong xpath! ");
 		}
-		//click by Menu:
-		getSession().getDriver().findElement(By.xpath(menuXpath)).click();
+		//4.click by Menu:
+		findElement(By.xpath(menuXpath)).click();
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
 		SiteMenuItemsTablePage siteMenuItems = new SiteMenuItemsTablePage(getSession());
 		return siteMenuItems;
@@ -159,26 +193,23 @@ public class LeftMenuFrame extends Page
 		//1. expand 'Sites' folder
 		expandSitesFolder();
 		//2. expand site folder
-		//expandSite(siteName);
 		String siteExpanderXpath = String.format(SITE_EXPANDER_IMG_XPATH, siteName);
-		//expandFolder(siteExpanderXpath);
 		TestUtils.getInstance().expandFolder(getSession(), siteExpanderXpath);
-		//3. expand Menu:
+		//3. expand Menu in the site:
 		String siteMenuExpanderXpath = String.format(SITE_MENU_EXPANDER_IMG_XPATH, siteName);
-		//expandFolder(siteMenuExpanderXpath);
 		TestUtils.getInstance().expandFolder(getSession(), siteMenuExpanderXpath);
 		
 		String siteMenuItem = String.format(SITE_MENU_ITEM_XPATH, siteName, sectionName);
-		boolean isMenuItemPresent = TestUtils.getInstance().waitAndFind(By.xpath(siteMenuItem), getSession().getDriver());
+		boolean isMenuItemPresent = TestUtils.getInstance().waitAndFind(By.xpath(siteMenuItem), getDriver());
 		if(!isMenuItemPresent)
 		{
 			throw new TestFrameworkException("Menu Item does not exist or wrong xpath");
 		}
-		getSession().getDriver().findElement(By.xpath(siteMenuItem)).click();
+		findElement(By.xpath(siteMenuItem)).click();
 		
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
 		SectionContentsTablePage contentTablePage = new SectionContentsTablePage(getSession());
-		contentTablePage.waituntilPageLoaded(2l);
+		contentTablePage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		contentTablePage.switchToViewContent();
 		return contentTablePage;
 	}
@@ -212,14 +243,14 @@ public class LeftMenuFrame extends Page
 		// 3. click by category and open category-view, where 'New/add' button should present.
 		String categoryName = names[names.length - 1];
 		String categoryXpath = String.format(CATEGORY_XPATH, categoryName);
-		boolean isCategoryPresent = TestUtils.getInstance().waitAndFind(By.xpath(categoryXpath), getSession().getDriver());
+		boolean isCategoryPresent = TestUtils.getInstance().waitAndFind(By.xpath(categoryXpath), getDriver());
 		if (!isCategoryPresent)
 		{
 			throw new TestFrameworkException("category with name" + categoryName);
 		}
 		
 		//4.click by categoryName:
-		getSession().getDriver().findElement(By.xpath(categoryXpath)).click();
+		findElement(By.xpath(categoryXpath)).click();
 		
 		//5. switch to the main frame
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
@@ -228,6 +259,11 @@ public class LeftMenuFrame extends Page
 		return view;
 	}
 	
+	/**
+	 * @param categoryToSearch
+	 * @param parentNames
+	 * @return
+	 */
 	public WebElement findCategoryInContentFolder(String categoryToSearch, String... parentNames)
 	{
 		if(parentNames.length == 0)
@@ -246,12 +282,12 @@ public class LeftMenuFrame extends Page
 
 		// 3. click by category and open category-view, where 'New/add' button should present.		
 		String categoryXpath = String.format(CATEGORY_XPATH, categoryToSearch);
-		boolean isCategoryPresent = TestUtils.getInstance().waitAndFind(By.xpath(categoryXpath), getSession().getDriver());
+		boolean isCategoryPresent = TestUtils.getInstance().waitAndFind(By.xpath(categoryXpath), getDriver());
 		if (!isCategoryPresent)
 		{
 			return null;
 		}else{
-			return getSession().getDriver().findElement(By.xpath(categoryXpath));
+			return findElement(By.xpath(categoryXpath));
 		}
 		
 
@@ -264,21 +300,25 @@ public class LeftMenuFrame extends Page
 	private void expandContentFolder()
 	{
 		String expanderPlusXpath = String.format(CONTENTFOLDER_EXPANDER_XPATH, AppConstants.PLUS_ICON_PNG);
-		boolean isRolledUp = TestUtils.getInstance().waitAndFind(By.xpath(expanderPlusXpath), getSession().getDriver());
+		boolean isRolledUp = TestUtils.getInstance().waitAndFind(By.xpath(expanderPlusXpath), getDriver());
 		if (isRolledUp)
 		{
 			// 1. Expand the 'Content' folder:
-			TestUtils.getInstance().clickByLocator(By.xpath(expanderPlusXpath), getSession().getDriver());
+			TestUtils.getInstance().clickByLocator(By.xpath(expanderPlusXpath), getDriver());
 		}
 	}
+	
+	/**
+	 * Clicks by 'expand' icon and expands the 'Sites' folder in the 'Left Menu' frame
+	 */
 	private void expandSitesFolder()
 	{
 		String expanderPlusXpath = String.format(SITEFOLDER_EXPANDER_XPATH, AppConstants.PLUS_ICON_PNG);
-		boolean isRolledUp = TestUtils.getInstance().waitAndFind(By.xpath(expanderPlusXpath), getSession().getDriver());
+		boolean isRolledUp = TestUtils.getInstance().waitAndFind(By.xpath(expanderPlusXpath), getDriver());
 		if (isRolledUp)
 		{
 			// 1. Expand the 'Content' folder:
-			TestUtils.getInstance().clickByLocator(By.xpath(expanderPlusXpath), getSession().getDriver());
+			TestUtils.getInstance().clickByLocator(By.xpath(expanderPlusXpath), getDriver());
 		}
 	}
 

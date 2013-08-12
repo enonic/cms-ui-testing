@@ -42,12 +42,11 @@ public class AddFileContentWizard extends AbstractAddContentWizard implements IU
 		descriptionTextarea.sendKeys(contentTab.getContentTabInfo().getDescription());
 		}
 		
-		// getSession().getDriver().findElement(By.id("newfile")).sendKeys("d:\\bel.gif");
 		File file = new File(newcontent.getContentTab().getContentTabInfo().getPathToFile());
 		String pathTofile = file.getAbsolutePath();
-		if(!getSession().getDriver().findElement(By.id("newfile")).getText().equals(pathTofile))
+		if(!findElement(By.id("newfile")).getText().equals(pathTofile))
 		{
-		getSession().getDriver().findElement(By.id("newfile")).sendKeys(pathTofile);
+			findElement(By.id("newfile")).sendKeys(pathTofile);
 		}
 		//fill the display name:
 		if(!nameInput.getAttribute("value").equals( newcontent.getDisplayName()))

@@ -2,9 +2,11 @@ package com.enonic.autotests.services;
 
 import java.util.List;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentRepository;
+import com.enonic.autotests.model.Section;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
@@ -29,6 +31,28 @@ public class ContentService
 		return frame.doSearchContent(contentName);
 		
 	}
+	
+	/**
+	 * Opens category by name, find a content and publishes content to Section.
+	 * 
+	 * @param testSession
+	 * @param content
+	 * @param section
+	 */
+	public void doPublishContentToSection(TestSession testSession,Content<?> content,Section section)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);		
+		ContentsTableFrame contentTableFrame = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		contentTableFrame.doPublishToSection(content.getDisplayName(), section);
+		contentTableFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+	}
+	public void doPublishContentToSectionAnMoveToEnd(TestSession testSession,Content<?> content,Section section)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);		
+		ContentsTableFrame contentTableFrame = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		contentTableFrame.doPublishToSectionAndMoveToEnd(content.getDisplayName(), section);
+		contentTableFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+	}
 	/**
 	 * Open Category and add content. 
 	 * 
@@ -42,7 +66,7 @@ public class ContentService
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
 		IUpdateOrCreateContent wizard = tableViewFrame.openAddContentWizardPage(cRepository);
 		wizard.typeDataAndSave(content);
-		tableViewFrame.waituntilPageLoaded(3l);
+		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return tableViewFrame;
 		
 		
@@ -66,7 +90,7 @@ public class ContentService
 	}
 	
 	/**
-	 * Opens a Category, shows the table of content, clicks by 'Delete' icon, confirm and deletes content from this category
+	 * Opens a Category, shows the table of content, clicks by 'Delete' icon, confirm and deletes content from the category.
 	 * 
 	 * @param session
 	 * @param displayName
@@ -96,7 +120,7 @@ public class ContentService
 		 return (ContentsTableFrame)PageNavigatorV4.openContentsTableView(session, destinationNames);
 	}
 	/**
-	 * Moves content to the destination folder.
+	 * Opens category, finds content in table and moves this content to the destination folder.
 	 * 
 	 * @param session
 	 * @param content
@@ -111,8 +135,13 @@ public class ContentService
 		return contentTableFrame;
 	}
 	
+	/**
+	 * @param session
+	 * @param destinationNames
+	 */
 	public void deleteCategory(TestSession session,String ...destinationNames )
 	{
 		openCategory(session, destinationNames);
+		//TODO not implemented yet.
 	}
 }

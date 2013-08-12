@@ -32,14 +32,15 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 
 	@FindBy(how = How.ID, using = "cmdNewMenuButtonbutton")
 	protected  WebElement buttonNew;
-	//span  color: gray
-	protected String CONTENT_NAME_XPATH = "//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//div[contains(@style,'font-weight: bold') and text()='%s']";//font-weight: bold
-	
-	protected String EDIT_CONTENT_LINK = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]//img[@src='images/icon_edit.gif']";
-	protected String DELETE_CONTENT_LINK = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]//img[@src='images/icon_delete.gif']";
-	protected String MOVE_CONTENT_LINK = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]//img[@src='images/icon_content_move.gif']";
 
-	protected String SELECT_CONTENT_CHECKBOX = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]/td/input[@name='batch_operation']";
+	protected String CONTENT_NAME_XPATH = "//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//div[contains(@style,'font-weight: bold') and text()='%s']";
+	private String CONTENT_ROW = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]";
+	protected String EDIT_CONTENT_LINK = CONTENT_ROW + "//img[@src='images/icon_edit.gif']";
+	protected String DELETE_CONTENT_LINK = CONTENT_ROW + "//img[@src='images/icon_delete.gif']";
+	protected String PUBLISH_CONTENT_LINK = CONTENT_ROW + "//img[@src='images/icon_content_publish.gif']";
+	protected String MOVE_CONTENT_LINK =  CONTENT_ROW + "//img[@src='images/icon_content_move.gif']";
+
+	protected String SELECT_CONTENT_CHECKBOX = CONTENT_ROW + "/td/input[@name='batch_operation']";
 	/**
 	 * @param session
 	 */
@@ -56,13 +57,12 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	{
 		//String pathName = content.buildContentNameWithPath();
 		String nameXpath = String.format(EDIT_CONTENT_LINK, content.getDisplayName() );
-		boolean isEditButtonPresent = TestUtils.getInstance().waitAndFind(By.xpath(nameXpath), getSession().getDriver());
+		boolean isEditButtonPresent = TestUtils.getInstance().waitAndFind(By.xpath(nameXpath), getDriver());
 		if (!isEditButtonPresent)
 		{
 			throw new AddContentException("'Edit Content' link was not found");
 		}
-		WebElement element = getSession().getDriver().findElement(By.xpath(nameXpath));
-		element.click();
+		findElement(By.xpath(nameXpath)).click();
 		return updateOrCreateWizardFactory(content.getContentHandler());
 	}
 	
@@ -73,7 +73,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	{
 		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
 		buttonNew.click();
-		List<WebElement> elems = getSession().getDriver().findElements(By.xpath(CREATE_CATEGORY_BUTTON_XPATH));
+		List<WebElement> elems = getDriver().findElements(By.xpath(CREATE_CATEGORY_BUTTON_XPATH));
 		if (elems.size() == 0)
 		{
 			throw new TestFrameworkException("add Category Button was not found!");
@@ -92,7 +92,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	{
 		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
 		buttonNew.click();
-		boolean isAddContentButtonShowed = TestUtils.getInstance().waitAndFind(By.xpath(CREATE_CONTENT_MENU_BUTTON_XPATH),getSession().getDriver());
+		boolean isAddContentButtonShowed = TestUtils.getInstance().waitAndFind(By.xpath(CREATE_CONTENT_MENU_BUTTON_XPATH), getDriver());
 		if (!isAddContentButtonShowed)
 		{
 			throw new AddContentException("'New Content-'Menu item was not found");
@@ -101,7 +101,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 		menuItemAddContent.click();
 		// 3. verify if wizard opened:
 		String xpath = String.format("//a[text()='%s']", cRepository.getName());
-		boolean isTitleLoaded = TestUtils.getInstance().waitAndFind(By.xpath(xpath), getSession().getDriver());
+		boolean isTitleLoaded = TestUtils.getInstance().waitAndFind(By.xpath(xpath), getDriver());
 		if (!isTitleLoaded)
 		{
 			throw new AddContentException("Create Content Wizard was not opened! Repository: " + cRepository.getName());
@@ -116,7 +116,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	public boolean findContentInTableByName(String displayName)
 	{
 		String contentXpath = String.format(CONTENT_NAME_XPATH, displayName);
-		boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(contentXpath), getSession().getDriver());
+		boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(contentXpath), getDriver());
 		return isPresent;
 	}
 	/**

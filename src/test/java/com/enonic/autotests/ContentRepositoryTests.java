@@ -1,9 +1,11 @@
 package com.enonic.autotests;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+import org.openqa.selenium.internal.seleniumemulation.GetLocation;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -39,10 +41,15 @@ public class ContentRepositoryTests extends BaseTest
 	private final String FILE_CONTENT = "file_content";
 	private final String TEST_SITE = "test_site";
 	private final String TEST_SECTION_FILE_CTYPE = "test_section";
+	private final String TEST_ORDEREDSECTION_FILE_CTYPE = "test_section_ordered";
 	private final String EDITTEST_CONTENT_NAME = "edited.gif";
+	
+	private String SECTION_CONTENT_ADD_NAME ="sectioncontent.gif";
+	private String SECTION_CONTENT_PUBLISH_NAME ="publishcontent.gif";
 	
 	private final String TEST_REPO_NAME =  "notopcategory";
 	private final String TEST_FILE_CATEGORY_NAME =  "filesCategory";
+	private final String TEST_PUBLISH_FILE_CATEGORY_NAME =  "publishtest";
 
 	private ContentTypeService contentTypeService = new ContentTypeService();
 	private RepositoryService repositoryService = new RepositoryService();
@@ -155,6 +162,9 @@ public class ContentRepositoryTests extends BaseTest
 		// 4. verify content is present in the table.(Content visible in the category view)
 		boolean result = frame.findContentInTableByName(content.getDisplayName());
 		logger.info("case-info: Content visible in category view:" + result);
+		Assert.assertTrue(result, "new added content was not found");
+		
+		
 		logger.info("addContentToCategoryTest finished" );
 
 		//5. put objects to the test-session for re use.
@@ -167,7 +177,7 @@ public class ContentRepositoryTests extends BaseTest
 			getTestSession().put(FILE_CONTENT, content);	
 		}
 		
-		Assert.assertTrue(result, "new added content was not found");
+		
 
 	}
 
@@ -225,6 +235,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(description = "delete content and verify it in the table", dependsOnMethods = "updateContentNameAndSearchTest")
 	public void deleteContentFromCategory()
 	{
+		logger.info("case-info:Delete  content in admin, verify -Content not present in category view ");
 		Content<?> content = (Content<?>) getTestSession().get(IMAGE_CONTENT);
 		content.setDisplayName(EDITTEST_CONTENT_NAME);
 		ContentsTableFrame contentTableFrame = contentService.deleteContentfromCategory(getTestSession(), content);
@@ -243,9 +254,10 @@ public class ContentRepositoryTests extends BaseTest
 	  * <br>-Content searchable in new category
 	  * 
 	  **/
-	@Test(dependsOnMethods = "addContentToCategoryTest")
+	@Test(dependsOnMethods = "addContentToCategoryTest",description = "Move (both one and multiple (bulk)) content in admin, verify Content visible in new category view")
 	public void moveContentTest()
 	{
+		logger.info("Case-info: Move  content in admin, verify Content visible in new category view");
 		Content<?> content = (Content<?>) getTestSession().get(FILE_CONTENT);
 		ContentRepository repository = findRepositoryByName(TEST_REPO_NAME);
 		ContentsTableFrame table = contentService.moveContent(getTestSession(), content, repository.getName(), TEST_FILE_CATEGORY_NAME);
@@ -265,6 +277,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(description="Empty all content from category. Open category, and delete by pushing 'Delete'",dependsOnMethods = "addContentToCategoryTest")
 	public void deleteAllContentAndDeleteCategory()
 	{
+		logger.info("Empty all content from category. Open category, and delete by pushing 'Delete'");
 		ContentRepository repository = findRepositoryByName(TEST_REPO_NAME);
 		ContentCategory newcategory = new ContentCategory();
 		newcategory.setName("categoryTodelete");
@@ -315,7 +328,7 @@ public class ContentRepositoryTests extends BaseTest
 		logger.info("Edit site-test finished,  Section page type allowed.");
 	}
 	/**
-	 * Case-info: add to Site new section menu item.
+	 * Case-info: add new section menu item to the  Site .
 	 */
 	@Test(dependsOnMethods ="allowSectionPageTypeTest",description ="add to Site new section menu item")
 	public void addSectionTest()
@@ -326,14 +339,121 @@ public class ContentRepositoryTests extends BaseTest
 		section.setDisplayName("section1");
 		section.setShowInMenu(true);
 		section.setMenuName("section1");
+		section.setSiteName(site.getDispalyName());
 		List<String> list = new ArrayList<>();
 		list.add("File");
 		section.setAvailableContentTypes(list );
+		//1. try to add a new section to Site:
 		SiteMenuItemsTablePage siteItems = siteService.addSection(getTestSession(), site.getDispalyName(), section );
+		//2. verify: section present
 		boolean result = siteItems.verifyIsPresent(section.getDisplayName());
 		Assert.assertTrue(result,"section was not found in the table!");
+		logger.info("TEST FINISHED: add to Site new section menu item ");
+		// put new created section to the session.
 		getTestSession().put(TEST_SECTION_FILE_CTYPE, section);	
 		
+	}
+	/**
+	 * Case-info: add new section menu item to the  Site .
+	 */
+	@Test(dependsOnMethods ="allowSectionPageTypeTest",description ="add new ordered section menu item to the  Site ")
+	public void addOrderedSectionTest()
+	{
+		logger.info("case-info: add new ordered section menu item to the  Site ");
+		Site site = (Site)getTestSession().get(TEST_SITE);			
+		Section section = new Section();
+		section.setDisplayName("ordered");
+		section.setShowInMenu(true);
+		section.setMenuName("ordered");
+		section.setOrdered(true);
+		section.setSiteName(site.getDispalyName());
+		List<String> list = new ArrayList<>();
+		list.add("File");
+		section.setAvailableContentTypes(list );
+		//1. try to add a new section to Site:
+		SiteMenuItemsTablePage siteItems = siteService.addSection(getTestSession(), site.getDispalyName(), section );
+		//2. verify: section present
+		boolean result = siteItems.verifyIsPresent(section.getDisplayName());
+		Assert.assertTrue(result,"section was not found in the table!");
+		logger.info("TEST FINISHED: add to Site new section menu item ");
+		// put new created section to the session.
+		getTestSession().put(TEST_ORDEREDSECTION_FILE_CTYPE, section);	
+		
+	}
+	/**
+	 * Case-info: Publish  to ordered section in admin, verify: 
+	 * <br>Content visible as published in section view
+	 * <br>correct ordering  is maintained after save
+	 */
+	@Test(dependsOnMethods ="addOrderedSectionTest",description = "publish 2 file to ordered section")
+	public void publishContentToOrderedSection()
+	{
+		
+		logger.info("case-info:publish 2 files to ordered section ");
+		Content<FileContentInfo> content = (Content<FileContentInfo>)getTestSession().get(FILE_CONTENT);
+		ContentRepository repository = findRepositoryByHandler( content.getContentHandler().toString());
+		
+		Content<FileContentInfo> sectionContent = content.cloneContent();
+		sectionContent.setDisplayName(SECTION_CONTENT_PUBLISH_NAME);
+		Content<FileContentInfo> sectionContent2 = content.cloneContent();
+		sectionContent2.setDisplayName("content2.gif");
+		
+		//1. preparation: create new category and add content to the category
+		List<Content<FileContentInfo>> contents = new  ArrayList<>();
+		contents.add(sectionContent);
+		contents.add(sectionContent2);
+		addCategoryAndContent(contents, repository,TEST_PUBLISH_FILE_CATEGORY_NAME);
+		//2. get section from, that was created in previous tests: 'addSectionTest'
+		Section section = (Section)getTestSession().get(TEST_ORDEREDSECTION_FILE_CTYPE);	
+		
+		//3. open category and press 'approve and publish'-button, (publish content to the section)
+		contentService.doPublishContentToSection(getTestSession(), sectionContent, section);
+		boolean isContentPublished =  siteService.isContentFromSectionPublished(getTestSession(), section,sectionContent.getDisplayName());
+		Assert.assertTrue(isContentPublished, "content publishing failed, content not present in the section or content is not published!");
+		
+		contentService.doPublishContentToSectionAnMoveToEnd(getTestSession(), sectionContent2, section);
+		List<String> actualContentNames = siteService.getContentNamesFromSection(getTestSession(), section);
+		boolean isOrsered = verifyOrder(actualContentNames, sectionContent2.getDisplayName());
+		
+		Assert.assertTrue(isOrsered,"wrong order in the section page");
+		logger.info("TEST FINISHED: publish content to section ");
+	}
+	/**
+	 * Verifies: list is ordered.
+	 * @param orderedContent
+	 * @param expectedLastContentName
+	 * @return
+	 */
+	private boolean verifyOrder(List<String> actualContentNames,String expectedContentName)
+	{
+		// contentName was moved down, when it published, so this content should in the second row.
+		return actualContentNames.get(1).equals(expectedContentName);
+	}
+	/**
+	 * Case-info: Publish  to section in admin, verify: 
+	 * <br>Content visible as published in section view
+	 */
+	@Test(dependsOnMethods ="addSectionTest",description = "publish content to section")
+	public void publishContentToSection()
+	{
+		logger.info("case-info:publish content to section ");
+		Content<FileContentInfo> content = (Content<FileContentInfo>)getTestSession().get(FILE_CONTENT);
+		ContentRepository repository = findRepositoryByHandler( content.getContentHandler().toString());
+		
+		Content<FileContentInfo> sectionContent = content.cloneContent();
+		sectionContent.setDisplayName(SECTION_CONTENT_PUBLISH_NAME);
+		List<Content<FileContentInfo>> contents = new  ArrayList<>();
+		contents.add(sectionContent);
+		//1. preparation: create new category and add content to the category
+		addCategoryAndContent(contents, repository,TEST_PUBLISH_FILE_CATEGORY_NAME);
+		//2. get section from, that was created in previous tests: 'addSectionTest'
+		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);	
+		
+		//3. open category and press 'approve and publish'-button, (publish content to the section)
+		contentService.doPublishContentToSection(getTestSession(), sectionContent, section);
+		boolean isContentPublished =  siteService.isContentFromSectionPublished(getTestSession(), section,sectionContent.getDisplayName());
+		Assert.assertTrue(isContentPublished, "content publishing failed, content not present in the section or content is not published!");
+		logger.info("TEST FINISHED: publish content to section ");
 	}
 	/**
 	 * Case info:
@@ -341,36 +461,69 @@ public class ContentRepositoryTests extends BaseTest
 	 * Add content to section in admin, verify:
 	 * <br> -content visible in section view. 	
 	 */
-	@Test(dependsOnMethods ="addSectionTest")
+	@Test(dependsOnMethods ="addSectionTest",description = "add content to section, verify: content visible in section view")
 	public void addContentToSectionTest()
 	{
+		logger.info("case-info:add content to section, verify: content visible in section view");
 		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);
-		Site site = (Site)getTestSession().get(TEST_SITE);
 		
 		Content<FileContentInfo> content = (Content<FileContentInfo>)getTestSession().get(FILE_CONTENT);
 		ContentRepository repository = findRepositoryByHandler( content.getContentHandler().toString());
 		
 		Content<FileContentInfo> sectionContent = content.cloneContent();
-		sectionContent.setDisplayName("sectioncontent.gif");
-		
-//		ContentCategory newcategory = new ContentCategory();
-//		newcategory.setName(TEST_FILE_CATEGORY_NAME);
-//		newcategory.setContentTypeName("File");
-//		newcategory.setDescription("Files category.");
-//		String[] categoryPathName = { repository.getName() };
-//		String[] contentPathName = { repository.getName(), newcategory.getName() };
-//		newcategory.setParentNames(categoryPathName);
-//		
-//		sectionContent.setParentNames(contentPathName);
-//		//2. add category with content type === "File"
-//		repositoryService.addCategory(getTestSession(), newcategory);
-//		contentService.addContent(getTestSession(), repository, sectionContent);
-		addCategoryAndContent(sectionContent, repository);
-		
-		SectionContentsTablePage table = siteService.addContentToSection(getTestSession(), site.getDispalyName(), section, sectionContent);
+		sectionContent.setDisplayName(SECTION_CONTENT_ADD_NAME);
+		List<Content<FileContentInfo>> contents = new  ArrayList<>();
+		contents.add(sectionContent);
+		//1. preparation: create new  category and add content to the category
+		addCategoryAndContent(contents, repository,TEST_FILE_CATEGORY_NAME);
+		//2.verify, that content visible in section view and try to add content to section:
+		SectionContentsTablePage table = siteService.addContentToSection(getTestSession(), section, sectionContent);
+		//3. verify: content present in the section:
 		boolean result = table.verifyIsPresent(sectionContent.getDisplayName());
 		Assert.assertTrue(result,"content was not added to Section!");
+		logger.info("TEST FINISHED:add content to section");
 		
+	}
+	
+	/**
+	 * Case info:
+	 * Delete site in admin , verify:
+	 * <br> -site present in the table. 	
+	 */
+	@Test(description="delete site test. Find site in admin console and delete")
+	public void deleteSiteTest()
+	{
+		logger.info("Case-info:delete site test. Find site in admin console and delete");
+		Site site =  new Site();
+		site.setDispalyName("siteTodelete");
+		AllowedPageTypes[] allowedPageTypes = { AllowedPageTypes.SECTION, AllowedPageTypes.LABEL, AllowedPageTypes.URL };
+		site.setLanguage("English");
+		site.setAllowedPageTypes(allowedPageTypes );
+		SitesTableFrame sitesPage = siteService.createSite(getTestSession(), site );
+		boolean result = sitesPage.verifyIsPresent(site.getDispalyName());
+		Assert.assertTrue(result,"site was not created: "+ site.getDispalyName());
+		
+		siteService.deleteSite(getTestSession(), site.getDispalyName());
+		result = sitesPage.verifyIsPresent(site.getDispalyName());
+		Assert.assertFalse(result,"site was not deleted: "+ site.getDispalyName());
+		
+	}
+	/**
+	 * Case info:
+	 * 
+	 * Remove content from section, verify:
+	 * <br> -content not present in section view. 	
+	 */
+	@Test(dependsOnMethods ="addContentToSectionTest",description = "Remove content from section, verify: content not present in section view")
+	public void removeFromSectionTest()
+	{
+		logger.info("case-info:add content to section, verify: content visible in section view");
+		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);
+		Site site = (Site)getTestSession().get(TEST_SITE);
+		SectionContentsTablePage table = siteService.removeContentFromSection(getTestSession(), site.getDispalyName(), section.getDisplayName(), SECTION_CONTENT_ADD_NAME);
+		boolean result = table.verifyIsPresent(SECTION_CONTENT_ADD_NAME);
+		Assert.assertFalse(result, "content was not removed from section, contentname:" +SECTION_CONTENT_ADD_NAME);
+		logger.info("TEST FINISHED: Remove content from section");
 	}
 	
 	// ==================================================================================================
@@ -379,21 +532,24 @@ public class ContentRepositoryTests extends BaseTest
 	 * @param sectionContent
 	 * @param repository
 	 */
-	private void addCategoryAndContent(Content<FileContentInfo>sectionContent,ContentRepository repository)
-	{
-		
-		
+	private void addCategoryAndContent(List<Content<FileContentInfo>>sectionContents, ContentRepository repository, String categoryName)
+	{		
 		ContentCategory newcategory = new ContentCategory();
-		newcategory.setName(TEST_FILE_CATEGORY_NAME);
+		newcategory.setName(categoryName);
 		newcategory.setContentTypeName("File");
 		newcategory.setDescription("Files category.");
 		String[] categoryPathName = { repository.getName() };
 		String[] contentPathName = { repository.getName(), newcategory.getName() };
 		newcategory.setParentNames(categoryPathName);
-		sectionContent.setParentNames(contentPathName);
+		
 		// add category with content type === "File"
 		repositoryService.addCategory(getTestSession(), newcategory);
-		contentService.addContent(getTestSession(), repository, sectionContent);
+		for(Content<FileContentInfo> content: sectionContents)
+		{
+			content.setParentNames(contentPathName);
+			contentService.addContent(getTestSession(), repository, content);
+		}
+		
 	}
 	
 	/**

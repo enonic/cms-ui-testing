@@ -54,7 +54,7 @@ public class ContentRepositoriesTableFrame extends AbstractContentTableView
 		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
 		if (isAlertPresent)
 		{
-			Alert alert = getSession().getDriver().switchTo().alert();
+			Alert alert = getDriver().switchTo().alert();
 			// Get the Text displayed on Alert:
 			String textOnAlert = alert.getText();
 			getLogger().info("Deleting of the repository, alert message:" + textOnAlert);
@@ -67,7 +67,7 @@ public class ContentRepositoriesTableFrame extends AbstractContentTableView
 	@Override
 	public void waituntilPageLoaded(long timeout)
 	{
-		new WebDriverWait(getSession().getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By
+		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By
 				.xpath(EDIT_REPOSITORY_BUTTON_XPATH)));
 
 	}

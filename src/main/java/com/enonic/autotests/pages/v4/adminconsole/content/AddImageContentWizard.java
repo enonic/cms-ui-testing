@@ -69,9 +69,9 @@ public class AddImageContentWizard extends AbstractAddContentWizard implements I
 		File file = new File(newcontent.getContentTab().getContentTabInfo().getPathToFile());
 		String pathTofile = file.getAbsolutePath();
 
-		if (!getSession().getDriver().findElement(By.id("origimagefilename")).getText().equals(pathTofile))
+		if (!findElement(By.id("origimagefilename")).getText().equals(pathTofile))
 		{
-		getSession().getDriver().findElement(By.id("origimagefilename")).sendKeys(pathTofile);
+			getDriver().findElement(By.id("origimagefilename")).sendKeys(pathTofile);
 		}
 
 		//6.  fill the display name:

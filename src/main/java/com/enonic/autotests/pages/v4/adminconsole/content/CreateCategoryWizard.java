@@ -35,7 +35,7 @@ public class CreateCategoryWizard extends AbstractAdminConsoleWizardPage
 	public void doAddCategory(ContentCategory category)
 	{
 		nameInput.sendKeys(category.getName());
-		getSession().getDriver().findElements(By.xpath("//input[@name='name']"));
+		//getSession().getDriver().findElements(By.xpath("//input[@name='name']"));
 		if(category.getDescription()!=null)
 		{
 		descriptionTextArea.sendKeys(category.getDescription());

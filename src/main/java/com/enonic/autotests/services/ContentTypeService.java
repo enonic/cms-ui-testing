@@ -5,6 +5,10 @@ import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 
+/**
+ * 
+ *Content type service.
+ */
 public class ContentTypeService
 {
 
