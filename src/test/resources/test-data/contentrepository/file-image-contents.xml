@@ -7,7 +7,7 @@
         <categoryName>category1</categoryName>
         <displayName>image.gif</displayName>
         <copyright>copyright</copyright>
-        <pathToFile>c:\\GRID\\res\\bel.gif</pathToFile>
+        <pathToFile>c:\\GRID\\res\\test.jpg</pathToFile>
         <photographerEmail>aa@gmail.com</photographerEmail>
         <photographerName>Joan</photographerName>
     </image>
@@ -17,6 +17,6 @@
         <categoryName>category1</categoryName>
         <contentHandler>FILES</contentHandler>
         <displayName>file.gif</displayName>
-        <pathToFile>c:\\GRID\\res\\bel.gif</pathToFile>
+        <pathToFile>c:\\GRID\\res\\test.jpg</pathToFile>
     </file>
 </contentTestData>
