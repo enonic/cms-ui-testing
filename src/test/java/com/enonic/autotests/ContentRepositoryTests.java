@@ -1,14 +1,10 @@
 package com.enonic.autotests;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-
-import org.openqa.selenium.internal.seleniumemulation.GetLocation;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;

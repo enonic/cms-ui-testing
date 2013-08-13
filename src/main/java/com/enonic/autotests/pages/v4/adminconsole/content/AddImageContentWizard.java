@@ -1,7 +1,5 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
-import java.io.File;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -15,7 +13,7 @@ import com.enonic.autotests.utils.TestUtils;
 
 /**
  * Page Object for 'Add image content Wizard'
- *
+ * 
  */
 public class AddImageContentWizard extends AbstractAddContentWizard implements IUpdateOrCreateContent<ImageContentInfo>
 {
@@ -44,15 +42,15 @@ public class AddImageContentWizard extends AbstractAddContentWizard implements I
 		//1. fill a comments field
 		if (comment != null && !commentInput.getAttribute("value").equals(comment))
 		{
-		commentInput.sendKeys(contentTab.getContentTabInfo().getComment());
+			commentInput.sendKeys(contentTab.getContentTabInfo().getComment());
 		}
 		String description = contentTab.getContentTabInfo().getDescription();
 		//2. fill a description field
 		if (description != null && !descriptionTextarea.getAttribute("value").equals(description))
 		{
-		descriptionTextarea.sendKeys(contentTab.getContentTabInfo().getDescription());
+			descriptionTextarea.sendKeys(contentTab.getContentTabInfo().getDescription());
 		}
-                //3. fill a photographername field.
+        //3. fill a photographername field.
 		String phName = contentTab.getContentTabInfo().getPhotographerName();
 		if (phName != null && !photographername.getAttribute("value").equals(phName))
 		{
@@ -64,16 +62,14 @@ public class AddImageContentWizard extends AbstractAddContentWizard implements I
 		{
 			photographeremail.sendKeys(newcontent.getContentTab().getContentTabInfo().getPhotographerEmail());
 		}
-	
-		//5. specify a path to the file: 
-		File file = new File(newcontent.getContentTab().getContentTabInfo().getPathToFile());
-		String pathTofile = file.getAbsolutePath();
 
+		//5. specify a path to the file: 		
+		String pathTofile = newcontent.getContentTab().getContentTabInfo().getPathToFile();
 		if (!findElement(By.id("origimagefilename")).getText().equals(pathTofile))
 		{
 			getDriver().findElement(By.id("origimagefilename")).sendKeys(pathTofile);
 		}
-
+		
 		//6.  fill the display name:
 		if (!nameInput.getAttribute("value").equals(newcontent.getDisplayName()))
 		{
@@ -82,6 +78,6 @@ public class AddImageContentWizard extends AbstractAddContentWizard implements I
 		}
 		saveButton.click();
 		waituntilPageLoaded(4l);
-		closeButton.click();		
+		closeButton.click();
 	}
 }
