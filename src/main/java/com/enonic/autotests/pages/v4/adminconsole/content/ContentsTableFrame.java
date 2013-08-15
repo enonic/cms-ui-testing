@@ -42,6 +42,10 @@ public class ContentsTableFrame extends AbstractContentTableView
 	@FindBy(how = How.ID, using = "movecategorybtn")
 	protected WebElement moveButton;
 	
+	@FindBy(xpath= "//button[text()='Import']")
+	protected WebElement importButton;
+	
+	
 	/** this button appears during add content to section */
 	private final String ADD_CONTENT_TO_SECTION_XPATH = "//button[text()='Add']";
 	@FindBy(how = How.XPATH, using = ADD_CONTENT_TO_SECTION_XPATH)
@@ -58,6 +62,10 @@ public class ContentsTableFrame extends AbstractContentTableView
 	{
 		super(session);
 
+	}
+	public void doImportContent()
+	{
+		importButton.click();
 	}
 	/**
 	 * Clicks by 'approve and publish' and publish content to section.

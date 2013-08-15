@@ -4,11 +4,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
@@ -72,19 +74,34 @@ public class TestUtils
 
 	}
 	
-	public void doubleClickActionByOption(final TestSession testSession, List<WebElement> allOptions , String optionText) {
-		
+	
+	/**
+	 * Finds option from the select and performs double click action.
+	 * 
+	 * @param testSession
+	 * @param allOptions
+	 * @param optionText
+	 */
+	public void doubleClickActionByOption(final TestSession testSession, List<WebElement> allOptions , String optionText) 
+	{	
 		boolean isFound = false;
 		for (WebElement option : allOptions) {
 			logger.debug(String.format("option was found : %s", option.getText()));
 			if (option.getText().equals(optionText)) {
 				Actions builder = new Actions(testSession.getDriver());
-				//builder.doubleClick(option).perform();
+				//builder.doubleClick(option).perform();//dosent work
 				//builder.doubleClick(option).build().perform();
 				builder.moveToElement(option).click().perform();
-				builder.moveToElement(option).doubleClick().perform();
-				
-				isFound = true;
+				//Actions builder2 = new Actions(testSession.getDriver());//builder.moveToElement(option).clickAndHold().release().build().perform();
+				builder.moveToElement(option).doubleClick().perform();//builder.moveToElement(option).perform();option
+				//Actions builder3 = new Actions(testSession.getDriver());
+				//builder3.moveToElement(testSession.getDriver().findElement(By.xpath("//select[@name='availablect']"))).perform();
+				//option.click();
+				//boolean aa = (((RemoteWebElement)option).findElements(By.xpath("//option[text()='File']")).get(0)).isSelected();
+				//Actions builder2 = new Actions(testSession.getDriver());
+				//builder2.moveToElement(testSession.getDriver().findElements(By.xpath("//option[text()='File']")).get(0)).click().perform();
+				//builder2.moveToElement(testSession.getDriver().findElements(By.xpath("//option[text()='File']")).get(0)).doubleClick().perform();
+				isFound = true;//builder.moveToElement(((RemoteWebElement)option).findElements(By.xpath("//option[text()='File']")).get(0)).is
 				break;
 			}
 
@@ -182,7 +199,7 @@ public class TestUtils
 		}
 	}
 
-
+	
 	/**
 	 * Checks if alert dialog present.
 	 * @param testSession
@@ -291,7 +308,7 @@ public class TestUtils
 				}
 			}
 		});
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
 		// TODO add perfomance log
 		// logger.perfomance("clickByLocator:" + locator.toString(), startTime);
 		// staticlogger.info("Finished click after waiting for " + totalTime +
@@ -415,6 +432,26 @@ public class TestUtils
 		String msg = alert.getText();
 		alert.dismiss();
 		return msg;
+	}
+	/**
+	 * Reads data in XML for ContentType configuration Text Area.
+	 * 
+	 * @param in
+	 *            {@link InputStream} instance.
+	 * @return configuration as String.
+	 */
+	public  String readConfiguration(InputStream in)
+	{
+		StringBuilder sb = new StringBuilder();
+		Scanner scanner = new Scanner(in);
+		while (scanner.hasNextLine())
+		{
+			sb.append(scanner.nextLine());
+
+		}
+		scanner.close();
+		return sb.toString();
+		
 	}
 
 }

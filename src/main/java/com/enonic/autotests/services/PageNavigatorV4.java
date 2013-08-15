@@ -14,7 +14,7 @@ import com.enonic.autotests.pages.v4.HomePage;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesTableFrame;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoryViewFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.CreateContentRepositoryWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 import com.enonic.autotests.utils.TestUtils;
@@ -45,7 +45,7 @@ public class PageNavigatorV4
 				break;
 			}
 		}
-		String xpathExpression = String.format(ContentRepositoriesTableFrame.CONTENT_REPOSITORY_FRAME_NAME_XPATH, repositoryName);
+		String xpathExpression = String.format(ContentRepositoryViewFrame.CONTENT_REPOSITORY_FRAME_NAME_XPATH, repositoryName);
 		TestUtils.getInstance().waitUntilVisible(session, By.xpath(xpathExpression), AppConstants.PAGELOAD_TIMEOUT);
 		logger.info("new Content Repository was not found in the Table! " + repositoryName);
 		return new CreateContentRepositoryWizard(session);

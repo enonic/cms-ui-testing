@@ -20,6 +20,34 @@ import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
  */
 public class SiteService
 {
+	/**
+	 * Deletes all sites in admin.
+	 * 
+	 * @param testSession
+	 */
+	public void delteAllSites(TestSession testSession)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
+		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		sitesFrame.doDeleteAll(testSession);
+	}
+	
+	/**
+	 * Returns the names of all sites.
+	 * 
+	 * @param testSession
+	 * @return
+	 */
+	public List<String> getAllSiteNames(TestSession testSession)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
+		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return sitesFrame.getAllSiteNames();
+	}
 
 	/**
 	 * Clicks by 'New' button, opens site-wizard, populate a data and save new Site
@@ -33,13 +61,20 @@ public class SiteService
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
-		sitesFrame.waituntilPageLoaded(2l);
+		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		sitesFrame.doAddSite(site);		
-		sitesFrame.waituntilPageLoaded(2l);
+		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sitesFrame;
 
 	}
 	
+	/**
+	 * Add new section "Menu item" to Site
+	 * @param testSession
+	 * @param siteName
+	 * @param section
+	 * @return
+	 */
 	public SiteMenuItemsTablePage addSection(TestSession testSession,String siteName,Section section)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
@@ -53,13 +88,14 @@ public class SiteService
 		AddSectionWizardPage sectionwizard = siteMenuItems.startAddNewSection();
 		//3. populate data and save.
 		sectionwizard.doTypeDataAndSave(section);
-		siteMenuItems.waituntilPageLoaded(2l);
+		siteMenuItems.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return siteMenuItems;
 	}
 	
 	
 	/**
 	 * Opens a section, clicks by 'Add' button and add new content to a section.
+	 * 
 	 * @param testSession
 	 * @param section
 	 * @param content content to add.
@@ -72,7 +108,7 @@ public class SiteService
 		SectionContentsTablePage sectionContentsTable = leftmenu.openSiteSection(section.getSiteName(), section.getDisplayName());
 		String[] parents = content.getParentNames();
 		sectionContentsTable.doAddContentToSection(parents,content.getDisplayName());
-		sectionContentsTable.waituntilPageLoaded(2l);
+		sectionContentsTable.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sectionContentsTable;
 	}
 	
@@ -93,7 +129,7 @@ public class SiteService
 		
 	}
 	/**
-	 * Gets all names of contents from section
+	 * Gets all names of content from the section.
 	 * 
 	 * @param testSession
 	 * @param section
@@ -155,12 +191,12 @@ public class SiteService
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
 		sitesFrame.doEditSite(siteName, newSite);
-		sitesFrame.waituntilPageLoaded(2l);
+		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sitesFrame;
 	}
 	
 	/**
-	 * Deletes site.
+	 * Deletes a site.
 	 * 
 	 * @param testSession
 	 * @param siteName

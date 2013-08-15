@@ -38,10 +38,10 @@ public class ContentRepositoryTests extends BaseTest
 	private final String TEST_SITE = "test_site";
 	private final String TEST_SECTION_FILE_CTYPE = "test_section";
 	private final String TEST_ORDEREDSECTION_FILE_CTYPE = "test_section_ordered";
-	private final String EDITTEST_CONTENT_NAME = "edited.gif";
+	private final String EDITTEST_CONTENT_NAME = "edited.jpg";
 	
-	private String SECTION_CONTENT_ADD_NAME ="sectioncontent.gif";
-	private String SECTION_CONTENT_PUBLISH_NAME ="publishcontent.gif";
+	private String SECTION_CONTENT_ADD_NAME ="sectioncontent.jpg";
+	private String SECTION_CONTENT_PUBLISH_NAME ="publishcontent.jpg";
 	
 	private final String TEST_REPO_NAME =  "notopcategory";
 	private final String TEST_FILE_CATEGORY_NAME =  "filesCategory";
@@ -148,7 +148,7 @@ public class ContentRepositoryTests extends BaseTest
 		ContentCategory category = extractCategoryFromTestData(ctypeName, repository.getCategories());
 		String[] pathName = new String[] { repository.getName() };
 		category.setParentNames(pathName);
-		// 2. add category to the Content-Reposotry
+		// 2. add category to the Content-Repository
 		repositoryService.addCategory(getTestSession(), category);
 		String[] pathToContent = new String[] { repository.getName(), category.getName() };
 		content.setParentNames(pathToContent);
@@ -392,7 +392,7 @@ public class ContentRepositoryTests extends BaseTest
 		Content<FileContentInfo> sectionContent = content.cloneContent();
 		sectionContent.setDisplayName(SECTION_CONTENT_PUBLISH_NAME);
 		Content<FileContentInfo> sectionContent2 = content.cloneContent();
-		sectionContent2.setDisplayName("content2.gif");
+		sectionContent2.setDisplayName("content2.jpg");
 		
 		//1. preparation: create new category and add content to the category
 		List<Content<FileContentInfo>> contents = new  ArrayList<>();

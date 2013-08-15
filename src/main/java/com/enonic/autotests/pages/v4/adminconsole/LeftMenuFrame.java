@@ -1,16 +1,21 @@
 package com.enonic.autotests.pages.v4.adminconsole;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.FluentWait;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.pages.Page;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoryViewFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentRepositoriesTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
@@ -19,15 +24,22 @@ import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
 import com.enonic.autotests.services.PageNavigatorV4;
 import com.enonic.autotests.utils.TestUtils;
+import com.google.common.base.Function;
 
 /**
  * Page object for Left Menu Frame.
  * 
  */
 public class LeftMenuFrame extends Page
-{
-
+{   
+	/** locator for "Content" folder */
+	public  String CONTENT_FOLDER_LOCATOR_XPATH = "//a[@target='mainFrame' and descendant::img[contains(@src,'images/icon_folder.gif')]]//span[text()='Content']";
+	
+	/** '+' or '-' icon near the 'Content' folder */
 	private String CONTENTFOLDER_EXPANDER_XPATH = "//a[@id='openBranch-categories-']/img[contains(@src,'%s')]";
+	                                                
+	//private String ALL_REPOSITORIES_TABLE_ELEMENTS = "//table[@class='menuItem']/tbody/tr[@id='id-categories']/td[2]//table[@class='menuItem']";
+	
 	private String SITEFOLDER_EXPANDER_XPATH = "//a[descendant::span[@id='menuitemText' and contains(.,'Sites')]]/../../td/a/img[contains(@src,'%s')]";
 	private String SITENAME_LINK_XPATH = "//a[descendant::span[contains(@id,'menuitemText') and contains(.,'%s')]]";
 	private String SITE_EXPANDER_IMG_XPATH =  SITENAME_LINK_XPATH + "/../../td/a/img";
@@ -43,13 +55,12 @@ public class LeftMenuFrame extends Page
 	private String CATEGORY_MENU_ITEM = "//tr[@id='id-categories']/child::td[2]//table[@class='menuItem' and descendant::tr[1]//span[text()='%s']]";
 	private String CATEGORY_EXPANDER_IMG_XPATH = CATEGORY_MENU_ITEM + "//td[1]/a/img";
 	private String CATEGORY_XPATH = CATEGORY_MENU_ITEM + "//td[2]/a";
-
-	
+	private String LAST_CHILD_CATEGORY_LINK = CATEGORY_MENU_ITEM + "//table[@class='menuItem' and descendant::img[contains(@src,'L.png')]]//a";
 
 	public static String CONTENT_TYPES_LOCATOR_XPATH = "//a[text()='Content types']";
 	public static String SITES_LOCATOR_XPATH = "//a/span[@id='menuitemText' and contains(.,'Sites')]";
-	public static String CONTENT_LOCATOR_XPATH = "//a[@target='mainFrame' and descendant::img[contains(@src,'images/icon_folder.gif')]]//span[text()='Content']";
-
+	
+	
 	
 	/**
 	 * @param session
@@ -89,11 +100,12 @@ public class LeftMenuFrame extends Page
 	}
 
 	/**
+	 * Clicks by "Content" link in the LeftFrame and opens a table with all repositories.
 	 * @return
 	 */
 	public RepositoriesListFrame openRepositoriesTableFrame()
 	{
-		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(getSession(), CONTENT_LOCATOR_XPATH);
+		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(getSession(), CONTENT_FOLDER_LOCATOR_XPATH);
 		RepositoriesListFrame frame = new RepositoriesListFrame(getSession());
 		frame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return frame;
@@ -101,14 +113,83 @@ public class LeftMenuFrame extends Page
 	}
 
 	/**
-	 * Expand the "Content" folder, click by RepositoryName, open repository
-	 * view and click by 'New-Category' button
+	 * Expands the "Content" folder and delete repository with all content inside.
+	 * 
+	 * @param repoName
+	 */
+	public void doDeleteRepository(String repoName)
+	{
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		// 1. expand the 'Content' folder.
+		expandContentFolder();
+		// 2.expand repository and find last category, click by last category
+		String repoXpath = String.format(CATEGORY_EXPANDER_IMG_XPATH, repoName);
+		List<WebElement> plusIconXpath = findElements(By.xpath(repoXpath));
+		//if "+" image-icon is absent, click by repository and delete it. 
+		if (plusIconXpath.size() == 0)
+		{
+			// click by Repository-name and press "Remove content repository" button
+			ContentRepositoryViewFrame view = openRepositoryViewFrame(repoName);
+			view.doDeleteEmptyRepository();
+			RepositoriesListFrame allRepositoriesView = new RepositoriesListFrame(getSession());
+			allRepositoriesView.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		} else
+		{
+            //if "+" image-icon is present, expand the Repository:
+			TestUtils.getInstance().expandFolder(getSession(), repoXpath);
+			// and delete all categories from the Repository:
+			do
+			{
+				// switch to right frame:
+				doDeleteLastCategoryWithContent(repoName);
+				plusIconXpath = findElements(By.xpath(repoXpath));
+				
+			} while (plusIconXpath.size() > 0);
+			
+			PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+			ContentRepositoryViewFrame repoView = new ContentRepositoryViewFrame(getSession());
+			repoView.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+			repoView.doDeleteEmptyRepository();
+			RepositoriesListFrame allRepositoriesView = new RepositoriesListFrame(getSession());
+			allRepositoriesView.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+
+		}
+
+	}
+	/**
+	 * Finds a Category, that has icon: "images/L.png", empty all content and deletes this Category.
+	 * 
+	 * @param repoName
+	 */
+	private void doDeleteLastCategoryWithContent(String repoName)
+	{
+		//1. find the last Category:
+		String linkXpath = String.format(LAST_CHILD_CATEGORY_LINK, repoName);
+		List<WebElement> elems = findElements(By.xpath(linkXpath));
+		if(elems.size() == 0)
+		{
+			throw new TestFrameworkException("Error during deleting a category. Category was not found! repositoryName"+ repoName);
+		}
+		// click by this category
+		elems.get(0).click();
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+		ContentsTableFrame tableView = new ContentsTableFrame(getSession());
+		tableView.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		//delete all.
+		tableView.doDeleteAllContent();
+		tableView.doDeleteEmptyCategory();
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
+	}
+	
+	/**
+	 * Expands the "Content" folder, click by RepositoryName, opens repository
+	 * <br>view and click by 'New-Category' button
 	 * 
 	 * @param session
 	 * @param repoName
 	 * @return
 	 */
-	public ContentRepositoriesTableFrame openRepositoryViewFrame(String repoName)
+	public ContentRepositoryViewFrame openRepositoryViewFrame(String repoName)
 	{
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
 		// 1. expand a 'Content' folder
@@ -119,7 +200,7 @@ public class LeftMenuFrame extends Page
 		TestUtils.getInstance().clickByLocator(By.xpath(xpathString), getDriver());
 
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
-		ContentRepositoriesTableFrame view = new ContentRepositoriesTableFrame(getSession());
+		ContentRepositoryViewFrame view = new ContentRepositoryViewFrame(getSession());
 		view.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		String repoNameXpath = String.format("//h1/a[text()='%s']", repoName);
 		List<WebElement> elems = findElements(By.xpath(repoNameXpath));

@@ -15,7 +15,6 @@ import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 
 public class ContentService
 {
-
 	/**
 	 * Finds all content in the 'Content' folder of Left Menu.
 	 * <br>return list of full names: 'RepsitoryName/CategoryName/../ContentName'
@@ -90,7 +89,8 @@ public class ContentService
 	}
 	
 	/**
-	 * Opens a Category, shows the table of content, clicks by 'Delete' icon, confirm and deletes content from the category.
+	 * Opens a Category, shows the table of content, finds content and select it.
+	 * <br>clicks by 'Delete' icon, confirm and deletes content from the category.
 	 * 
 	 * @param session
 	 * @param displayName

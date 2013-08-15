@@ -19,7 +19,7 @@ import com.enonic.autotests.utils.TestUtils;
  * 
  * 09.04.2013
  */
-public class ContentRepositoriesTableFrame extends AbstractContentTableView
+public class ContentRepositoryViewFrame extends AbstractContentTableView
 {
 
 	public static final String EDIT_REPOSITORY_BUTTON_XPATH = "//button[text()='Edit content repository']";
@@ -35,7 +35,7 @@ public class ContentRepositoriesTableFrame extends AbstractContentTableView
 	 * 
 	 * @param session {@link TestSession} instance.
 	 */
-	public ContentRepositoriesTableFrame( TestSession session )
+	public ContentRepositoryViewFrame( TestSession session )
 	{
 		super(session);
 
@@ -48,7 +48,7 @@ public class ContentRepositoriesTableFrame extends AbstractContentTableView
 	 * @param repositoryName
 	 * @return
 	 */
-	public RepositoriesListFrame deleteContentRepository()
+	public RepositoriesListFrame doDeleteEmptyRepository()
 	{
 		buttonDelete.click();
 		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);

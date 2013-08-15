@@ -20,6 +20,7 @@ import com.enonic.autotests.testdata.content.ContentRepositoryXml;
 import com.enonic.autotests.testdata.content.FileContentXml;
 import com.enonic.autotests.testdata.content.ImageContentXml;
 import com.enonic.autotests.testdata.content.TopCategoryXml;
+import com.enonic.autotests.utils.TestUtils;
 
 public class ContentConvertor
 {
@@ -94,7 +95,7 @@ public class ContentConvertor
 		if (ctypeXML.getCfgFile() != null && !ctypeXML.getCfgFile().isEmpty())
 		{
 			InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("test-data/contenttype/" + ctypeXML.getCfgFile());
-			ctype.setConfiguration(readConfiguration(in));
+			ctype.setConfiguration(TestUtils.getInstance().readConfiguration(in));
 		} else
 		{
 
@@ -138,8 +139,8 @@ public class ContentConvertor
 		cat.setDescription(catXml.getDescription());
 		if(catXml.getParentName()!=null)
 		{
-		String[] names = catXml.getParentName().split("/");
-		cat.setParentNames(names);
+			String[] names = catXml.getParentName().split("/");
+			cat.setParentNames(names);
 		}
 		
 		return cat;
@@ -168,24 +169,5 @@ public class ContentConvertor
 		topcategory.setContentType(convertXmlDataToContentType(topCatXml.getContentType()));
 		topcategory.setDescription(topCatXml.getDescription());
 		return topcategory;
-	}
-
-	/**
-	 * Reads data in XML for ContentType configuration Text Area.
-	 * 
-	 * @param in
-	 *            {@link InputStream} instance.
-	 * @return configuration as String.
-	 */
-	private static String readConfiguration(InputStream in)
-	{
-		StringBuilder sb = new StringBuilder();
-		Scanner scanner = new Scanner(in);
-		while (scanner.hasNextLine())
-		{
-			sb.append(scanner.nextLine());
-
-		}
-		return sb.toString();
 	}
 }

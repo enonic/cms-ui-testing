@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.utils.TestUtils;
@@ -121,6 +122,19 @@ public class RepositoriesListFrame extends AbstractAdminConsolePage
 
 		return true;
 	}
+
+	public List<String> getRepositoryNames()
+	{
+		List<String> names = new ArrayList<>();
+		String namesXpath = "//tr[contains(@class,'tablerowpainter')]//td[1][contains(@class,'browsetablecell')]";
+		List<WebElement> repoElements = findElements(By.xpath(namesXpath));
+		for(WebElement elem:repoElements)
+		{
+			names.add(elem.getText());
+		}
+		return names;
+	}
+	
 
 	/**
 	 * @param timeout
