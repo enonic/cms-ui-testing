@@ -1,5 +1,7 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.openqa.selenium.Alert;
@@ -63,8 +65,42 @@ public class ContentsTableFrame extends AbstractContentTableView
 		super(session);
 
 	}
-	public void doImportContent()
+	/**
+	 * Gets names of all contents from the table.
+	 * 
+	 * @return
+	 */
+	public List<String> getContentNames()
 	{
+		List<String> names = new ArrayList<>();
+		String namesXpath = "//tr[contains(@class,'tablerowpainter')]//td[3][contains(@class,'browsetablecell')]/div[contains(@style,'font-weight: bold')]";
+		List<WebElement> contentElements = findElements(By.xpath(namesXpath));
+		for(WebElement elem:contentElements)
+		{
+			names.add(elem.getText());
+		}
+		return names;
+	}
+	/**
+	 * Clicks by a 'Content Name' and opens a content-info page. 
+	 * @param contentName
+	 */
+	public void clickByNameAndOpenInfo(String contentName)
+	{ 
+		String nameLinkXpath = String.format("//tr[contains(@class,'tablerowpainter')]//td[3][contains(@class,'browsetablecell')]/div[contains(@style,'font-weight: bold') and text()='%s']", contentName);
+		WebElement contentNameElement = findElement(By.xpath(nameLinkXpath));
+		contentNameElement.click();
+		
+	}
+	/**
+	 * Clicks by 'Import' button
+	 */
+	public void startImportContent()
+	{
+		if(importButton == null)
+		{
+			throw new TestFrameworkException("import button was not found!");
+		}
 		importButton.click();
 	}
 	/**
@@ -101,6 +137,10 @@ public class ContentsTableFrame extends AbstractContentTableView
 			
 		
 	}
+	/**
+	 * @param contentDisplayName
+	 * @param section
+	 */
 	public void doPublishToSectionAndMoveToEnd(String contentDisplayName, Section section)
 	{
 		if(!section.isOrdered())

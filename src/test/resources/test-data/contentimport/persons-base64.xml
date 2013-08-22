@@ -1,0 +1,14 @@
+<persons>
+  <person id="1001">
+    <name>Paolo Veronese</name>
+    <occupation>Italian painter</occupation>
+    <birth>1528-19-04</birth>
+    <image-base64enc filename="Veronese.gif">R0lGODlhDgAPALMAAP/WN//PEf/TJt6yArqVAP7hbP/vrV1fK/vJAf/kfP///wAAAP///wAAAAAAAAAAACH5BAEAAAwALAAAAAAOAA8AAARLkEm2qp24pp0qpkuiKMbmTeFIbsiSJca6BS7K3e17HEqyAzVJKoYoKIAv1UCgoL02O0QiZ2NJp0GKwLc7YD+LLYcKRgAA5A/oNIkAADs=</image-base64enc>
+  </person>
+  <person id="1002">
+    <name>Tiziano Vecelli</name>
+    <occupation>Italian painter</occupation>
+    <birth>1490-12-07</birth>
+    <image-base64enc filename="Tiziano.gif">R0lGODlhDgAPALMAAP/WN//PEf/TJt6yArqVAP7hbP/vrV1fK/vJAf/kfP///wAAAP///wAAAAAAAAAAACH5BAEAAAwALAAAAAAOAA8AAARLkEm2qp24pp0qpkuiKMbmTeFIbsiSJca6BS7K3e17HEqyAzVJKoYoKIAv1UCgoL02O0QiZ2NJp0GKwLc7YD+LLYcKRgAA5A/oNIkAADs=</image-base64enc>
+  </person>
+</persons>

@@ -2,7 +2,6 @@ package com.enonic.autotests.pages.v4.adminconsole.contenttype;
 
 import java.util.List;
 
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
@@ -10,8 +9,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
@@ -20,7 +17,6 @@ import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsoleWizardPage;
 import com.enonic.autotests.utils.TestUtils;
-import com.enonic.autotests.utils.TextTransfer;
 import com.enonic.autotests.validation.contenttype.ContentTypeValidateHelper;
 
 /**
@@ -103,9 +99,9 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 				
 				getLogger().debug("new 'Content type' creation. Content handler's configuration: " + contentHandlerName);
 				
-					clearConfigurationTextArea(getSession().getDriver());
-					WebElement confTextArea = getSession().getDriver().findElement(By.tagName(CONFIGURATION_TEXTAREA_TAGNAME));
-					confTextArea.sendKeys(ctype.getConfiguration());				
+					//clearConfigurationTextArea(getDriver());
+					WebElement confTextArea = findElement(By.tagName(CONFIGURATION_TEXTAREA_TAGNAME));
+					confTextArea.sendKeys(Keys.chord(Keys.CONTROL, "a"), ctype.getConfiguration());			
 				
 			}
 		}
@@ -124,6 +120,24 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 
 	}
 
+	/**
+	 * Changes configuration of content type and clicks by "Save" button.
+	 * @param conf
+	 */
+	public void updateConfiguration(String conf)
+	{
+		if (conf != null && !conf.isEmpty())
+		{
+			WebElement confTextArea = findElement(By.tagName(CONFIGURATION_TEXTAREA_TAGNAME));
+			confTextArea.sendKeys(Keys.chord(Keys.CONTROL, "a"), conf);
+		} else
+		{
+			getLogger().warning("wrong configuration");
+		}
+		saveButton.click();
+		checkAlerts(getSession());
+
+	}
 
 	/**
 	 * Check error message above the name field.
@@ -155,8 +169,7 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 		}
 	}
 
-	/**
-	 * 
+	/** 
 	 * 
 	 * @param driver
 	 */

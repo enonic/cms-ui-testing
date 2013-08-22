@@ -142,7 +142,7 @@ public class RepositoriesListFrame extends AbstractAdminConsolePage
 	@Override
 	public void waituntilPageLoaded(long timeout)
 	{
-		new WebDriverWait(getSession().getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(CONTENT_FRAME_NAME_XPATH)));
+		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(CONTENT_FRAME_NAME_XPATH)));
 
 	}
 }

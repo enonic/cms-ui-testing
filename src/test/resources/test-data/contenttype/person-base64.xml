@@ -1,7 +1,7 @@
 <contenttype>
   <config>
     <form>
-      <title name="name"/>
+      <title name="name" />
       <block name="Person">
         <input name="person-no" required="true" type="text">
           <display>Person number</display>
@@ -15,22 +15,23 @@
           <display>Date of Birth</display>
           <xpath>contentdata/date-of-birth</xpath>
         </input>
+        <input name="image" required="false" type="uploadfile">
+          <display>Image</display>
+          <xpath>contentdata/image</xpath>
+        </input>
       </block>
     </form>
     <imports>
       <import base="/persons/person" mode="xml" name="person-import-xml" status="0">
-        <mapping dest="person-no" src="@id"/>
-        <mapping dest="name" src="name"/>
-        <mapping dest="date-of-birth" src="birth"/>
-      </import>
-       <import mode="csv" name="person-import-csv" separator=";">
-        <mapping dest="person-no" src="1" />
-        <mapping dest="name" src="2" />
-        <mapping dest="date-of-birth" src="4" />
+        <mapping dest="person-no" src="@id" />
+        <mapping dest="name" src="name" />
+        <mapping dest="date-of-birth" src="birth" />
+        <mapping dest="image" exsrc="image-base64enc/@filename" src="image-base64enc" />
       </import>
     </imports>
   </config>
   <indexparameters>
-    <index name="person-no" xpath="contentdata/person-no"/>
+    <index name="person-no" xpath="contentdata/person-no" />
   </indexparameters>
 </contenttype>
+

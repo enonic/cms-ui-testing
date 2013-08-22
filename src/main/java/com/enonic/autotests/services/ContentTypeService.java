@@ -56,10 +56,18 @@ public class ContentTypeService
 		return new ContentTypesFrame(testSession);
 	}
 
-	public void editContentType(TestSession testSession, String name)
+	/**
+	 * Clicks by 'Content type', opens for edit it  and changes a configuration of content type.
+	 * @param testSession
+	 * @param ctypeName
+	 * @param cfg
+	 */
+	public void editContentType(TestSession testSession, String ctypeName, String cfg)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
-		// TODO add implementation.
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		ContentTypesFrame ctypesFrame = menu.openContentTypesFrame(testSession);
+		ctypesFrame.doChangeConfiguration(ctypeName, cfg);
 
 	}
 }

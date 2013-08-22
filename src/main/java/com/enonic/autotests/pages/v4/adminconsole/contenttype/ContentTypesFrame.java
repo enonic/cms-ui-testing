@@ -9,10 +9,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.ContentTypeException;
+import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.utils.TestUtils;
@@ -30,6 +30,7 @@ public class ContentTypesFrame extends AbstractAdminConsolePage
 	public static final String CONTENT_TYPES_FRAME_NAME_XPATH = "//a[text()='Content types']";
 	public static final String CONTENT_TYPES_TABLE_NAME_XPATH = "//td[contains(@class,'browsetablecell'  ) and text()='%s']";
 	public static final String CONTENT_TYPES_TABLE_DELETE_BUTTON_XPATH = "//tr/td[text()='%s']/following-sibling:: td[2]//a[@class='button_link'  and descendant::img[@src='images/icon_delete.gif']]";
+	public static final String CONTENT_TYPES_TABLE_EDIT_BUTTON_XPATH = "//tr/td[text()='%s']/following-sibling:: td[2]//a[@class='button_link'  and descendant::img[@src='images/icon_edit.gif']]";
 
 	private final String CONTENT_TABLE_XPATH = "//table[@class='browsetable']";
 	
@@ -99,6 +100,30 @@ public class ContentTypesFrame extends AbstractAdminConsolePage
 		buttonNew.click();
 		ContentTypeWizardPage wizard = new ContentTypeWizardPage(getSession());
 		wizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return wizard;
+	}
+
+	/**
+	 * Changes a configuration for 'Content Type'.
+	 * 
+	 * @param ctypeName
+	 * @param cfg
+	 * @return
+	 */
+	public ContentTypeWizardPage doChangeConfiguration(String ctypeName,String cfg)
+	{
+		String contentTypeEdit = String.format(CONTENT_TYPES_TABLE_EDIT_BUTTON_XPATH, ctypeName);
+		if(findElements(By.xpath(contentTypeEdit)).size()==0)
+		{
+			throw new TestFrameworkException("Content type was not found: " +ctypeName);
+		} 
+		//1. find content type and click it.
+		findElement(By.xpath(contentTypeEdit)).click();
+		ContentTypeWizardPage wizard = new ContentTypeWizardPage(getSession());
+		wizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		//2. clear and  write new configuration.
+		wizard.updateConfiguration(cfg);
+		
 		return wizard;
 	}
 

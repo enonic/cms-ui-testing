@@ -2,6 +2,8 @@ package com.enonic.autotests.services;
 
 import java.util.List;
 
+import org.testng.Assert;
+
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
@@ -11,6 +13,7 @@ import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.IUpdateOrCreateContent;
+import com.enonic.autotests.pages.v4.adminconsole.content.PersonImportWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 
 public class ContentService
@@ -29,6 +32,37 @@ public class ContentService
 		RepositoriesListFrame frame = menu.openRepositoriesTableFrame();
 		return frame.doSearchContent(contentName);
 		
+	}
+	
+	/**
+	 * Imports content to the Category.
+	 * 
+	 * @param testSession
+	 * @param importName
+	 * @param fileName
+	 * @param categoryPath
+	 * @return
+	 */
+	public ContentsTableFrame doImportContent(TestSession testSession,String importName,String fileName,String... categoryPath)
+	{		
+		ContentsTableFrame tableOfContent = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, categoryPath );
+		//1. clicks by 'Import' button.
+		tableOfContent.startImportContent();
+		// check if import name equals: import-person-xml or import-person-csv
+		if(importName.contains("person"))
+		{
+			PersonImportWizardPage page = new PersonImportWizardPage(testSession);
+			page.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		//2. choose	 a file and press "Import" button, press the "Back" button as well and waits until Table of content appears.
+			page.doImportFromFile(importName, fileName);
+			
+			tableOfContent.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		}else{
+		   System.out.println("not implemented for import name:"+importName);
+		   Assert.fail("not implemented for import name:"+importName);
+		}
+		
+		return tableOfContent;
 	}
 	
 	/**

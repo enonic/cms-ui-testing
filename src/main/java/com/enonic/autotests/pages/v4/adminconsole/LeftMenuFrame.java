@@ -336,7 +336,7 @@ public class LeftMenuFrame extends Page
 		//5. switch to the main frame
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
 		ContentsTableFrame view = new ContentsTableFrame(getSession());
-		view.waituntilPageLoaded(2L);
+		view.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return view;
 	}
 	

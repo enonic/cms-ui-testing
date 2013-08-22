@@ -1,0 +1,26 @@
+<persons>
+  <person id="1003">
+    <name>Liv Nansen</name>
+      <date>1858-12-07</date>
+    <children>
+    </children>
+  </person>
+  
+  <person id="1004">
+    <name>Kare Nansen</name>
+    <date>1858-12-07</date>
+    <children>
+    </children>
+  </person>
+  
+  <person id="1001">
+    <name>Fridtjof Nansen</name>
+     <date>1858-12-07</date>
+   
+    <children>
+      <child id="1003"/>
+      <child id="1004"/>
+    </children>
+  </person>
+
+</persons>

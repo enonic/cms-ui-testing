@@ -1,0 +1,40 @@
+<persons>
+  <person id="1001">
+    <name>Fridtjof Nansen</name>
+    <occupation>Explorer, diplomat, philanthropist</occupation>
+    <events>
+      <event>
+        <name>Birth</name>
+        <date>10-10-1861</date>
+      </event>
+      <event>
+      <name>Marriage</name>
+      <date>1889-08-11</date>
+    </event>
+      <event>
+      <name>Death</name>
+      <date>13-05-1930</date>
+    </event>
+    </events>
+  </person>
+  <person id="1002">
+    <name>Eva Helene Sars</name>
+    <occupation>Singer</occupation>
+    <events>
+      <event>
+        <name>Birth</name>
+        <date>12-07-1858</date>
+      </event>
+    </events>
+  </person>
+   <person id="1003">
+    <name>Albert Einstein</name>
+    <occupation>theoretical physicist</occupation>
+    <events>
+      <event>
+        <name>Birth</name>
+        <date>14-03-1879</date>
+      </event>
+    </events>
+  </person>
+</persons>
