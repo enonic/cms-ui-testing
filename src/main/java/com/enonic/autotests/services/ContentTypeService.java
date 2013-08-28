@@ -1,5 +1,6 @@
 package com.enonic.autotests.services;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
@@ -54,6 +55,20 @@ public class ContentTypeService
 		ContentTypesFrame frame = menu.openContentTypesFrame(testSession);
 		frame.deleteContentType(contentTypeName);
 		return new ContentTypesFrame(testSession);
+	}
+	
+	/**
+	 * Deletes all sites in admin.
+	 * 
+	 * @param testSession
+	 */
+	public void delteAllContentTypes(TestSession testSession)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		ContentTypesFrame ctypesFrame = menu.openContentTypesFrame(testSession);
+		ctypesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		ctypesFrame.doDeleteAll();
 	}
 
 	/**

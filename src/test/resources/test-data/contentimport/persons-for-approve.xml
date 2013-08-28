@@ -1,0 +1,12 @@
+<persons>
+  <person id="1001">
+    <name>Albert Einstein</name>
+    <occupation>Theoretical physicist</occupation>
+    <birth>14-03-1879</birth>
+  </person>
+  <person id="1002">
+    <name>Claude Monet</name>
+    <occupation>impressionist painting</occupation>
+    <birth>14-11-1840</birth> 
+  </person>
+</persons>

@@ -9,18 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.xml.xpath.XPathConstants;
-
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
-import org.jdom2.xpath.XPath;
-import org.jdom2.xpath.XPathExpression;
-import org.jdom2.xpath.XPathFactory;
 
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 
+/**
+ * This class used for Import content Tests
+ *
+ */
 public class XmlReader
 {
 	public List<String> readNodeValue(String fileName, String childrenName, String childNodeName)
@@ -59,21 +58,6 @@ public class XmlReader
 		return vlaues;
 	}
 
-	public static void main(String[] args)
-	{
-		//XmlReader reader = new XmlReader();
-		//List<String> result = reader.readNodeValue( "test-data/contentimport/persons.xml",  "person","name");
-		//System.out.println("cc");
-		XmlReader reader = new XmlReader();
-		//List<String> result = reader.getPersonNamesFromCSV("test-data/contentimport/persons.csv");
-		List<Person> res = reader.getPersons("test-data/contentimport/persons-block-groups.xml");
-		for(Person p: res)
-		{
-			System.out.println(p.getName());
-			System.out.println(p.getEvents().get(0).getName());p.getEvents().get(0).getValue();
-		}
-		System.out.println("cc");
-	}
 	
 	/**
 	 * Importing into block groups:
@@ -84,7 +68,6 @@ public class XmlReader
 	{
 		List<Person>persons = new ArrayList<>();
 		Person person = null;
-		//List<Event> events = new ArrayList<>();
 		SAXBuilder builder = new SAXBuilder();
 		URL dirURL = XmlReader.class.getClassLoader().getResource(dataXmlFile);
 		File xmlFile = null;
@@ -109,18 +92,22 @@ public class XmlReader
 				person = new Person();
 				person.setName(personElement.getChildText("name"));
 				List<UserEvent> userEvents = new ArrayList<>();
-				List<Element> allEvents = personElement.getChildren("events").get(0).getChildren("event");
-				for(Element el: allEvents)
+				if(personElement.getChildren("events").size()!=0)
 				{
-					userevent = new UserEvent();
-					String name = el.getChildText("name");
-					userevent.setName(name);
-					System.out.println(name);
-					String value = el.getChildText("date");
-					userevent.setValue(value);
-					System.out.println(value);
-					userEvents.add(userevent);
+					List<Element> allEvents = personElement.getChildren("events").get(0).getChildren("event");
+					for(Element el: allEvents)
+					{
+						userevent = new UserEvent();
+						String name = el.getChildText("name");
+						userevent.setName(name);
+						System.out.println(name);
+						String value = el.getChildText("date");
+						userevent.setValue(value);
+						System.out.println(value);
+						userEvents.add(userevent);
+					}
 				}
+				
 				person.setEvents(userEvents);
 				persons.add(person);
 			}

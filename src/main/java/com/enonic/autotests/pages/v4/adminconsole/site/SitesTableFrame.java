@@ -62,7 +62,7 @@ public class SitesTableFrame extends AbstractAdminConsolePage
 	 * Opens 'Sites' folder and delete all sites.
 	 * @param session
 	 */
-	public void doDeleteAll(TestSession session)
+	public void doDeleteAll()
 	{
 		List<WebElement> deleteIcons = findElements(By.xpath(DELTE_SITE_ICON));
 		if (deleteIcons.size() == 0)
@@ -151,7 +151,7 @@ public class SitesTableFrame extends AbstractAdminConsolePage
 	@Override
 	public void waituntilPageLoaded(long timeout)
 	{
-		new WebDriverWait(getSession().getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(TD_HEADER_XPATH)));
+		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(TD_HEADER_XPATH)));
 
 	}
 

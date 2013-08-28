@@ -22,6 +22,7 @@ import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteInfoPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
+import com.enonic.autotests.pages.v4.adminconsole.system.SystemFrame;
 import com.enonic.autotests.services.PageNavigatorV4;
 import com.enonic.autotests.utils.TestUtils;
 import com.google.common.base.Function;
@@ -57,8 +58,9 @@ public class LeftMenuFrame extends Page
 	private String CATEGORY_XPATH = CATEGORY_MENU_ITEM + "//td[2]/a";
 	private String LAST_CHILD_CATEGORY_LINK = CATEGORY_MENU_ITEM + "//table[@class='menuItem' and descendant::img[contains(@src,'L.png')]]//a";
 
-	public static String CONTENT_TYPES_LOCATOR_XPATH = "//a[text()='Content types']";
-	public static String SITES_LOCATOR_XPATH = "//a/span[@id='menuitemText' and contains(.,'Sites')]";
+	public static String CONTENT_TYPES_MENU_ITEM_XPATH = "//a[text()='Content types']";
+	public static String SITES_MENU_ITEM_XPATH = "//a/span[@id='menuitemText' and contains(.,'Sites')]";
+	public static String SYSTEM_MENU_ITEM_XPATH = "//a[child::img[@src='images/icon_system.gif'] and text()='System']";
 	
 	
 	
@@ -79,9 +81,33 @@ public class LeftMenuFrame extends Page
 	public SitesTableFrame openSitesTableFrame(TestSession testSession)
 	{
 		SitesTableFrame sitesframe = new SitesTableFrame(testSession);
-		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(testSession, SITES_LOCATOR_XPATH);
+		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(testSession, SITES_MENU_ITEM_XPATH);
 		sitesframe.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sitesframe;
+
+	}
+//	public SitesTableFrame openContentTypesTableFrame(TestSession testSession)
+//	{
+//		
+//		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(testSession, SITES_MENU_ITEM_XPATH);
+//		ContentTypesFrame ctypesFrame = new SitesTableFrame(testSession);
+//		ctypesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+//		return ctypesFrame;
+//
+//	}
+//	ctypesFrame
+	
+	/**
+	 * Clicks by 'Sites' link and open frame with table of sites.
+	 * @param testSession
+	 * @return
+	 */
+	public SystemFrame openSystemPage(TestSession testSession)
+	{
+		SystemFrame systemFrame = new SystemFrame(testSession);
+		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(testSession, SYSTEM_MENU_ITEM_XPATH);
+		systemFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return systemFrame;
 
 	}
 	
@@ -93,7 +119,7 @@ public class LeftMenuFrame extends Page
 	public ContentTypesFrame openContentTypesFrame(TestSession testSession)
 	{
 		ContentTypesFrame frame = new ContentTypesFrame(testSession);
-		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(testSession, CONTENT_TYPES_LOCATOR_XPATH);
+		PageNavigatorV4.clickMenuItemAndSwitchToRightFrame(testSession, CONTENT_TYPES_MENU_ITEM_XPATH);
 		frame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return frame;
 

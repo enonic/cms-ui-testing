@@ -7,10 +7,12 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.model.Content;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 
-public class AbstractAddContentWizard extends AbstractAdminConsolePage
+public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePage implements IContentWizard<T>
 {
 
 	public static final String GENERAL_TAB_LINK_XPATH = "//a[text()='Content']";
@@ -32,9 +34,12 @@ public class AbstractAddContentWizard extends AbstractAdminConsolePage
 	//5. close wizard button
 	@FindBy(how = How.ID, using = "closebtn")
 	protected WebElement closeButton;
-
+	
 	@FindBy(how = How.ID, using = "name")
 	protected WebElement nameInput;
+	
+	private final String PROPERTIES_TAB_LINK = "//span[contains(@class,'tab')]/a[text()='Properties']";
+	
 
 	/**
 	 * Constructor
@@ -53,4 +58,18 @@ public class AbstractAddContentWizard extends AbstractAdminConsolePage
 		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(GENERAL_TAB_LINK_XPATH)));
 
 	}
+	@Override
+	public String getContentKey()
+	{
+		getDriver().findElement(By.xpath(PROPERTIES_TAB_LINK)).click();
+		ContentPropertiesTab propTab = new ContentPropertiesTab(getSession());
+		propTab.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return propTab.getKeyValue();
+		
+	}
+
+
+	@Override
+	public abstract  void typeDataAndSave(Content<T> content);
+	
 }

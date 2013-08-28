@@ -2,9 +2,7 @@ package com.enonic.autotests.testdata.contenttype;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentCategory;

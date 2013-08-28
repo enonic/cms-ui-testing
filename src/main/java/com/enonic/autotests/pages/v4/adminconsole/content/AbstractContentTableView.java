@@ -53,9 +53,8 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	/**
 	 * @param pathName content name with absolute path name.
 	 */
-	public  IUpdateOrCreateContent openEditContentWizard(Content content)
+	public <T> IContentWizard<T> openEditContentWizard(Content<T> content)
 	{
-		//String pathName = content.buildContentNameWithPath();
 		String nameXpath = String.format(EDIT_CONTENT_LINK, content.getDisplayName() );
 		boolean isEditButtonPresent = TestUtils.getInstance().waitAndFind(By.xpath(nameXpath), getDriver());
 		if (!isEditButtonPresent)
@@ -86,9 +85,9 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	/**
 	 * Opens CreateContentWizardPage page on the Right Frame.
 	 * 
-	 * @return {@link IUpdateOrCreateContent} instance.
+	 * @return {@link IContentWizard} instance.
 	 */
-	public IUpdateOrCreateContent openAddContentWizardPage(ContentRepository cRepository)
+	public IContentWizard openAddContentWizardPage(ContentRepository cRepository)
 	{
 		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
 		buttonNew.click();
@@ -109,6 +108,27 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 
 		return updateOrCreateWizardFactory(cRepository.getTopCategory().getContentType().getContentHandler());
 	}
+	public AddImageContentWizard openAddImageContentWizardPage(String repoName )
+	{
+		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
+		buttonNew.click();
+		boolean isAddContentButtonShowed = TestUtils.getInstance().waitAndFind(By.xpath(CREATE_CONTENT_MENU_BUTTON_XPATH), getDriver());
+		if (!isAddContentButtonShowed)
+		{
+			throw new AddContentException("'New Content-'Menu item was not found");
+		}
+		// 2.click by: '(content-type) Content' and open the "add content-wizard":
+		menuItemAddContent.click();
+		// 3. verify if wizard opened:
+		String xpath = String.format("//a[text()='%s']", repoName);
+		boolean isTitleLoaded = TestUtils.getInstance().waitAndFind(By.xpath(xpath), getDriver());
+		if (!isTitleLoaded)
+		{
+			throw new AddContentException("Create Content Wizard was not opened! Repository: " + repoName);
+		}
+
+		return new AddImageContentWizard(getSession());
+	}
 	/**
 	 * @param displayName
 	 * @return
@@ -123,7 +143,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	 * @ContentHandler handler
 	 * @return
 	 */
-	public IUpdateOrCreateContent updateOrCreateWizardFactory(ContentHandler handler)
+	public IContentWizard updateOrCreateWizardFactory(ContentHandler handler)
 	{
 		switch (handler)
 		{

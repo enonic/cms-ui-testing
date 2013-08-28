@@ -1,7 +1,13 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
@@ -9,13 +15,14 @@ import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.IContentInfo;
 import com.enonic.autotests.model.ImageContentInfo;
+import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
  * Page Object for 'Add image content Wizard'
  * 
  */
-public class AddImageContentWizard extends AbstractAddContentWizard implements IUpdateOrCreateContent<ImageContentInfo>
+public class AddImageContentWizard extends AbstractAddContentWizard<ImageContentInfo> 
 {
 
 	@FindBy(how = How.ID, using = "photographername")
@@ -65,10 +72,26 @@ public class AddImageContentWizard extends AbstractAddContentWizard implements I
 
 		//5. specify a path to the file: 		
 		String pathTofile = newcontent.getContentTab().getContentTabInfo().getPathToFile();
-		if (!findElement(By.id("origimagefilename")).getText().equals(pathTofile))
+		//if (!findElement(By.id("origimagefilename")).getText().equals(pathTofile))
+		//{
+		//	getDriver().findElement(By.id("origimagefilename")).sendKeys(pathTofile);
+		//}
+		URL dirURL = ContentConvertor.class.getClassLoader().getResource(pathTofile);
+		File file = null;
+		try
 		{
-			getDriver().findElement(By.id("origimagefilename")).sendKeys(pathTofile);
+			file = new File(dirURL.toURI());
+		} catch (URISyntaxException e)
+		{
+			getLogger().error("Error during importing a content: Wrong file URL ", getSession());
+
 		}
+		LocalFileDetector detector = new LocalFileDetector();
+		WebElement fileInputType = findElement(By.id("origimagefilename"));
+		File localFile = detector.getLocalFile(file.getAbsolutePath());
+		((RemoteWebElement) fileInputType).setFileDetector(detector);
+
+		fileInputType.sendKeys(localFile.getAbsolutePath());
 		
 		//6.  fill the display name:
 		if (!nameInput.getAttribute("value").equals(newcontent.getDisplayName()))

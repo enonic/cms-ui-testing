@@ -1,0 +1,12 @@
+<persons>
+  <person id="1001">
+    <name>Claude Monet</name>
+    <occupation>impressionist painting</occupation>
+    <birth>14-11-1840</birth> 
+  </person>
+  <person id="1002">
+    <name>Edouard Manet</name>
+    <occupation>impressionist painting</occupation>
+    <birth>23-01-1832</birth>
+  </person>
+</persons>

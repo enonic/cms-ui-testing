@@ -31,7 +31,7 @@ public class SiteService
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
 		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
-		sitesFrame.doDeleteAll(testSession);
+		sitesFrame.doDeleteAll();
 	}
 	
 	/**

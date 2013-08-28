@@ -46,10 +46,12 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 	}
 
 	/**
+	 * Imports file, that located in folder 'resources'.
+	 * 
 	 * Importing of content performs in the following way:
 	 * 
-	 * 1. Chooses a file and clicks by the  button "Import". When the import is successful, button "Back" appears.
-	 * <br>2. Click by button "Back" and shows a table of content
+	 * 1. Chooses a file and clicks by the button "Import". When the import is successful, button "Back" appears. <br>
+	 * 2. Click by button "Back" and shows a table of content
 	 * 
 	 * @param importName
 	 * @param fileName
@@ -62,7 +64,6 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 			// TODO verify is present in select!
 			TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_IMPORT_NAME), importName);
 		}
-
 		
 		URL dirURL = ContentConvertor.class.getClassLoader().getResource(fileName);
 		File file = null;
@@ -84,6 +85,47 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 			LocalFileDetector detector = new LocalFileDetector();
 			WebElement fileInputType = findElement(By.id("importfile"));
 			File localFile = detector.getLocalFile(file.getAbsolutePath());
+			((RemoteWebElement) fileInputType).setFileDetector(detector);
+
+			fileInputType.sendKeys(localFile.getAbsolutePath());
+		}
+        // 3. click by the "Import" button
+		importButton.click();
+		
+		//4. wait until button "Back" appears and press this button
+		boolean isBackButtonPresent = TestUtils.getInstance().waitAndFind(By.xpath("//button[text()='Back']"), getDriver());
+		if (!isBackButtonPresent)
+		{
+			throw new ImportContentException("Error during content importing, 'Back' button was not found! ");
+		}
+		findElement(By.xpath("//button[text()='Back']")).click();
+
+	}
+
+	/**
+	 * Import file from system-tmp folder
+	 * @param importName
+	 * @param file
+	 */
+	public void doImportFromTmpFile(String importName, File tmpfile)
+	{
+		//1. select the name of import.
+		if (importName != null)
+		{
+			// TODO verify is present in select!
+			TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_IMPORT_NAME), importName);
+		}
+				
+		//2. choose a file:
+		if (!getSession().getIsRemote())
+		{
+			// use the a proxy and absolute path to file:
+			chooseFileInputType.sendKeys(tmpfile.getAbsolutePath());
+		} else
+		{  // use the RemoteWebElement and  LocalFileDetector!!!
+			LocalFileDetector detector = new LocalFileDetector();
+			WebElement fileInputType = findElement(By.id("importfile"));
+			File localFile = detector.getLocalFile(tmpfile.getAbsolutePath());
 			((RemoteWebElement) fileInputType).setFileDetector(detector);
 
 			fileInputType.sendKeys(localFile.getAbsolutePath());

@@ -14,6 +14,7 @@
 		<parameter name="browser" value="firefox" />
 		<parameter name="browserVersion" value="23.0.1" />
 		<classes>	
+			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
 			<!-- <class name="com.enonic.autotests.ContentTypeTests" />  -->
 			<class name="com.enonic.autotests.ContentRepositoryTests" />
 		</classes>
@@ -27,6 +28,7 @@
 		<parameter name="base.url" value="http://10.0.6.80:8080/admin/" />
 		
 		<classes>
+		<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
 			<!-- <class name="com.enonic.autotests.ContentTypeTests" />  -->
 			<class name="com.enonic.autotests.ContentRepositoryTests" />
 		</classes>

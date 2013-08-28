@@ -1,0 +1,40 @@
+<contenttype>
+  <config>
+    <form>
+      <title name="name" />
+      <block name="Person">
+        <input name="person-no" required="true" type="text">
+          <display>Person number</display>
+          <xpath>contentdata/person-no</xpath>
+        </input>
+        <input name="name" required="true" type="text">
+          <display>Name</display>
+          <xpath>contentdata/name</xpath>
+        </input>
+      </block>
+      <block group="contentdata/events/event" name="Events">
+        <input name="event-name" required="true" type="text">
+          <display>Name</display>
+          <xpath>name</xpath>
+        </input>
+        <input name="event-date" required="true" type="date">
+          <display>Date</display>
+          <xpath>date</xpath>
+        </input>
+      </block>
+    </form>
+    <imports>
+      <import base="/persons/person" mode="xml" name="person-import-xml" purge="archive" status="0" sync="person-no">
+        <mapping dest="person-no" src="@id" />
+        <mapping dest="name" src="name" />
+        <block base="events/event" dest="Events" purge="delete">
+          <mapping dest="event-name" src="name" />
+          <mapping dest="event-date" format="dd-MM-yyyy" src="date" />
+        </block>
+      </import>
+    </imports>
+  </config>
+  <indexparameters>
+    <index name="person-no" xpath="contentdata/person-no" />
+  </indexparameters>
+</contenttype>

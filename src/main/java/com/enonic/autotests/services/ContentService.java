@@ -1,5 +1,6 @@
 package com.enonic.autotests.services;
 
+import java.io.File;
 import java.util.List;
 
 import org.testng.Assert;
@@ -8,11 +9,13 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentRepository;
+import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.model.Section;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
+import com.enonic.autotests.pages.v4.adminconsole.content.AddImageContentWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.IUpdateOrCreateContent;
+import com.enonic.autotests.pages.v4.adminconsole.content.IContentWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.PersonImportWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
 
@@ -64,6 +67,27 @@ public class ContentService
 		
 		return tableOfContent;
 	}
+	public ContentsTableFrame doImportTmpFileContent(TestSession testSession,String importName,File tmp,String... categoryPath)
+	{		
+		ContentsTableFrame tableOfContent = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, categoryPath );
+		//1. clicks by 'Import' button.
+		tableOfContent.startImportContent();
+		// check if import name equals: import-person-xml or import-person-csv
+		if(importName.contains("person"))
+		{
+			PersonImportWizardPage page = new PersonImportWizardPage(testSession);
+			page.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		//2. choose	 a file and press "Import" button, press the "Back" button as well and waits until Table of content appears.
+			page.doImportFromTmpFile(importName, tmp);
+			
+			tableOfContent.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		}else{
+		   System.out.println("not implemented for import name:"+importName);
+		   Assert.fail("not implemented for import name:"+importName);
+		}
+		
+		return tableOfContent;
+	}
 	
 	/**
 	 * Opens category by name, find a content and publishes content to Section.
@@ -97,7 +121,24 @@ public class ContentService
 	public <T> AbstractContentTableView addContent(TestSession testSession, ContentRepository cRepository, Content<T> content)//
 	{
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
-		IUpdateOrCreateContent wizard = tableViewFrame.openAddContentWizardPage(cRepository);
+		IContentWizard<T> wizard = tableViewFrame.openAddContentWizardPage(cRepository);
+		wizard.typeDataAndSave(content);
+		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return tableViewFrame;
+	}
+	
+	public <T> String getContentKeyPropery(TestSession testSession, Content<T> content)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		IContentWizard<?> wizard = tableViewFrame.openEditContentWizard(content);
+		return wizard.getContentKey();
+		
+	}
+	
+	public AbstractContentTableView addimageContent(TestSession testSession,  Content<ImageContentInfo> content)//
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		AddImageContentWizard wizard = tableViewFrame.openAddImageContentWizardPage(content.getParentNames()[0]);
 		wizard.typeDataAndSave(content);
 		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return tableViewFrame;
@@ -117,7 +158,7 @@ public class ContentService
 		doSearchContentByName(session, content.getDisplayName());
 		
 		ContentsTableFrame contentsTable = new ContentsTableFrame(session);
-		IUpdateOrCreateContent dd = contentsTable.openEditContentWizard(content);
+		IContentWizard<T> dd = contentsTable.openEditContentWizard(content);
 		content.setDisplayName(newName);
 	    dd.typeDataAndSave(content);
 	}

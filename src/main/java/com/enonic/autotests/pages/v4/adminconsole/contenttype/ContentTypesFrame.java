@@ -32,6 +32,7 @@ public class ContentTypesFrame extends AbstractAdminConsolePage
 	public static final String CONTENT_TYPES_TABLE_DELETE_BUTTON_XPATH = "//tr/td[text()='%s']/following-sibling:: td[2]//a[@class='button_link'  and descendant::img[@src='images/icon_delete.gif']]";
 	public static final String CONTENT_TYPES_TABLE_EDIT_BUTTON_XPATH = "//tr/td[text()='%s']/following-sibling:: td[2]//a[@class='button_link'  and descendant::img[@src='images/icon_edit.gif']]";
 
+	private String DELTE_CTYPE_ICON = "//a[@class='button_link']//img[@src='images/icon_delete.gif']";
 	private final String CONTENT_TABLE_XPATH = "//table[@class='browsetable']";
 	
 	@FindBy(xpath = "//button[text()='New']")
@@ -48,6 +49,39 @@ public class ContentTypesFrame extends AbstractAdminConsolePage
 		super(session);
 
 	}
+
+	public void doDeleteAll()
+	{
+		List<WebElement> deleteIcons = findElements(By.xpath(DELTE_CTYPE_ICON));
+		if (deleteIcons.size() == 0)
+		{
+			getLogger().info("There are no any sites to delete!");
+			return;
+		}
+		do
+		{
+			deleteContentType(deleteIcons.get(0));
+			deleteIcons = findElements(By.xpath(DELTE_CTYPE_ICON));
+
+		} while (deleteIcons.size() > 0);
+	}
+
+	private void deleteContentType(WebElement siteElement)
+	{
+		siteElement.click();
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		if (isAlertPresent)
+		{
+			Alert alert = getDriver().switchTo().alert();
+			// Get the Text displayed on Alert:
+			String textOnAlert = alert.getText();
+			getLogger().info("Deleting of the content type, alert message:" + textOnAlert);
+			// Click OK button, by calling accept() method of Alert Class:
+			alert.accept();
+			getLogger().info("content type deleted");
+		}
+	}
+
 
 	/**
 	 * Finds a content type in the table, clicks by 'Delete' icon, confirms the  deletion and waits until frame will be loaded again.

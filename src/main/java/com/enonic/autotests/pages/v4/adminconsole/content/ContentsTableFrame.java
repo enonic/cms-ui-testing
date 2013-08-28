@@ -65,6 +65,29 @@ public class ContentsTableFrame extends AbstractContentTableView
 		super(session);
 
 	}
+	
+	public ContentStatus getContentStatus(String contentName)
+	{
+       String statusImageXpath  = String.format("//tr[contains(@class,'tablerowpainter')]//td[3][contains(@class,'browsetablecell')]/div[contains(@style,'font-weight: bold') and text()='%s']/../../td[6]/img",contentName);
+       List<WebElement> elems = findElements(By.xpath(statusImageXpath));
+       if(elems.size() == 0)
+       {
+    	   throw new TestFrameworkException("Status icon was not found!, probably wrong xpath");
+       }
+       if(elems.get(0).getAttribute("src").contains("approved.gif"))
+       {
+    	   return ContentStatus.APPROVED;
+       }
+       if(elems.get(0).getAttribute("src").contains("draft.gif"))
+       {
+    	   return ContentStatus.DRAFT;
+       }
+       if(elems.get(0).getAttribute("src").contains("archived.gif"))
+       {
+    	   return ContentStatus.ARCHIVED;
+       }
+       throw new TestFrameworkException("unknown status");
+	}
 	/**
 	 * Gets names of all contents from the table.
 	 * 

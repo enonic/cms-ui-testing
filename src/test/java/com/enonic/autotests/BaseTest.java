@@ -2,6 +2,7 @@ package com.enonic.autotests;
 
 import java.io.IOException;
 
+import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
@@ -108,6 +109,10 @@ public class BaseTest
 			logger.info("BaseTest: testsession is null!" );
 		}
 		return sess;
+	}
+	public WebDriver getSessionDriver()
+	{
+		return getTestSession().getDriver();
 	}
 
 }
