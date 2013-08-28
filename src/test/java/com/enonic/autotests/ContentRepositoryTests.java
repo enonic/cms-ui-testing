@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentCategory;
@@ -53,8 +54,9 @@ public class ContentRepositoryTests extends BaseTest
 	private SiteService siteService = new SiteService();
 
 	@Test(description="set up: create content types: Image and File")
-	public  void settings()
+	public  void settingsForContentRepository()
 	{
+		logger.info("############TESTS STARTED:  ContentRepositoryTests###################");
 		logger.info("checks for the existance  of Content type, creates new content type if it does not exist");
 		ContentType imagesType = new ContentType();
 		imagesType.setName("Image");
@@ -79,11 +81,13 @@ public class ContentRepositoryTests extends BaseTest
 		}
 
 		getTestSession().put(REPOSITORY_LIST, new ArrayList<ContentRepository>());
+		logger.info("FINISHED: settings ForContentRepositoryTest ");
 	}
 
-    @Test(dependsOnMethods = "settings", description = "create new Content Repository with specified Content Type", dataProvider = "createContentRepositoryPositive", dataProviderClass = ContentRepositoryProvider.class)
+    @Test(dependsOnMethods = "settingsForContentRepository", description = "create new Content Repository with specified Content Type", dataProvider = "createContentRepositoryPositive", dataProviderClass = ContentRepositoryProvider.class)
 	public void createRepositoryTest(ContentRepositoryXml contentRepoXML)
 	{
+    	logger.info("#### STARTED: createRepositoryTest ");
 		logger.info(contentRepoXML.getCaseInfo());
 		// add new content repository and save it in the test-session.
 		ContentRepository cRepository = ContentConvertor.convertXmlDataToContentRepository(contentRepoXML);
@@ -105,13 +109,14 @@ public class ContentRepositoryTests extends BaseTest
 		List<ContentRepository> repositoryList = (List) getTestSession().get(REPOSITORY_LIST);
 		// add new created repository to arrayList and the save in the session:
 		repositoryList.add(cRepository);
+		logger.info("$$$$ FINISHED: createRepositoryTest ");
 
 	}
 
     @Test(description = "add category(Content Type == 'Files') to the repository, repsitory has no a TopCategory", dependsOnMethods = "createRepositoryTest")
 	public void testAddCategoryToRepository()
 	{
-    	logger.info("case-info: add category with 'Files' type  to the repository, repsitory has no a TopCategory  Repository name is  "+TEST_REPO_NAME);
+    	logger.info("#### STARTED: add category with 'Files' type  to the repository, repsitory has no a TopCategory  Repository name is  "+TEST_REPO_NAME);
 		ContentRepository repository = findRepositoryByName(TEST_REPO_NAME);
 		
 		//1. build new category with content type === "File"
@@ -127,6 +132,7 @@ public class ContentRepositoryTests extends BaseTest
 		//3.verify: category created
 		boolean isCreated = repositoryService.findCategoryByPath(getTestSession(), TEST_FILE_CATEGORY_NAME, pathName);
 		Assert.assertTrue(isCreated, "new added category was not found!" + newcategory.getName());
+		logger.info("$$$$ FINISHED: testAddCategoryToRepository ");
 
 	}
 	  
@@ -140,7 +146,7 @@ public class ContentRepositoryTests extends BaseTest
     @Test(dependsOnMethods = "createRepositoryTest", dataProvider = "addContent", dataProviderClass = ContentRepositoryProvider.class)
 	public void addContentToCategoryTest(AbstractContentXml xmlContent)
 	{
-		logger.info(xmlContent.getCaseInfo());
+		logger.info("#### STARTED  "+ xmlContent.getCaseInfo());
 		Content<?> content = ContentConvertor.convertXmlDataToContent(xmlContent);
         //1. find repository for test in the testsession :
 		ContentRepository repository = findRepositoryByHandler( xmlContent.getContentHandler());
@@ -173,7 +179,7 @@ public class ContentRepositoryTests extends BaseTest
 			getTestSession().put(FILE_CONTENT, content);	
 		}
 		
-		
+		logger.info("$$$$ FINISHED: addContentToCategoryTest ");
 
 	}
 
@@ -187,7 +193,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(dependsOnMethods = "addContentToCategoryTest", description = "Create content in admin, verify: Content searchable")
 	public void searchContentTest()
 	{
-		logger.info("case-info: create content and verify: Content  searchable ");
+		logger.info("### STARTED: create content and verify: Content  searchable ");
 		Content<?> content = (Content<?>) getTestSession().get(IMAGE_CONTENT);
 		// 1. Type the display name of content and press the 'Search' button
 		List<String> contentNames = contentService.doSearchContentByName(getTestSession(), content.getDisplayName());
@@ -195,6 +201,7 @@ public class ContentRepositoryTests extends BaseTest
 		boolean result = contentNames.contains(content.getDisplayName());
 		logger.info("case-info: Content searchable: " + result);
 		Assert.assertTrue(result, "new added content was not found, search content does not work");
+		logger.info("$$$$ FINISHED: searchContentTest ");
 	}
 
 	/**
@@ -208,7 +215,7 @@ public class ContentRepositoryTests extends BaseTest
     @Test(description = "change content's name and search ",dependsOnMethods="searchContentTest")
 	public void updateContentNameAndSearchTest()
 	{
-    	logger.info("case-info: update content in admin and checkout:Content visible in category view,Content (new values) searchable ");
+    	logger.info("##### STARTED: update content in admin and checkout:Content visible in category view,Content (new values) searchable ");
 		Content<?> content = (Content<?>) getTestSession().get(IMAGE_CONTENT);
 		// 1. change name of content.
 		contentService.editContent(getTestSession(), content, EDITTEST_CONTENT_NAME);
@@ -218,6 +225,7 @@ public class ContentRepositoryTests extends BaseTest
 		boolean result = contentNames.contains(EDITTEST_CONTENT_NAME);
 		logger.info("case-info: Content searchable: " + result);
 		Assert.assertTrue(result, "new added content was not found, search content does not work");
+		logger.info("$$$$$$ FINISHED: updateContentNameAndSearchTest ");
 	}
 
 	/**
@@ -231,12 +239,13 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(description = "delete content and verify it in the table", dependsOnMethods = "updateContentNameAndSearchTest")
 	public void deleteContentFromCategory()
 	{
-		logger.info("case-info:Delete  content in admin, verify -Content not present in category view ");
+		logger.info("#### STARTED :Delete  content in admin, verify -Content not present in category view ");
 		Content<?> content = (Content<?>) getTestSession().get(IMAGE_CONTENT);
 		content.setDisplayName(EDITTEST_CONTENT_NAME);
 		ContentsTableFrame contentTableFrame = contentService.deleteContentfromCategory(getTestSession(), content);
 		boolean isPresent = contentTableFrame.findContentInTableByName(content.getDisplayName());
 		Assert.assertFalse(isPresent, String.format("content with name %s should be deleted ", content.getDisplayName()));
+		logger.info("$$$$$ FINISHED: deleteContentFromCategory ");
 
 	}
 	
@@ -253,7 +262,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(dependsOnMethods = "addContentToCategoryTest",description = "Move (both one and multiple (bulk)) content in admin, verify Content visible in new category view")
 	public void moveContentTest()
 	{
-		logger.info("Case-info: Move  content in admin, verify Content visible in new category view");
+		logger.info("#### STRATED: Move  content in admin, verify Content visible in new category view");
 		Content<?> content = (Content<?>) getTestSession().get(FILE_CONTENT);
 		ContentRepository repository = findRepositoryByName(TEST_REPO_NAME);
 		ContentsTableFrame table = contentService.moveContent(getTestSession(), content, repository.getName(), TEST_FILE_CATEGORY_NAME);
@@ -263,6 +272,7 @@ public class ContentRepositoryTests extends BaseTest
 		table = contentService.openCategory(getTestSession(), repository.getName(),TEST_FILE_CATEGORY_NAME);
 		result = table.findContentInTableByName(content.getDisplayName());
 		Assert.assertTrue(result,"content not present in the destination folder! content name"+content.getDisplayName());
+		logger.info("$$$$$ FINISHED: moveContentTest ");
 	}
 	
 	/**
@@ -273,7 +283,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(description="Empty all content from category. Open category, and delete by pushing 'Delete'",dependsOnMethods = "addContentToCategoryTest")
 	public void deleteAllContentAndDeleteCategory()
 	{
-		logger.info("Empty all content from category. Open category, and delete by pushing 'Delete'");
+		logger.info("#### STARTED: Empty all content from category. Open category, and delete by pushing 'Delete'");
 		ContentRepository repository = findRepositoryByName(TEST_REPO_NAME);
 		ContentCategory newcategory = new ContentCategory();
 		newcategory.setName("categoryTodelete");
@@ -293,6 +303,7 @@ public class ContentRepositoryTests extends BaseTest
 		table.doDeleteEmptyCategory();
 		boolean ispresent = repositoryService.findCategoryByPath(getTestSession(), newcategory.getName(), pathName);
 		Assert.assertFalse(ispresent, "new added category was not found!" + newcategory.getName());
+		logger.info("$$$$$FINISHED: deleteAllContentAndDeleteCategory ");
 	}
 	
 	
@@ -308,6 +319,7 @@ public class ContentRepositoryTests extends BaseTest
 		boolean result = table.verifyIsPresent(site.getDispalyName());
 		Assert.assertTrue(result,"new site was not found in the table");		
 		getTestSession().put(TEST_SITE, site);	
+		logger.info("FINISHED: createNewSiteTest ");
 	}
 	
 	/**
@@ -316,12 +328,12 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(dependsOnMethods ="createNewSiteTest",description = "edit site and allow section page type")
 	public void allowSectionPageTypeTest()
 	{
-		logger.info("Case-info: Edit site, allow Section page type.");
+		logger.info("##### SATRTED: Edit site, allow Section page type.");
 		Site site = (Site)getTestSession().get(TEST_SITE);	
 		AllowedPageTypes[] allowedPageTypes = {AllowedPageTypes.SECTION};
 		site.setAllowedPageTypes(allowedPageTypes );
 		siteService.editSite(getTestSession(), site.getDispalyName(), site);
-		logger.info("Edit site-test finished,  Section page type allowed.");
+		logger.info("$$$$$ FINISHED: Edit site-test ,  Section page type allowed.");
 	}
 	/**
 	 * Case-info: add new section menu item to the  Site .
@@ -329,7 +341,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(dependsOnMethods ="allowSectionPageTypeTest",description ="add to Site new section menu item")
 	public void addSectionTest()
 	{
-		logger.info("case-info: add to Site new section menu item ");
+		logger.info("##### STARTED : add to Site new section menu item ");
 		Site site = (Site)getTestSession().get(TEST_SITE);			
 		Section section = new Section();
 		section.setDisplayName("section1");
@@ -347,6 +359,7 @@ public class ContentRepositoryTests extends BaseTest
 		logger.info("TEST FINISHED: add to Site new section menu item ");
 		// put new created section to the session.
 		getTestSession().put(TEST_SECTION_FILE_CTYPE, section);	
+		logger.info("$$$$$ FINISHED: addSectionTest.");
 		
 	}
 	/**
@@ -355,7 +368,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(dependsOnMethods ="allowSectionPageTypeTest",description ="add new ordered section menu item to the  Site ")
 	public void addOrderedSectionTest()
 	{
-		logger.info("case-info: add new ordered section menu item to the  Site ");
+		logger.info("#### STARTED: add new ordered section menu item to the  Site ");
 		Site site = (Site)getTestSession().get(TEST_SITE);			
 		Section section = new Section();
 		section.setDisplayName("ordered");
@@ -374,6 +387,7 @@ public class ContentRepositoryTests extends BaseTest
 		logger.info("TEST FINISHED: add to Site new section menu item ");
 		// put new created section to the session.
 		getTestSession().put(TEST_ORDEREDSECTION_FILE_CTYPE, section);	
+		logger.info("$$$$$ FINISHED: addOrderedSectionTest. #########");
 		
 	}
 	/**
@@ -385,7 +399,7 @@ public class ContentRepositoryTests extends BaseTest
 	public void publishContentToOrderedSection()
 	{
 		
-		logger.info("case-info:publish 2 files to ordered section ");
+		logger.info("##### STARTED :publish two files to ordered section ");
 		Content<FileContentInfo> content = (Content<FileContentInfo>)getTestSession().get(FILE_CONTENT);
 		ContentRepository repository = findRepositoryByHandler( content.getContentHandler().toString());
 		
@@ -412,7 +426,7 @@ public class ContentRepositoryTests extends BaseTest
 		boolean isOrsered = verifyOrder(actualContentNames, sectionContent2.getDisplayName());
 		
 		Assert.assertTrue(isOrsered,"wrong order in the section page");
-		logger.info("TEST FINISHED: publish content to section ");
+		logger.info("$$$$ FINISHED: publishContentToOrderedSection #########");
 	}
 	/**
 	 * Verifies: list is ordered.
@@ -432,7 +446,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(dependsOnMethods ="addSectionTest",description = "publish content to section")
 	public void publishContentToSection()
 	{
-		logger.info("case-info:publish content to section ");
+		logger.info("#### STARTED :publish content to section ");
 		Content<FileContentInfo> content = (Content<FileContentInfo>)getTestSession().get(FILE_CONTENT);
 		ContentRepository repository = findRepositoryByHandler( content.getContentHandler().toString());
 		
@@ -449,7 +463,7 @@ public class ContentRepositoryTests extends BaseTest
 		contentService.doPublishContentToSection(getTestSession(), sectionContent, section);
 		boolean isContentPublished =  siteService.isContentFromSectionPublished(getTestSession(), section,sectionContent.getDisplayName());
 		Assert.assertTrue(isContentPublished, "content publishing failed, content not present in the section or content is not published!");
-		logger.info("TEST FINISHED: publish content to section ");
+		logger.info("$$$$$ FINISHED: publishContentToSection #########");
 	}
 	/**
 	 * Case info:
@@ -460,7 +474,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(dependsOnMethods ="addSectionTest",description = "add content to section, verify: content visible in section view")
 	public void addContentToSectionTest()
 	{
-		logger.info("case-info:add content to section, verify: content visible in section view");
+		logger.info("#### STARTED :add content to section, verify: content visible in section view");
 		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);
 		
 		Content<FileContentInfo> content = (Content<FileContentInfo>)getTestSession().get(FILE_CONTENT);
@@ -477,7 +491,7 @@ public class ContentRepositoryTests extends BaseTest
 		//3. verify: content present in the section:
 		boolean result = table.verifyIsPresent(sectionContent.getDisplayName());
 		Assert.assertTrue(result,"content was not added to Section!");
-		logger.info("TEST FINISHED:add content to section");
+		logger.info("$$$$$ FINISHED:addContentToSectionTest#########");
 		
 	}
 	
@@ -487,9 +501,9 @@ public class ContentRepositoryTests extends BaseTest
 	 * <br> -site present in the table. 	
 	 */
 	@Test(description="delete site test. Find site in admin console and delete")
-	public void deleteSiteTest()
+	public void createAnddeleteSiteTest()
 	{
-		logger.info("Case-info:delete site test. Find site in admin console and delete");
+		logger.info("#### STARTED :delete site test. Find site in admin console and delete");
 		Site site =  new Site();
 		site.setDispalyName("siteTodelete");
 		AllowedPageTypes[] allowedPageTypes = { AllowedPageTypes.SECTION, AllowedPageTypes.LABEL, AllowedPageTypes.URL };
@@ -502,6 +516,7 @@ public class ContentRepositoryTests extends BaseTest
 		siteService.deleteSite(getTestSession(), site.getDispalyName());
 		result = sitesPage.verifyIsPresent(site.getDispalyName());
 		Assert.assertFalse(result,"site was not deleted: "+ site.getDispalyName());
+		logger.info("$$$$ FINISHED: deleteSiteTest #########");
 		
 	}
 	/**
@@ -513,16 +528,16 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(dependsOnMethods ="addContentToSectionTest",description = "Remove content from section, verify: content not present in section view")
 	public void removeFromSectionTest()
 	{
-		logger.info("case-info:add content to section, verify: content visible in section view");
+		logger.info("##### STARTED :add content to section, verify: content visible in section view");
 		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);
 		Site site = (Site)getTestSession().get(TEST_SITE);
 		SectionContentsTablePage table = siteService.removeContentFromSection(getTestSession(), site.getDispalyName(), section.getDisplayName(), SECTION_CONTENT_ADD_NAME);
 		boolean result = table.verifyIsPresent(SECTION_CONTENT_ADD_NAME);
 		Assert.assertFalse(result, "content was not removed from section, contentname:" +SECTION_CONTENT_ADD_NAME);
-		logger.info("TEST FINISHED: Remove content from section");
+		logger.info("$$$$ FINISHED: Remove content from section");
 	}
 	
-	// ==================================================================================================
+	
 	/**
 	 * Creates preconditions for addContentToSectionTest.
 	 * @param sectionContent

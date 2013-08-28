@@ -343,6 +343,7 @@ public class LeftMenuFrame extends Page
 		for (int i = 0; i < names.length - 1; i++)
 		{
 			String catXpath = String.format(CATEGORY_EXPANDER_IMG_XPATH, names[i]);
+			getLogger().info("try to expand a folder: "+names[i]);
 			//expandFolder(catXpath);
 			TestUtils.getInstance().expandFolder(getSession(),catXpath);
 		}

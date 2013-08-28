@@ -92,6 +92,7 @@ public class AddEntryImageFileContent extends BaseTest
 	@Test(description = "set up: create content types: Person and Image")
 	public void settings()
 	{
+		logger.info("#########  STARTED settings for  AddEntryImageFileContent");
 		logger.info("set up: create content types: Person and Image");
 		// 1.create content types
 		createContentTypes();
@@ -117,14 +118,14 @@ public class AddEntryImageFileContent extends BaseTest
 		imageCategory.setParentNames(parentNames2);
 		getTestSession().put(IMAGES_CATEGORY_KEY, imageCategory);
 		repositoryService.addCategory(getTestSession(), imageCategory);
-		logger.info("FINISHED: set up settings");
+		logger.info("$$$$ FINISHED: set up settings for  AddEntryImageFileContent");
 
 	}
 
 	@Test(description = "upload a image, the key of this image will use in Imported resource", dependsOnMethods = "settings")
 	public void uploadImageAndReadKey()
 	{
-		logger.info("upload image and gets KEY for this new resource");
+		logger.info("#### STARTED: upload image and gets KEY for this new resource");
 		// jpg file to upload:
 		String pathToFile = "test-data/contentimport/face.jpg";
 		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
@@ -142,10 +143,12 @@ public class AddEntryImageFileContent extends BaseTest
 		//1. add image to category, category has 'IMAGES' content handler:
 		AbstractContentTableView table = contentService.addimageContent(getTestSession(), content);
 		//2. verify:Image is present in the table of content
-		Assert.assertTrue(table.findContentInTableByName("face.jpg"), "image was not uploaded!");
+		Assert.assertTrue(table.findContentInTableByName("face"), "image was not uploaded!");
 		//3. save in session a key of uploaded image 
 		String key = contentService.getContentKeyPropery(getTestSession(), content);
 		getTestSession().put(CONTENT_KEY, key);
+
+		logger.info("$$$$ FINISHED: uploadImageAndReadKey");
 
 	}
 
@@ -160,7 +163,7 @@ public class AddEntryImageFileContent extends BaseTest
 	@Test(dependsOnMethods = "uploadImageAndReadKey", description = "Importing content with mapped input fields of type image ")
 	public void personWithImageImportTest() throws IOException
 	{
-		logger.info("case-info:Importing content with mapped input fields of type image");
+		logger.info("#### STARTED:Importing content with mapped input fields of type image");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(PERSON_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		//1. get key from the session
@@ -183,7 +186,7 @@ public class AddEntryImageFileContent extends BaseTest
 		logger.info("open for edit and verify: image is present on the page ");
 		boolean isImagePresent = ImportUtils.checkContentKey(getSessionDriver(), table, "Fridtjof Nansen", key);
 		Assert.assertTrue(isImagePresent, "image was not mapped");
-		logger.info("TEST-FINISHED:'Importing content with mapped input fields of type image' ");
+		logger.info("$$$$ FINISHED:'Importing content with mapped input fields of type image' ");
 
 	}
 

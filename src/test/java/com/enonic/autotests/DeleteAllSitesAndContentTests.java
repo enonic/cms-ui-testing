@@ -25,6 +25,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 	@Test(description = "Delete all items from 'Sites' folder")
 	public void deleteSites()
 	{
+		logger.info("### TEST: deleteSites started");
 		siteService.delteAllSites(getTestSession());
 
 		List<String> list = siteService.getAllSiteNames(getTestSession());
@@ -35,6 +36,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 	@Test(description = "Delete all items from 'Content' folder ", dependsOnMethods = "deleteSites")
 	public void deleteAllContent()
 	{
+		logger.info("### TEST: deleteAllContent");
 		List<String> allNames = repositoryService.getAllRepositoryNames(getTestSession());
 		for (String repoName : allNames)
 		{
@@ -47,6 +49,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 	@Test(description = "Remove Deleted Content From Database ", dependsOnMethods = "deleteAllContent")
 	public void removeDeletedContentFromDatabaseTest()
 	{
+		logger.info("#### TEST: removeDeletedContentFromDatabaseTest");
 		systemService.doRemoveDeletetContentFromDataBase(getTestSession());
 		logger.info("Content were removed From Database");
 
@@ -55,6 +58,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 	@Test(description = "Delete all Content Types", dependsOnMethods = "removeDeletedContentFromDatabaseTest")
 	public void deleteAllContentTypes()
 	{
+		logger.info("#### TEST: deleteAllContentTypes");
 		contentTypeService.delteAllContentTypes(getTestSession());
 		logger.info("all content types were deleted");
 

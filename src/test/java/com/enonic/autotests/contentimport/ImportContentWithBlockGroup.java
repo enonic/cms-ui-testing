@@ -85,7 +85,8 @@ public class ImportContentWithBlockGroup extends BaseTest
 	@Test(description = "set up: create content types: Person")
 	public void settings()
 	{
-		logger.info("checks for the existance  of Content type, creates new content type if it does not exist");
+		logger.info("####  STARTED name:  "+ "ImportContentWithBlockGroup");
+		logger.info("CREATE content types and categories: ImportContentWithBlockGroup");
 		// 1.create content types
 		createContentTypes();
 		// 2. create content repositories:
@@ -101,14 +102,14 @@ public class ImportContentWithBlockGroup extends BaseTest
 		catBlock.setParentNames(parentNames2);
 		getTestSession().put(IMPORT_CATEGORY_BLOCK_GROUPS_KEY, catBlock);
 		repositoryService.addCategory(getTestSession(), catBlock);
-		logger.info("FINISHED: set up settings");
+		logger.info("$$$$ FINISHED: set up settings");
 
 	}
 
 	@Test(dependsOnMethods = "settings", description = "Importing into block groups,Mapping input fields of type date, format='dd-MM-yyyy' ")
 	public void importingIntoBlockGroups()
 	{
-		logger.info("case-info:Importing into block groups.  Date Format used: format='dd-MM-yyyy'");
+		logger.info("####  STARTED:Importing into block groups.  Date Format used: format='dd-MM-yyyy'");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_BLOCK_GROUPS_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
@@ -129,7 +130,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 			boolean result = personFromXml.getEvents().equals(uiEvents);
 			Assert.assertTrue(result, "Importing into block groups test failed, because expexted events and actual are not equals!");
 		}
-		logger.info("TEST-FINISHED:'Importing into block groups' ");
+		logger.info("$$$$ FINISHED:'Importing into block groups' ");
 
 	}
 
@@ -143,8 +144,8 @@ public class ImportContentWithBlockGroup extends BaseTest
 	@Test(dependsOnMethods = "importingIntoBlockGroups", description = "Updating block group entries, sync='person-no'.There are a  new person and a new event in the XML formatted source. ")
 	public void updatingBlockGroupEntriesTest()
 	{
-		logger.info("case-info:Updating block group entries, sync='person-no'. There are a  new person and a new event in the XML formatted source. ");
-		logger.info("case-info:Mapping input fields of type date");
+		logger.info("####  STARTED: Updating block group entries, sync='person-no'. There are a  new person and a new event in the XML formatted source. ");
+		logger.info(" Mapping input fields of type date");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_BLOCK_GROUPS_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. update content: new event was added for first person and new person added:
@@ -162,7 +163,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 			boolean result = eventsFromUI.equals(personFromXML.getEvents());
 			Assert.assertTrue(result, "'Updating block group entries' test failed, because expexted events and actual are not equals!");
 		}
-		logger.info("TEST-FINISHED:'Importing into block groups' ");
+		logger.info("$$$$ FINISHED:'Importing into block groups' ");
 	}
 
 	
@@ -176,7 +177,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 	public void blockPurgeTrueTest()
 
 	{
-		logger.info("case-info:Block group purge setting. Sets purge to 'true' ");
+		logger.info("####  STARTED :Block group purge setting. Sets purge to 'true' ");
 		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(PERSON_BLOCK_EVENTS_PURGE_CFG);
 		String purgeTrueCFG = TestUtils.getInstance().readConfiguration(in);
 		// 1. change content type's configuration: add purge="true" for EVENTS
@@ -203,14 +204,14 @@ public class ImportContentWithBlockGroup extends BaseTest
 		// verify that
 		List<UserEvent> eventsAfterImport = ImportUtils.getEventsFromUI(getSessionDriver(), table, PERSON_EVENT_PURGE_TEST);
 		Assert.assertFalse(eventsAfterImport.contains(eventsBeforeUpdate), "event with name:" + EVENT_NAME_PURGE_TEST+ " still present on the page, but should be removed!");
-		logger.info("TEST-FINISHED:'Block group purge setting' ");
+		logger.info("$$$$ FINISHED:'Block group purge setting' ");
 
 	}
 	@Test(description = "Purge Content. Sets purge to 'archive' ", dependsOnMethods = "blockPurgeTrueTest")
 	public void contentPurgeArchiveTest()
 
 	{
-		logger.info("case-info:Purge Content. Sets purge to 'archive' ");
+		logger.info("####  STARTED: Purge Content. Sets purge to 'archive' ");
 		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(PERSON_CONTENT_PURGE_ARCHIVE_CFG);
 		String contentPurgeArchiveCFG = TestUtils.getInstance().readConfiguration(in);
 		// 1. change content type's configuration: add purge="true" for EVENTS
@@ -232,16 +233,15 @@ public class ImportContentWithBlockGroup extends BaseTest
 		ContentStatus statusAfterImport = table.getContentStatus(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertTrue(statusAfterImport.equals(ContentStatus.ARCHIVED),"expected status and actual are not equals!");
 			
-		logger.info("TEST-FINISHED: Purge Content. Sets purge to 'archive' ");
+		logger.info("$$$$  FINISHED: Purge Content. Sets purge to 'archive' ");
 
 	}
-	// TODO implement Keep content
 	
 	@Test(description = "Purge Content. Sets purge to 'delete' ", dependsOnMethods = "contentPurgeArchiveTest")
 	public void contentPurgeDeleteTest()
 
 	{
-		logger.info("case-info:Purge Content. Sets purge to 'archive' ");
+		logger.info("####  STARTED:  Purge Content. Sets purge to 'archive' ");
 		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(PERSON_CONTENT_PURGE_DELETE_CFG);
 		String contentPurgeDeleteCFG = TestUtils.getInstance().readConfiguration(in);
 		// 1. change content type's configuration: add purge="delete" for persons
@@ -259,7 +259,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE, pathToCategory);
 		boolean isPresentPersonAfterImport = table.findContentInTableByName(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertFalse(isPresentPersonAfterImport,"the person with name: "+ CONTENT_PURGE_PERSON_NAME + "should be deleted from the table!");		
-		logger.info("TEST-FINISHED: Purge Content. Sets purge to 'delete' ");
+		logger.info("$$$$ FINISHED: Purge Content. Sets purge to 'delete' ");
 
 	}
 	private String getContentTypeName()

@@ -64,7 +64,7 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 	@Test(description = "set up: create content types: Person")
 	public void settings()
 	{
-		logger.info("checks for the existance  of Content type, creates new content type if it does not exist");
+		logger.info("#### START: ImportContentUpdateStrategyTest set up create person content type and Repository ");
 		// 1.create content types
 		createContentTypes();
 		// 2. create content repositories:
@@ -80,14 +80,14 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		cat.setParentNames(parentNames2);
 		getTestSession().put(CATEGORY_STARTEGY_TEST_KEY, cat);
 		repositoryService.addCategory(getTestSession(), cat);
-		logger.info("FINISHED: set up settings");
+		logger.info("$$$$ FINISHED: set up settings");
 
 	}
 	
 	@Test(description = "UPDATE-AND-APPROVE-CONTENT strategy used",dependsOnMethods="settings")
 	public void updateAndApproveContentTest()
 	{
-		logger.info("case-info:Update content, UPDATE-AND-APPROVE-CONTENT strategy used.  ");
+		logger.info("####  STARTED : Update content, UPDATE-AND-APPROVE-CONTENT strategy used.  ");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(CATEGORY_STARTEGY_TEST_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
@@ -102,13 +102,13 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 			ContentStatus status = table.getContentStatus(name);
 			Assert.assertTrue(status.equals(ContentStatus.APPROVED), "the actual status and expected are not equals!");
 		}
-	  
+		logger.info("$$$$ FINISHED:  Update content, UPDATE-AND-APPROVE-CONTENT strategy used.");
 	}
 	
 	@Test(description = "UPDATE-AND-ARCHIVE-CONTENT strategy used",dependsOnMethods="updateAndApproveContentTest")
 	public void updateAndArchiveContentTest()
 	{
-		logger.info("case-info:Update content, UPDATE-AND-ARCHIVE-CONTENT strategy used.  ");
+		logger.info("####  STARTED: Update content, UPDATE-AND-ARCHIVE-CONTENT strategy used.  ");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(CATEGORY_STARTEGY_TEST_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
@@ -129,13 +129,13 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 			ContentStatus status = table.getContentStatus(name);
 			Assert.assertTrue(status.equals(ContentStatus.ARCHIVED), "the actual status and expected are not equals!");
 		}
-	  
+		logger.info("$$$$ FINISHED:  Update content, UPDATE-AND-ARCHIVE-CONTENT strategy used.");
 	}
 	
 	@Test(description = "UPDATE-CONTENT-DRAFT strategy used",dependsOnMethods="updateAndArchiveContentTest")
 	public void updateAndDraftContentTest()
 	{
-		logger.info("case-info:Update content, UPDATE-AND-ARCHIVE-CONTENT strategy used.  ");
+		logger.info("####  STARTED:  Update content, UPDATE-CONTENT-DRAFT strategy used.  ");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(CATEGORY_STARTEGY_TEST_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
@@ -156,13 +156,13 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 			ContentStatus status = table.getContentStatus(name);
 			Assert.assertTrue(status.equals(ContentStatus.DRAFT), "the actual status and expected are not equals!");
 		}
-	  
+		logger.info("$$$$ FINISHED:  Update content, UPDATE-CONTENT-DRAFT strategy used.  ");
 	}
 	
 	@Test(description = "UPDATE-CONTENT-KEEP-STATUS strategy used",dependsOnMethods="updateAndDraftContentTest")
 	public void updateAndKeepStatusTest()
 	{
-		logger.info("case-info:Update content,UPDATE-CONTENT-KEEP-STATUS strategy used.  ");
+		logger.info("####  STARTED: Update content,UPDATE-CONTENT-KEEP-STATUS strategy used.  ");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(CATEGORY_STARTEGY_TEST_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
@@ -183,7 +183,7 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 			ContentStatus status = table.getContentStatus(name);
 			Assert.assertTrue(status.equals(ContentStatus.DRAFT), "the actual status and expected are not equals!");
 		}
-	  
+		logger.info("$$$$ FINISHED: Update content,UPDATE-CONTENT-KEEP-STATUS strategy used.  ");
 	}
 	
 	private String getContentTypeName()

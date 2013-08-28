@@ -21,7 +21,7 @@ public class BaseTest
 	@BeforeClass(alwaysRun = true)
 	public void readDesiredCapabilities(ITestContext context)
 	{
-		logger.info("############### method readDesiredCapabilities started    ###################");
+		//logger.info("############### method readDesiredCapabilities started    ###################");
 		TestSession testSession = new TestSession();
 
 		String browser = (String) context.getCurrentXmlTest().getParameter("browser");
@@ -76,7 +76,8 @@ public class BaseTest
 			}
 		}
 		sessionRef.set(testSession);
-		logger.info("############### method readDesiredCapabilities finished    ###################");
+		//logger.info("############### method readDesiredCapabilities finished    ###################");
+		
 	}
 
 	@BeforeMethod
