@@ -1,5 +1,5 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="test suite" verbose="1" parallel="tests" thread-count="2">
+<suite name="test suite" verbose="1"  parallel="tests" thread-count="2">
 
 	<listeners>
 		<listener class-name="com.enonic.autotests.TestListener"></listener>
@@ -13,20 +13,21 @@
 		<parameter name="platform" value="windows" />
 		<parameter name="browser" value="firefox" />
 		<parameter name="browserVersion" value="23.0.1" />
-		<classes>	
+		<classes>
 			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
 			<class name="com.enonic.autotests.ContentTypeTests" />  
-			<class name="com.enonic.autotests.ContentRepositoryTests" />
+			<class name="com.enonic.autotests.ContentRepositoryTests" />		
 			<class name="com.enonic.autotests.contentimport.ContentImportTest" />
 			<class name="com.enonic.autotests.contentimport.ImportContentUpdateStrategyTest" />
            <class name="com.enonic.autotests.contentimport.ImportContentWithBlockGroup" />
            <class name="com.enonic.autotests.contentimport.AddEntryImageFileContent" />
+           <class name="com.enonic.autotests.textextractors.TextExtractorsTest" />
 			
 		</classes>
 	</test>
 	
 	
-		<!-- TEST 2 -->
+			<!-- TEST 2 -->
 	  <test verbose="2" name="ChromeTests-grid2" preserve-order="true"  parallel="false">
       <parameter name="platform" value="windows" />
 		<parameter name="browser" value="firefox" />  
@@ -36,17 +37,18 @@
 		<parameter name="base.url" value="http://10.0.6.80:8080/admin/" />
 		
 		<classes>
-		<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
+			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
 		        <class name="com.enonic.autotests.ContentTypeTests" /> 
-			<class name="com.enonic.autotests.ContentRepositoryTests" />
+			<class name="com.enonic.autotests.ContentRepositoryTests" />		
 			<class name="com.enonic.autotests.contentimport.ContentImportTest" />
 			<class name="com.enonic.autotests.contentimport.ImportContentUpdateStrategyTest" />
            <class name="com.enonic.autotests.contentimport.ImportContentWithBlockGroup" />
            <class name="com.enonic.autotests.contentimport.AddEntryImageFileContent" />
+           <class name="com.enonic.autotests.textextractors.TextExtractorsTest" />
 			
 		</classes>
 	</test>
-	
+
 
 
 </suite>
