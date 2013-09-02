@@ -1,5 +1,7 @@
 package com.enonic.autotests.pages.v4.adminconsole.content;
 
+import java.util.Map;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -39,6 +41,7 @@ public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePa
 	protected WebElement nameInput;
 	
 	private final String PROPERTIES_TAB_LINK = "//span[contains(@class,'tab')]/a[text()='Properties']";
+	private final String SOURCE_TAB_LINK = "//span[contains(@class,'tab')]/a[text()='Source']";
 	
 
 	/**
@@ -66,6 +69,14 @@ public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePa
 		propTab.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return propTab.getKeyValue();
 		
+	}
+	@Override
+	public Map<ContentIndexes,String> getIndexedValues()
+	{
+		getDriver().findElement(By.xpath(SOURCE_TAB_LINK)).click();
+		ContentSourceTab sourceTab = new ContentSourceTab(getSession());
+		sourceTab.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return sourceTab.getIndexedVaues();
 	}
 
 

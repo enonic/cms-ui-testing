@@ -15,6 +15,8 @@ import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
+import com.enonic.autotests.pages.v4.adminconsole.content.search.ContentSearchParams;
+import com.enonic.autotests.pages.v4.adminconsole.content.search.SearchContentPage;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
@@ -43,7 +45,11 @@ public class RepositoriesListFrame extends AbstractAdminConsolePage
 	@FindBy(xpath = "//button[text()='New']")
 	private WebElement buttonNew;
 
-	private String SPAN_CONTENTS_NAME_XPATH ="//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//div[contains(@style,'font-weight: bold')]";
+	@FindBy(xpath = "//button[text()='Advanced search']")
+	private WebElement buttonAdvancedSearch;
+	
+	
+	public static String SPAN_CONTENTS_NAME_XPATH ="//tr[contains(@class,'tablerowpainter_')]//td[contains(@class,'browsetablecell')]//div[contains(@style,'font-weight: bold')]";
 	
 
 	/**
@@ -74,6 +80,13 @@ public class RepositoriesListFrame extends AbstractAdminConsolePage
 		}
 		
 		return contentNames;
+	}
+	public List<String> doContentAdvancedSearch(ContentSearchParams params)
+	{
+		buttonAdvancedSearch.click();
+		SearchContentPage searchPage = new  SearchContentPage(getSession());
+		searchPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return searchPage.doAdvancedSearch(params);
 
 	}
 

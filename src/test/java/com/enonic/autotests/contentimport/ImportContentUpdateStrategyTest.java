@@ -77,9 +77,9 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		cat.setContentTypeName(((ContentType)getTestSession().get(PERSON_CTYPE_KEY)).getName());
 		cat.setName("strategyTest");
 		String[] parentNames2 = { repository.getName() };
-		cat.setParentNames(parentNames2);
-		getTestSession().put(CATEGORY_STARTEGY_TEST_KEY, cat);
+		cat.setParentNames(parentNames2);		
 		repositoryService.addCategory(getTestSession(), cat);
+		getTestSession().put(CATEGORY_STARTEGY_TEST_KEY, cat);
 		logger.info("$$$$ FINISHED: set up settings");
 
 	}

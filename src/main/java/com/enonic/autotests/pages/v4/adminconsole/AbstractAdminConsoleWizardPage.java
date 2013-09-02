@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.ContentTypeException;
+import com.enonic.autotests.exceptions.SaveOrUpdateException;
 import com.enonic.autotests.utils.TestUtils;
 
 public abstract class AbstractAdminConsoleWizardPage extends AbstractAdminConsolePage{
@@ -66,7 +67,7 @@ public abstract class AbstractAdminConsoleWizardPage extends AbstractAdminConsol
 			String msg = alert.getText();
 			alert.dismiss();
 			// alert.accept();
-			throw new ContentTypeException("error during creation the Content Type:" + msg);
+			throw new SaveOrUpdateException("error during creation the CMS-object:" + msg);
 		}
 	}
 

@@ -9,7 +9,7 @@ import org.testng.Assert;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
-import com.enonic.autotests.exceptions.SaveOrUpdateSiteException;
+import com.enonic.autotests.exceptions.SaveOrUpdateException;
 import com.enonic.autotests.model.Site;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.utils.TestUtils;
@@ -71,7 +71,7 @@ public class AddSiteWizardPage extends AbstractAdminConsolePage
 		{
 			String errorMessage = TestUtils.getInstance().getAlertMessage(getSession());
 			getLogger().error(errorMessage, getSession());
-			throw new SaveOrUpdateSiteException("Error during creation a Site: " + errorMessage);
+			throw new SaveOrUpdateException("Error during creation a Site: " + errorMessage);
 		}
 
 	}

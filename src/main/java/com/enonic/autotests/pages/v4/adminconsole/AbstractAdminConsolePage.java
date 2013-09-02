@@ -7,7 +7,6 @@ public abstract class AbstractAdminConsolePage extends Page
 {
 
 	public static final String REFRESH_IMAGE_XPATH = "//img[contains(@src,'images/action_refresh_blue.gif')]";
-	public static String LEFT_FRAME_CLASSNAME = "leftframe";
 	public static String LEFT_FRAME_NAME = "leftFrame";
 	public static String MAIN_FRAME_NAME = "mainFrame";
 

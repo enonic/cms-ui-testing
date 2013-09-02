@@ -2,6 +2,7 @@ package com.enonic.autotests.services;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 
 import org.testng.Assert;
 
@@ -9,11 +10,14 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentRepository;
+import com.enonic.autotests.model.FileContentInfo;
 import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.model.Section;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
+import com.enonic.autotests.pages.v4.adminconsole.content.AddFileContentWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.AddImageContentWizard;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentIndexes;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.IContentWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.PersonImportWizardPage;
@@ -134,11 +138,28 @@ public class ContentService
 		return wizard.getContentKey();
 		
 	}
+	public <T> Map<ContentIndexes,String> getContentIndexedValues(TestSession testSession, Content<T> content)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		IContentWizard<?> wizard = tableViewFrame.openEditContentWizard(content);
+		
+		return wizard.getIndexedValues();
+		
+	}
 	
-	public AbstractContentTableView addimageContent(TestSession testSession,  Content<ImageContentInfo> content)//
+	public AbstractContentTableView addimageContent(TestSession testSession,  Content<ImageContentInfo> content)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
 		AddImageContentWizard wizard = tableViewFrame.openAddImageContentWizardPage(content.getParentNames()[0]);
+		wizard.typeDataAndSave(content);
+		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return tableViewFrame;
+		
+	}
+	public AbstractContentTableView addFileContent(TestSession testSession,  Content<FileContentInfo> content)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		AddFileContentWizard wizard = tableViewFrame.openAddFileContentWizardPage(content.getParentNames()[0]);
 		wizard.typeDataAndSave(content);
 		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return tableViewFrame;

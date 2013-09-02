@@ -3,7 +3,7 @@ package com.enonic.autotests;
 public interface AppConstants {
 	
 	final long PAGELOAD_TIMEOUT = 4l;
-	final long IMPLICITLY_WAIT = 3l;
+	final long IMPLICITLY_WAIT = 4l;
 	
 	public String PLUS_ICON_PNG = "plus.png";
 	public String MINUS_ICON_PNG = "minus.png";

@@ -16,12 +16,12 @@ public class ContentPropertiesTab extends AbstractAdminConsolePage
 		
 	}
 
-	private final String TITLE = "//fieldset/legend[contains(.,'Properties')]";
+	private final String TITLE_TAB = "//fieldset/legend[contains(.,'Properties')]";
 
 	@Override
 	public void waituntilPageLoaded(long timeout)
 	{
-		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(TITLE)));
+		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(TITLE_TAB)));
 		
 	}
 	public String getKeyValue()

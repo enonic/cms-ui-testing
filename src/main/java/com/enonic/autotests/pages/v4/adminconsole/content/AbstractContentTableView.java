@@ -129,6 +129,27 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 
 		return new AddImageContentWizard(getSession());
 	}
+	public AddFileContentWizard openAddFileContentWizardPage(String repoName )
+	{
+		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
+		buttonNew.click();
+		boolean isAddContentButtonShowed = TestUtils.getInstance().waitAndFind(By.xpath(CREATE_CONTENT_MENU_BUTTON_XPATH), getDriver());
+		if (!isAddContentButtonShowed)
+		{
+			throw new AddContentException("'New Content-'Menu item was not found");
+		}
+		// 2.click by: '(content-type) Content' and open the "add content-wizard":
+		menuItemAddContent.click();
+		// 3. verify if wizard opened:
+		String xpath = String.format("//a[text()='%s']", repoName);
+		boolean isTitleLoaded = TestUtils.getInstance().waitAndFind(By.xpath(xpath), getDriver());
+		if (!isTitleLoaded)
+		{
+			throw new AddContentException("Create Content Wizard was not opened! Repository: " + repoName);
+		}
+
+		return new AddFileContentWizard(getSession());
+	}
 	/**
 	 * @param displayName
 	 * @return

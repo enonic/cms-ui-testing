@@ -53,7 +53,7 @@ public class HomePage extends Page {
 			getLogger().perfomance("user logged in " + username + "  password:" + password, start);
 			getSession().setLoggedIn(true);
 		}
-		TestUtils.getInstance().waitUntilVisible(getSession(), By.className(AbstractAdminConsolePage.LEFT_FRAME_CLASSNAME),AppConstants.PAGELOAD_TIMEOUT);
+		TestUtils.getInstance().waitUntilVisible(getSession(), By.name(AbstractAdminConsolePage.LEFT_FRAME_NAME),AppConstants.PAGELOAD_TIMEOUT);
 		TestUtils.getInstance().waitUntilVisible(getSession(), By.name(AbstractAdminConsolePage.MAIN_FRAME_NAME), AppConstants.PAGELOAD_TIMEOUT);
 		TestUtils.getInstance().saveScreenshot(getSession());
 	}

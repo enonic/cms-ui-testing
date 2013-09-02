@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.openqa.selenium.WebElement;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentRepository;
@@ -45,7 +46,7 @@ public class RepositoryService
 		// 3. populate all fields and click by 'Save' and 'Close' buttons
 		wizard = new CreateCategoryWizard(testSession);
 		wizard.doAddCategory(newCategory);
-		repoview.waituntilPageLoaded(1l);
+		repoview.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 
 	}
 
