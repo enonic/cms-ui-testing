@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.SearchException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
@@ -69,12 +70,16 @@ public class SearchContentPage extends AbstractAdminConsolePage
 			titleFieldRadio.click();
 		}
 		searchButton.click();
-		
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		if(isAlertPresent)
+		{
+			throw new SearchException("alert dialog appeared when 'Search' button was pressed");
+		}
 		//TODO wait until table appears
 		boolean isResultPresent = TestUtils.getInstance().waitAndFind(By.xpath("//fieldset//td[@class='browsetablecolumnheader']"), getDriver());
 		if(!isResultPresent)
 		{
-			throw new TestFrameworkException("Table with content does not present on page!");
+			throw new SearchException("Search failed! Table with content does not present on page!");
 		}
 		List<WebElement> names = getSession().getDriver().findElements(By.xpath(RepositoriesListFrame.SPAN_CONTENTS_NAME_XPATH));
 		List<String> contentNames = new ArrayList<>();

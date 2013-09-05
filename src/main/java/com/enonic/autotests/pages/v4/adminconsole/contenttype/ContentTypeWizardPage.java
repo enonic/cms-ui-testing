@@ -4,20 +4,16 @@ import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
-import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.ContentTypeException;
-import com.enonic.autotests.exceptions.TestFrameworkException;
+import com.enonic.autotests.exceptions.SaveOrUpdateException;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsoleWizardPage;
 import com.enonic.autotests.utils.TestUtils;
-import com.enonic.autotests.validation.contenttype.ContentTypeValidateHelper;
 
 /**
  * Wizard page for creating of new 'Content Type'.
@@ -25,10 +21,6 @@ import com.enonic.autotests.validation.contenttype.ContentTypeValidateHelper;
  */
 public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 {
-
-	private static String GET_CONFIGURATION_SCRIPT = "return document.getElementsByTagName('iframe')[0].contentDocument.body.innerHTML;";
-
-	private static String CLEAR_CONFIGURATION_SCRIPT = "document.getElementsByTagName('iframe')[0].contentDocument.body.innerHTML = '';";
 
 	public static String CUSTOM_CONTENT_HANDLER_NAME = "Custom content";
 
@@ -40,7 +32,6 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 	public static final String ERROR_MESSAGE_XPATH = "//img[contains(@src,'images/form-error.png')]/ancestor::span";
 
 	public static final String CONTENT_TYPES_TABLE_ROWS_XPATH = "//td[@class='browsetablecell']";
-
 
 	@FindBy(how = How.ID, using = "name")
 	private WebElement nameInput;
@@ -62,12 +53,12 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 
 	}
 
-
 	/**
 	 * This method types test data and press the "Save" button.
 	 * 
 	 * @param ctype
 	 *            {@link ContentType} instance.
+	 * @throws
 	 */
 	public void doTypeDataAndSave(ContentType ctype)
 	{
@@ -90,46 +81,31 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 		getLogger().debug("new 'Content type' creating. Content handler's name: " + contentHandlerName);
 		TestUtils.getInstance().selectByText(getSession(), By.name(CONTENT_HANDLER_SELCET_NAME), contentHandlerName);
 
-		// if content handler equls "Custom content", so need to fill the  configuration area:
+		// if content handler equals "Custom content", so need to fill the configuration area:
 		if (ctype.getContentHandler().getName().equals(CUSTOM_CONTENT_HANDLER_NAME))
 		{
-			
+
 			if (ctype.getConfiguration() != null && !ctype.getConfiguration().isEmpty())
 			{
-				
-				getLogger().debug("new 'Content type' creation. Content handler's configuration: " + contentHandlerName);
-				
-					//clearConfigurationTextArea(getDriver());
-					WebElement confTextArea = findElement(By.tagName(CONFIGURATION_TEXTAREA_TAGNAME));
-					confTextArea.sendKeys(Keys.chord(Keys.CONTROL, "a"), ctype.getConfiguration());			
-				
+				setContentTypeConfiguration(ctype.getConfiguration());
 			}
 		}
 		saveButton.click();
 		checkAlerts(getSession());
 		checkErrorMessages(getSession());
-
-		// boolean isPageStillPresent =
-		// TestUtils.getInstance().checkIfDisplayed(By.id(ContentTypeWizardPage.TAB1_ID),
-		// getSession().getDriver());
-		// if(isPageStillPresent){
-		// throw new
-		// ContentTypeException("Button 'Save' was pressed but new 'Content Type' was not created! And error message did not appear ");
-		// }
-		//
-
 	}
 
 	/**
 	 * Changes configuration of content type and clicks by "Save" button.
-	 * @param conf
+	 * 
+	 * @param cfg
 	 */
-	public void updateConfiguration(String conf)
+	public void updateConfiguration(String cfg)
 	{
-		if (conf != null && !conf.isEmpty())
+		if (cfg != null && !cfg.isEmpty())
 		{
-			WebElement confTextArea = findElement(By.tagName(CONFIGURATION_TEXTAREA_TAGNAME));
-			confTextArea.sendKeys(Keys.chord(Keys.CONTROL, "a"), conf);
+			setContentTypeConfiguration(cfg);
+
 		} else
 		{
 			getLogger().warning("wrong configuration");
@@ -137,6 +113,15 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 		saveButton.click();
 		checkAlerts(getSession());
 
+	}
+
+	/**
+	 * Sets value to the CodeMirror editor.
+	 * @param cfg
+	 */
+	private void setContentTypeConfiguration(String cfg)
+	{
+		((JavascriptExecutor) getSession().getDriver()).executeScript("window.moduleCodeArea.codeMirror.setValue(arguments[0])", cfg);
 	}
 
 	/**
@@ -152,61 +137,23 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 			TestUtils.getInstance().saveScreenshot(getSession());
 			String message = null;
 			List<WebElement> elems = getSession().getDriver().findElements(By.xpath(ERROR_MESSAGE_XPATH));
-			if(elems.size() > 0)
+			if (elems.size() > 0)
 			{
 				message = elems.get(0).getText();
 			}
 			elems = getSession().getDriver().findElements(By.xpath("//td[@class= 'warning-message']"));
-			if(elems.size() > 0)
+			if (elems.size() > 0)
 			{
 				message = elems.get(0).getText();
 			}
-			if(message == null)
+			if (message == null)
 			{
 				message = "error during saving a content type";
 			}
-			throw new ContentTypeException(message);
+			throw new SaveOrUpdateException(message);
 		}
 	}
 
-	/** 
-	 * 
-	 * @param driver
-	 */
-	private void clearConfigurationTextArea(WebDriver driver)
-	{
-		getLogger().debug("try to clear configuration text area, findByTagName:" + CONFIGURATION_TEXTAREA_TAGNAME);
-		Object cfgBefore = ((JavascriptExecutor) getSession().getDriver()).executeScript(GET_CONFIGURATION_SCRIPT);
-		boolean result = ContentTypeValidateHelper.validateConfigurationContent(cfgBefore, ContentTypeValidateHelper.CONTENTTYPE_TAG,
-				ContentTypeValidateHelper.INDEXPARAMETERS_TAG);
-		if (!result)
-		{
-			// TODO: Implement bad validation result.
-		}
-		getLogger().debug("content before cleaning:" + cfgBefore);
-		((JavascriptExecutor) getSession().getDriver()).executeScript(CLEAR_CONFIGURATION_SCRIPT);
-		Object cfgAfterClean = ((JavascriptExecutor) getSession().getDriver()).executeScript(GET_CONFIGURATION_SCRIPT);
-
-		if (!cfgAfterClean.toString().equals("<br>"))
-		{
-			throw new TestFrameworkException("ContentType wizard, configuration 'Text area' was not cleared!");
-		}
-
-	}
-
-	/**
-	 * Performs Click by "Cancel" button in the New Content Type wizard.
-	 */
-	public void doCancel()
-	{
-		cancelButton.click();
-		getLogger().debug("ContentTypeWizardPage, 'Cancel' button was pressed");
-
-		// ContentTypesFrame should appear, frame's name should be is
-		// " Admin/Content Types":
-		TestUtils.getInstance().waitUntilVisible(getSession(), By.xpath(ContentTypesFrame.CONTENT_TYPES_FRAME_NAME_XPATH),AppConstants.PAGELOAD_TIMEOUT);
-		getLogger().debug("ContentTypeWizardPage, was canceled.");
-	}
 
 	/**
 	 * @param name
@@ -239,7 +186,5 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 		expected.getDescription();
 		return result;
 	}
-	
-
 
 }

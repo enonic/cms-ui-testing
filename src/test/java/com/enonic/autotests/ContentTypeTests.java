@@ -7,7 +7,7 @@ import java.util.Random;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import com.enonic.autotests.exceptions.ContentTypeException;
+import com.enonic.autotests.exceptions.SaveOrUpdateException;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.providers.ContentTypeTestsProvider;
@@ -44,7 +44,7 @@ public class ContentTypeTests extends BaseTest
 		logger.info("$$$$ FINISHED: "+ctypeXML.getCaseInfo());
 	}
 
-	@Test(description = "negative tests: try to create new content type with wrong data", expectedExceptions = ContentTypeException.class, dataProvider = "createContentTypeNegative", dataProviderClass = ContentTypeTestsProvider.class)
+	@Test(description = "negative tests: try to create new content type with wrong data", expectedExceptions = SaveOrUpdateException.class, dataProvider = "createContentTypeNegative", dataProviderClass = ContentTypeTestsProvider.class)
 	public void createContentTypeNegative(ContentTypeXml ctypeXML)
 	{
 		logger.info("#### TEST: " + ctypeXML.getCaseInfo());

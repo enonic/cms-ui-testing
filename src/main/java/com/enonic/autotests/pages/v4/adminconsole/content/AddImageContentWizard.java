@@ -65,7 +65,7 @@ public class AddImageContentWizard extends AbstractAddContentWizard<ImageContent
 		}
 		//4. fill a photographeremail field.
 		String phEmail = contentTab.getContentTabInfo().getPhotographerEmail();
-		if (!photographeremail.getAttribute("value").equals(phEmail))
+		if (phEmail!=null && !photographeremail.getAttribute("value").equals(phEmail))
 		{
 			photographeremail.sendKeys(newcontent.getContentTab().getContentTabInfo().getPhotographerEmail());
 		}
