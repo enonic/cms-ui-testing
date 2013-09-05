@@ -80,13 +80,21 @@ public class AddSectionWizardPage extends AbstractAdminConsolePage
 		{
 			orderedRadio.click();
 		}
-		
-		List<WebElement> allOptions = avaiableContentTypeNames.findElements(By.tagName("option"));
 		List<String> expectedCTNames = section.getAvailableContentTypes();
-		for(String name: expectedCTNames)
+		List<WebElement> allOptions = avaiableContentTypeNames.findElements(By.tagName("option"));
+		for(WebElement opt: allOptions)
 		{
-			TestUtils.getInstance().doubleClickActionByOption(getSession(), allOptions, name);
+			if(expectedCTNames.contains(opt.getText()))
+		{
+				opt.click();
+				findElements(By.xpath("//button[child::img[contains(@src,'move_right')]]")).get(0).click();
 		}
+		}
+		
+//		for(String name: expectedCTNames)
+//		{
+//			TestUtils.getInstance().doubleClickActionByOption(getSession(), allOptions, name);
+//		}
 		saveButton.click();
 		
 		
