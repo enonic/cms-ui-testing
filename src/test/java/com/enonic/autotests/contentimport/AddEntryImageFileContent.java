@@ -92,7 +92,7 @@ public class AddEntryImageFileContent extends BaseTest
 	@Test(description = "set up: create content types: Person and Image")
 	public void settings()
 	{
-		logger.info("#########  STARTED settings for  AddEntryImageFileContent");
+		logger.info("@@@@@@@@@@@@@@@@  STARTED settings for  AddEntryImageFileContent  ");
 		logger.info("set up: create content types: Person and Image");
 		// 1.create content types
 		createContentTypes();

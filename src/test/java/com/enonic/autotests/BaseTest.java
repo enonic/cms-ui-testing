@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
@@ -76,7 +77,7 @@ public class BaseTest
 			}
 		}
 		sessionRef.set(testSession);
-		//logger.info("############### method readDesiredCapabilities finished    ###################");
+		logger.info("TEST NAME::::::::::::::::::::::" + this.getClass().getCanonicalName());
 		
 	}
 
@@ -86,12 +87,16 @@ public class BaseTest
 		BrowserUtils.createDriverAndOpenBrowser(getTestSession());
 
 	}
+	@AfterClass
+	public void testInfo()
+	{
+		logger.info("end of test:"+ this.getClass().getName()+ sessionRef.get().getBrowserName());
+	}
 
 	@AfterTest
 	public  void clearSession()
 	{
 		logger.info("end of test:"+ this.getClass().getName()+ "try to clear session "+sessionRef.get().getBrowserName());
-		System.out.println("end of test:"+ this.getClass().getName()+ "try to clear session "+sessionRef.get().getBrowserName());
 		sessionRef.set(null);
 	}
 

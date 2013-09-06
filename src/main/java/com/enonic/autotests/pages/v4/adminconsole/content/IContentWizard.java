@@ -10,6 +10,7 @@ public interface IContentWizard<T>
 	void typeDataAndSave(Content<T> content);
 
 	String getContentKey();
+	
 	Map<ContentIndexes,String> getIndexedValues();
 
 }

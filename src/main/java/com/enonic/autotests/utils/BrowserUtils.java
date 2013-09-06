@@ -83,7 +83,7 @@ public class BrowserUtils {
 
 		} else if (cfgBrowser.equals(BrowserName.CHROME)) {
 			capability = DesiredCapabilities.chrome();
-			capability.setCapability("chrome.binary", "c:/chrome/chromedriver.exe");
+			//capability.setCapability("chrome.binary", "c:/chrome/chromedriver.exe");
 			capability.setPlatform(getPLatform(platform));
 			
 		} else if (cfgBrowser.equals(BrowserName.IE)) {

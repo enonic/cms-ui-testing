@@ -85,7 +85,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 	@Test(description = "set up: create content types: Person")
 	public void settings()
 	{
-		logger.info("####  STARTED name:  "+ "ImportContentWithBlockGroup");
+		logger.info("@@@@@@@@@@@@@@@@  STARTED name:  "+ "ImportContentWithBlockGroup ");
 		logger.info("CREATE content types and categories: ImportContentWithBlockGroup");
 		// 1.create content types
 		createContentTypes();

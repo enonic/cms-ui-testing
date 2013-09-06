@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentCategory;
@@ -56,7 +55,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(description="set up: create content types: Image and File")
 	public  void settingsForContentRepository()
 	{
-		logger.info("############TESTS STARTED:  ContentRepositoryTests###################");
+		logger.info("@@@@@@@@@@@@@@ TESTS STARTED:  ContentRepositoryTests");
 		logger.info("checks for the existance  of Content type, creates new content type if it does not exist");
 		ContentType imagesType = new ContentType();
 		imagesType.setName("Image");
@@ -81,7 +80,7 @@ public class ContentRepositoryTests extends BaseTest
 		}
 
 		getTestSession().put(REPOSITORY_LIST, new ArrayList<ContentRepository>());
-		logger.info("FINISHED: settings ForContentRepositoryTest ");
+		logger.info("### FINISHED: settings ForContentRepositoryTest ");
 	}
 
     @Test(dependsOnMethods = "settingsForContentRepository", description = "create new Content Repository with specified Content Type", dataProvider = "createContentRepositoryPositive", dataProviderClass = ContentRepositoryProvider.class)

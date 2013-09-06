@@ -64,7 +64,7 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 	@Test(description = "set up: create content types: Person")
 	public void settings()
 	{
-		logger.info("#### START: ImportContentUpdateStrategyTest set up create person content type and Repository ");
+		logger.info("@@@@@@@@@@@@@@@@START: ImportContentUpdateStrategyTest set up create person content type and Repository  ");
 		// 1.create content types
 		createContentTypes();
 		// 2. create content repositories:

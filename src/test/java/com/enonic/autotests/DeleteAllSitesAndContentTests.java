@@ -25,12 +25,12 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 	@Test(description = "Delete all items from 'Sites' folder")
 	public void deleteSites()
 	{
-		logger.info("### TEST: deleteSites started");
+		logger.info("@@@@@@@@@@@@@@@@ TEST: deleteSites started  @@@@@@@@@@@@@@@@");
 		siteService.delteAllSites(getTestSession());
 
 		List<String> list = siteService.getAllSiteNames(getTestSession());
 		Assert.assertTrue(list.size() == 0, "Folder 'Sites' is not empty");
-		logger.info("all sites were deleted");
+		logger.info("$$$$$ all sites were deleted");
 	}
 
 	@Test(description = "Delete all items from 'Content' folder ", dependsOnMethods = "deleteSites")
@@ -42,7 +42,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 		{
 			repositoryService.deleteRepository(getTestSession(), repoName);
 		}
-		logger.info("all content were deleted");
+		logger.info("$$$$$$ all content were deleted");
 
 	}
 
@@ -52,6 +52,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 		logger.info("#### TEST: removeDeletedContentFromDatabaseTest");
 		systemService.doRemoveDeletetContentFromDataBase(getTestSession());
 		logger.info("Content were removed From Database");
+		logger.info("$$$$$ TEST: removeDeletedContentFromDatabaseTest");
 
 	}
 
@@ -60,7 +61,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 	{
 		logger.info("#### TEST: deleteAllContentTypes");
 		contentTypeService.delteAllContentTypes(getTestSession());
-		logger.info("all content types were deleted");
+		logger.info("$$$$$$$$ ALL FINISHED:DeleteAllSitesAndContentTests, all content types were deleted");
 
 	}
 }

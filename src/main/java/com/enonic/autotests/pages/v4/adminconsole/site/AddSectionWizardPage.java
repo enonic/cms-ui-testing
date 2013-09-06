@@ -12,7 +12,6 @@ import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.Section;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
-import com.enonic.autotests.utils.TestUtils;
 
 /**
  * Page object for "Add new section" Menu Item wizard.
@@ -85,10 +84,10 @@ public class AddSectionWizardPage extends AbstractAdminConsolePage
 		for(WebElement opt: allOptions)
 		{
 			if(expectedCTNames.contains(opt.getText()))
-		{
+			{
 				opt.click();
 				findElements(By.xpath("//button[child::img[contains(@src,'move_right')]]")).get(0).click();
-		}
+			}
 		}
 		
 //		for(String name: expectedCTNames)

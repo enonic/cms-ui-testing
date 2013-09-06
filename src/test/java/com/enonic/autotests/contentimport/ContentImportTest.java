@@ -98,7 +98,7 @@ public class ContentImportTest extends BaseTest
 	@Test(description = "set up: create content types: Person")
 	public void settingsForImport()
 	{
-		logger.info("############# TEST STARTED name:  ContentImportTest   "+ "set up: create content types: Person");
+		logger.info("@@@@@@@@@@@@@@@@ TEST STARTED name:  ContentImportTest   "+ "set up: create content types: Person ");
 		logger.info("create content types and categories for ContentImportTest ");
 		// 1.create content types
 		createContentTypesForImport();

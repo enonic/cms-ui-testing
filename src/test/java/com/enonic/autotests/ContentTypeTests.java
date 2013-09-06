@@ -25,7 +25,7 @@ public class ContentTypeTests extends BaseTest
 	@Test(description = "positive tests: create new content type", dataProvider = "createContentTypePositive", dataProviderClass = ContentTypeTestsProvider.class)//,dependsOnMethods="preparation"
 	public void testCreateContentTypePositive(ContentTypeXml ctypeXML)
 	{
-		logger.info("#### TEST "+ctypeXML.getCaseInfo());
+		logger.info("###### STARTED "+ctypeXML.getCaseInfo()   +"######");
 		String name = ctypeXML.getName() + Math.abs(new Random().nextInt());
 		ContentType ctype = ContentConvertor.convertXmlDataToContentType(ctypeXML);
 		ctype.setName(name);
@@ -47,18 +47,18 @@ public class ContentTypeTests extends BaseTest
 	@Test(description = "negative tests: try to create new content type with wrong data", expectedExceptions = SaveOrUpdateException.class, dataProvider = "createContentTypeNegative", dataProviderClass = ContentTypeTestsProvider.class)
 	public void createContentTypeNegative(ContentTypeXml ctypeXML)
 	{
-		logger.info("#### TEST: " + ctypeXML.getCaseInfo());
+		logger.info("#### NEGATIVE TEST STARTED: " + ctypeXML.getCaseInfo());
 		String name = ctypeXML.getName() + Math.abs(new Random().nextInt());
 		ContentType ctype = ContentConvertor.convertXmlDataToContentType(ctypeXML);
 		ctype.setName(name);
 		contentTypeService.createContentType(getTestSession(), ctype);
-		logger.info("$$$$ FINISHED: "+ctypeXML.getCaseInfo());
 
 	}
 	
 	@Test(dependsOnMethods = "testCreateContentTypePositive")
 	public void deleteContentTypeTest()
 	{
+		logger.info("#### STARTED: delete content types: " );
 		ContentTypesFrame frame = null;
 		List<ContentType> ctypes =  (List<ContentType>)getTestSession().get(CONTENTTYPE_CREATED_LIST);
 		for(ContentType ct:ctypes)

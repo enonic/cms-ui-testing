@@ -31,7 +31,7 @@ import com.enonic.autotests.services.SearchService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.XmlReader;
 
-public class TextExtractorsTest extends BaseTest
+public class TextExtractorTest extends BaseTest
 {
 	private final static String TEXT_FOR_EXTRACTING = "text extractor test";
 	private final String NOR_TEXT_FOR_EXTRACTING = "kjølig tåket dag";
@@ -86,7 +86,7 @@ public class TextExtractorsTest extends BaseTest
 	@Test(description = "Create a category for storing content with the Files Content Handler ")
 	public void setup()
 	{
-		logger.info("#########  STARTED setup for  XML Extractor tests");
+		logger.info(" ###  STARTED SETUP for  XML Extractor tests  ");
 		logger.info("set up: create content types: Person and Image");
 		// 1.create content types
 		createContentType();
@@ -110,10 +110,10 @@ public class TextExtractorsTest extends BaseTest
 
 	}
 
-	@Test(dependsOnMethods = "setup", description = "add content with Norwegian encoding", groups = "upload")
-	public void addContentNorwegianEncodingTest()
+	@Test(dependsOnMethods = "setup", priority=1, description = "add content with Norwegian encoding")
+	public void contentNorwegianEncodingTest()
 	{
-		logger.info("#########  STARTED: Test *.txt Text extraction, add content with Norwegian encoding");
+		logger.info("#######  STARTED: Test *.txt Text extraction, add content with Norwegian encoding");
 
 		String displayName = "nor.txt";
 		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
@@ -138,13 +138,13 @@ public class TextExtractorsTest extends BaseTest
 		String attachmentIndex = map.get(ContentIndexes.ATTACHMENT);
 
 		Assert.assertTrue(attachmentIndex.contains(NOR_TEXT_FOR_EXTRACTING), "expected text was not found on the Source page in block 'Indexed Values'!");
-		logger.info("#########  FINISHED: Test *.txt Text extraction, add content with Norwegian encoding");
+		logger.info("#######  FINISHED: Test *.txt Text extraction, add content with Norwegian encoding");
 	}
 
-	@Test(dependsOnMethods = "setup", groups = "upload", description = "add *.txt content with Cyrillic encoding")
-	public void addCyrillicEncodingTextTest() throws URISyntaxException, IOException
+	@Test(dependsOnMethods = "setup", priority=1, description = "add *.txt content with Cyrillic encoding")
+	public void cyrillicEncodingTextTest() throws URISyntaxException, IOException
 	{
-		logger.info("#########  STARTED: Test *.txt Text extraction, add content with Cyrillic encoding  ");
+		logger.info("#######  STARTED: Test *.txt Text extraction, add content with Cyrillic encoding  ");
 
 		String displayName = "cyrillic.txt";
 		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
@@ -175,11 +175,11 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Test *.txt Text extraction, add content with Cyrillic encoding");
 	}
 
-	@Test(description = "Upload an xml file with some text. Verify that the attachment index contains text from the file.  ",groups = "upload", dependsOnMethods = "setup")
+	@Test(description = "Upload an xml file with some text. Verify that the attachment index contains text from the file.  ",dependsOnMethods = "setup", priority=1)
 	public void xmlExtractorTest()
 	{
 		String displayName = "xmltestdata.xml";
-		logger.info("#########  STARTED setup for  XML Extractor tests");
+		logger.info("#######  STARTED setup for  XML Extractor tests");
 
 		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
@@ -213,7 +213,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Test *.xml Text extraction    ");
 	}
 
-	@Test(description = "Upload an html file with some text. Verify that the attachment index contains text from the file.  ", groups = "upload", dependsOnMethods = "setup")
+	@Test(description = "Upload an html file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void htmlExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "htmltestdata.html";
@@ -249,7 +249,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Test *.html Text extraction    ");
 	}
 
-	@Test(description = "Upload an Plain Text file with some text. Verify that the attachment index contains text from the file.  ", groups = "upload", dependsOnMethods = "setup")
+	@Test(description = "Upload an Plain Text file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void plainTextExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "text.txt";
@@ -285,7 +285,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Test *.txt Text extraction    ");
 	}
 
-	@Test(description = "Upload an PDF Text file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup")
+	@Test(description = "Upload an PDF Text file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void pdfTextExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "pdf.pdf";
@@ -318,7 +318,7 @@ public class TextExtractorsTest extends BaseTest
 		((List<String>)getTestSession().get(CONTENT_LIST_KEY)).add(displayName);
 		logger.info("#########  FINISHED: Test *.pdf Text extraction    ");
 	}
-	@Test(description = "Upload an XLSX Text file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup")
+	@Test(description = "Upload an XLSX Text file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void xlsxTextExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "excel.xls";
@@ -351,7 +351,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Test *.xls Text extraction    ");
 	}
 
-	@Test(description = "Upload an word *.doc  file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup")
+	@Test(description = "Upload an word *.doc  file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void wordTextExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "word.doc";
@@ -384,7 +384,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Test *.doc Text extraction    ");
 	}
 
-	@Test(description = "Upload an word *.docx  file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup")
+	@Test(description = "Upload an word *.docx  file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void docxTextExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "word.docx";
@@ -418,7 +418,7 @@ public class TextExtractorsTest extends BaseTest
 	}
 
 	
-	@Test(description = "Upload an PowerPoint   file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup")
+	@Test(description = "Upload an PowerPoint   file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void pptTextExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "ppt.pptx";
@@ -449,7 +449,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Test *.pptx Text extraction    ");
 	}
 
-	@Test(description = "Upload an *.rtf   file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup")
+	@Test(description = "Upload an *.rtf   file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void rtfTextExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "rtf.rtf";
@@ -484,7 +484,7 @@ public class TextExtractorsTest extends BaseTest
 	}
 	 
 	 
-	@Test(description = "Upload an odt   file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup")
+	@Test(description = "Upload an odt   file with some text. Verify that the attachment index contains text from the file.  ", dependsOnMethods = "setup", priority=1)
 	public void odtTextExtractorTest() throws IOException, URISyntaxException
 	{
 		String displayName = "odt.odt";
@@ -518,7 +518,9 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Test *.odt Text extraction    ");
 	}
 	 
-	@Test(description = "advanced search with text extractor plugin", dependsOnGroups ="upload")
+	///---------------- SEARCH TEST
+	
+	@Test(description = "advanced search with text extractor plugin",priority = 2, dependsOnMethods ="setup")
 	public void advancedSearchTest()
 	{
 		logger.info("#########  STARTED: Try to find text in attachments, text in English encoding ");
@@ -530,7 +532,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Try to find text in attachments, text in English encoding ");
 		
 	}
-	@Test(description = "advanced search test: 'Try to find text in attachments, text in Norwegian encoding'", dependsOnGroups ="upload")
+	@Test(description = "advanced search test: 'Try to find text in attachments, text in Norwegian encoding'", priority = 2, dependsOnMethods ="setup")
 	public void advancedSearchNorTextTest()
 	{
 		logger.info("#########  STARTED: Try to find text in attachments, text in Norwegian encoding ");
@@ -541,7 +543,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: find text in attachments, text in Norwegian encoding");
 		
 	}
-	@Test(description = "advanced search test: text have less than 3 characters ", dependsOnGroups ="upload")
+	@Test(description = "advanced search test: text have less than 3 characters ", priority = 2, dependsOnMethods ="setup")
 	public void advancedSearchLess3CharsTest()
 	{
 		logger.info("#########  STARTED: Try to find text in attachments, text have less than 3 characters");
@@ -554,7 +556,7 @@ public class TextExtractorsTest extends BaseTest
 		logger.info("#########  FINISHED: Try to find text in attachments, text have less than 3 characters");
 		
 	}
-	@Test(description = "advanced search test: empty string used for search input ", dependsOnGroups ="upload")
+	@Test(description = "advanced search test: empty string used for search input ", priority = 2, dependsOnMethods ="setup")
 	public void advancedSearchEmptyStringTest()
 	{
 		logger.info("#########  STARTED: advanced search test: empty string used for search input");
