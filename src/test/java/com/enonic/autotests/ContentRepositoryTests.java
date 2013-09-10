@@ -129,7 +129,7 @@ public class ContentRepositoryTests extends BaseTest
 		//2. add category with content type === "File"
 		repositoryService.addCategory(getTestSession(), newcategory);
 		//3.verify: category created
-		boolean isCreated = repositoryService.findCategoryByPath(getTestSession(), TEST_FILE_CATEGORY_NAME, pathName);
+		boolean isCreated = repositoryService.isCategoryPresent(getTestSession(), TEST_FILE_CATEGORY_NAME, pathName);
 		Assert.assertTrue(isCreated, "new added category was not found!" + newcategory.getName());
 		logger.info("$$$$ FINISHED: testAddCategoryToRepository ");
 
@@ -161,7 +161,7 @@ public class ContentRepositoryTests extends BaseTest
 		// 3. add content to the category.
 		AbstractContentTableView frame = contentService.addContent(getTestSession(), repository, content);
 		// 4. verify content is present in the table.(Content visible in the category view)
-		boolean result = frame.findContentInTableByName(content.getDisplayName());
+		boolean result = frame.isContentPresentInTable(content.getDisplayName());
 		logger.info("case-info: Content visible in category view:" + result);
 		Assert.assertTrue(result, "new added content was not found");
 		
@@ -242,7 +242,7 @@ public class ContentRepositoryTests extends BaseTest
 		Content<?> content = (Content<?>) getTestSession().get(IMAGE_CONTENT);
 		content.setDisplayName(EDITTEST_CONTENT_NAME);
 		ContentsTableFrame contentTableFrame = contentService.deleteContentfromCategory(getTestSession(), content);
-		boolean isPresent = contentTableFrame.findContentInTableByName(content.getDisplayName());
+		boolean isPresent = contentTableFrame.isContentPresentInTable(content.getDisplayName());
 		Assert.assertFalse(isPresent, String.format("content with name %s should be deleted ", content.getDisplayName()));
 		logger.info("$$$$$ FINISHED: deleteContentFromCategory ");
 
@@ -265,11 +265,11 @@ public class ContentRepositoryTests extends BaseTest
 		Content<?> content = (Content<?>) getTestSession().get(FILE_CONTENT);
 		ContentRepository repository = findRepositoryByName(TEST_REPO_NAME);
 		ContentsTableFrame table = contentService.moveContent(getTestSession(), content, repository.getName(), TEST_FILE_CATEGORY_NAME);
-		boolean result = table.findContentInTableByName(content.getDisplayName());
+		boolean result = table.isContentPresentInTable(content.getDisplayName());
 		Assert.assertFalse(result,"content was not moved! content name"+content.getDisplayName());
 		
 		table = contentService.openCategory(getTestSession(), repository.getName(),TEST_FILE_CATEGORY_NAME);
-		result = table.findContentInTableByName(content.getDisplayName());
+		result = table.isContentPresentInTable(content.getDisplayName());
 		Assert.assertTrue(result,"content not present in the destination folder! content name"+content.getDisplayName());
 		logger.info("$$$$$ FINISHED: moveContentTest ");
 	}
@@ -294,13 +294,13 @@ public class ContentRepositoryTests extends BaseTest
 		//2. add category with content type === "File"
 		repositoryService.addCategory(getTestSession(), newcategory);
 		//3.verify: category created
-		boolean isCreated = repositoryService.findCategoryByPath(getTestSession(), newcategory.getName(), pathName);
+		boolean isCreated = repositoryService.isCategoryPresent(getTestSession(), newcategory.getName(), pathName);
 		Assert.assertTrue(isCreated, "new added category was not found!" + newcategory.getName());
 
 		ContentsTableFrame table = contentService.openCategory(getTestSession(), repository.getName(),newcategory.getName());
 		table.doDeleteAllContent();
 		table.doDeleteEmptyCategory();
-		boolean ispresent = repositoryService.findCategoryByPath(getTestSession(), newcategory.getName(), pathName);
+		boolean ispresent = repositoryService.isCategoryPresent(getTestSession(), newcategory.getName(), pathName);
 		Assert.assertFalse(ispresent, "new added category was not found!" + newcategory.getName());
 		logger.info("$$$$$FINISHED: deleteAllContentAndDeleteCategory ");
 	}

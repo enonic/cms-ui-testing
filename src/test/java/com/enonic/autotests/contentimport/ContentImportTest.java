@@ -114,7 +114,7 @@ public class ContentImportTest extends BaseTest
 		newCategory.setParentNames(parentNames);
 		getTestSession().put(IMPORT_CATEGORY_KEY, newCategory);
 		repositoryService.addCategory(getTestSession(), newCategory);
-		boolean isCreated = repositoryService.findCategoryByPath(getTestSession(), newCategory.getName(), newCategory.getParentNames());
+		boolean isCreated = repositoryService.isCategoryPresent(getTestSession(), newCategory.getName(), newCategory.getParentNames());
 		if (!isCreated)
 		{
 			Assert.fail("category was not created!");
@@ -127,7 +127,7 @@ public class ContentImportTest extends BaseTest
 		ctegoryRelated.setParentNames(parentNames2);
 		getTestSession().put(IMPORT_CATEGORY_RELATED_KEY, ctegoryRelated);
 		repositoryService.addCategory(getTestSession(), ctegoryRelated);
-		isCreated = repositoryService.findCategoryByPath(getTestSession(), ctegoryRelated.getName(), ctegoryRelated.getParentNames());
+		isCreated = repositoryService.isCategoryPresent(getTestSession(), ctegoryRelated.getName(), ctegoryRelated.getParentNames());
 		if (!isCreated)
 		{
 			Assert.fail("category was not created!");

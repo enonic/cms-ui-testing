@@ -154,7 +154,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	 * @param displayName
 	 * @return
 	 */
-	public boolean findContentInTableByName(String displayName)
+	public boolean isContentPresentInTable(String displayName)
 	{
 		String contentXpath = String.format(CONTENT_NAME_XPATH, displayName);
 		boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(contentXpath), getDriver());

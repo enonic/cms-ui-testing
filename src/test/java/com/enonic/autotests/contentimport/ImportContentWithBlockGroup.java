@@ -252,12 +252,12 @@ public class ImportContentWithBlockGroup extends BaseTest
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		ContentsTableFrame table = (ContentsTableFrame) PageNavigatorV4.openContentsTableView(getTestSession(), pathToCategory);
 		// 2. finds person in the table before a import
-		boolean isPresentPersonBeforeImport = table.findContentInTableByName(CONTENT_PURGE_PERSON_NAME);
+		boolean isPresentPersonBeforeImport = table.isContentPresentInTable(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertTrue(isPresentPersonBeforeImport,"the person with name: "+ CONTENT_PURGE_PERSON_NAME + "is present in the table!");	
 
 		// 3. import and update content: person with name  "Eva Helene Sars" should be deleted from a category:
 		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE, pathToCategory);
-		boolean isPresentPersonAfterImport = table.findContentInTableByName(CONTENT_PURGE_PERSON_NAME);
+		boolean isPresentPersonAfterImport = table.isContentPresentInTable(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertFalse(isPresentPersonAfterImport,"the person with name: "+ CONTENT_PURGE_PERSON_NAME + "should be deleted from the table!");		
 		logger.info("$$$$ FINISHED: Purge Content. Sets purge to 'delete' ");
 

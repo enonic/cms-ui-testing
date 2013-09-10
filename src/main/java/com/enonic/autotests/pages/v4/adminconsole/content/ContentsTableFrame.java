@@ -86,6 +86,10 @@ public class ContentsTableFrame extends AbstractContentTableView
        {
     	   return ContentStatus.ARCHIVED;
        }
+       if(elems.get(0).getAttribute("src").contains("published.gif"))
+       {
+    	   return ContentStatus.PUBLISHED;
+       }
        throw new TestFrameworkException("unknown status");
 	}
 	/**

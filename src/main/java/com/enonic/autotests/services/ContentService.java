@@ -18,6 +18,7 @@ import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableVi
 import com.enonic.autotests.pages.v4.adminconsole.content.AddFileContentWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.AddImageContentWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentIndexes;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.IContentWizard;
 import com.enonic.autotests.pages.v4.adminconsole.content.PersonImportWizardPage;
@@ -39,6 +40,19 @@ public class ContentService
 		RepositoriesListFrame frame = menu.openRepositoriesTableFrame();
 		return frame.doSearchContent(contentName);
 		
+	}
+	/**
+	 * @param testSession
+	 * @param contentName
+	 * @param parents
+	 * @return
+	 */
+	public ContentStatus getContentStatus(TestSession testSession, String contentName, String[] parents)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		ContentsTableFrame table = menu.openCategoryViewFrame(parents);
+		return table.getContentStatus(contentName);
 	}
 	
 	/**

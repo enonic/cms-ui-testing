@@ -20,6 +20,17 @@ import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
  */
 public class RepositoryService
 {
+	/**
+	 * @param testSession
+	 * @param repositoryName
+	 * @return
+	 */
+	public int getRepositoryKey(TestSession testSession,String repositoryName)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		return menu.getRepositoryKey(repositoryName);
+	}
 
 	public RepositoriesListFrame createContentRepository(TestSession testSession, ContentRepository repository)
 	{
@@ -58,7 +69,7 @@ public class RepositoryService
 	 * @param parents
 	 * @return true if category was found, otherwise false.
 	 */
-	public Boolean findCategoryByPath(TestSession session, String categoryName, String... parents)
+	public Boolean isCategoryPresent(TestSession session, String categoryName, String... parents)
 	{
 		PageNavigatorV4.navgateToAdminConsole(session);
 		LeftMenuFrame menu = new LeftMenuFrame(session);

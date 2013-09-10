@@ -34,11 +34,12 @@ public class AddEntryImageFileContent extends BaseTest
 {
 
 	private ContentTypeService contentTypeService = new ContentTypeService();
+	
 	private RepositoryService repositoryService = new RepositoryService();
+	
 	private ContentService contentService = new ContentService();
 
 	private final String IMAGE_CTYPE_KEY = "image_ctype";
-	private final String FILE_CTYPE_KEY = "file_ctype";
 
 	private final String PERSON_IMAGE_CFG = "test-data/contenttype/person-image.xml";
 
@@ -143,7 +144,7 @@ public class AddEntryImageFileContent extends BaseTest
 		//1. add image to category, category has 'IMAGES' content handler:
 		AbstractContentTableView table = contentService.addimageContent(getTestSession(), content);
 		//2. verify:Image is present in the table of content
-		Assert.assertTrue(table.findContentInTableByName("face"), "image was not uploaded!");
+		Assert.assertTrue(table.isContentPresentInTable("face"), "image was not uploaded!");
 		//3. save in session a key of uploaded image 
 		String key = contentService.getContentKeyPropery(getTestSession(), content);
 		getTestSession().put(CONTENT_KEY, key);

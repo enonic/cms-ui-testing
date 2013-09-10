@@ -43,7 +43,7 @@ public class TextExtractorTest extends BaseTest
 	private String CONTENT_LIST_KEY = "content_list";
 
 	private final String FILES_CATEGORY_KEY = "files_category";
-	private final String REPOSITORY_KEY = "repository_key";
+	private final String REPOSITORY_TEST_KEY = "repository_test_key";
 
 	private final String FILE_CTYPE_NAME = "File";
 
@@ -94,7 +94,7 @@ public class TextExtractorTest extends BaseTest
 		ContentRepository repository = new ContentRepository();
 		repository.setName("extractorTest" + Math.abs(new Random().nextInt()));
 		repositoryService.createContentRepository(getTestSession(), repository);
-		getTestSession().put(REPOSITORY_KEY, repository);
+		getTestSession().put(REPOSITORY_TEST_KEY, repository);
 
 		// create category for upload files:
 		ContentCategory fileCategory = new ContentCategory();
@@ -116,7 +116,7 @@ public class TextExtractorTest extends BaseTest
 		logger.info("#######  STARTED: Test *.txt Text extraction, add content with Norwegian encoding");
 
 		String displayName = "nor.txt";
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -129,7 +129,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -147,7 +147,7 @@ public class TextExtractorTest extends BaseTest
 		logger.info("#######  STARTED: Test *.txt Text extraction, add content with Cyrillic encoding  ");
 
 		String displayName = "cyrillic.txt";
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -160,7 +160,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -181,7 +181,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "xmltestdata.xml";
 		logger.info("#######  STARTED setup for  XML Extractor tests");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -194,7 +194,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -219,7 +219,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "htmltestdata.html";
 		logger.info("#########  STARTED setup for  HTML Extractor tests");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -232,7 +232,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -255,7 +255,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "text.txt";
 		logger.info("#########  STARTED: Test Plain Text extraction ");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -268,7 +268,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -291,7 +291,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "pdf.pdf";
 		logger.info("#########  STARTED: Test PDF Text extraction  ");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -304,7 +304,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -324,7 +324,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "excel.xls";
 		logger.info("#########  STARTED: Test PDF Text extraction  ");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -337,7 +337,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -357,7 +357,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "word.doc";
 		logger.info("#########  STARTED: Test MS Word Text extraction  ");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -370,7 +370,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -390,7 +390,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "word.docx";
 		logger.info("#########  STARTED: Test MS Word Text extraction  ");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -403,7 +403,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -424,7 +424,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "ppt.pptx";
 		logger.info("#########  STARTED: Test PowerPoint Text extraction   ");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -437,7 +437,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -446,6 +446,7 @@ public class TextExtractorTest extends BaseTest
 		String attachmentIndex = map.get(ContentIndexes.ATTACHMENT);
 		
 		Assert.assertTrue(attachmentIndex.contains(TEXT_FOR_EXTRACTING),"expected text was not found on the Source page in block 'Indexed Values'!");
+		((List<String>)getTestSession().get(CONTENT_LIST_KEY)).add(displayName);
 		logger.info("#########  FINISHED: Test *.pptx Text extraction    ");
 	}
 
@@ -455,7 +456,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "rtf.rtf";
 		logger.info("#########  STARTED: Test RTF Text extraction    ");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -468,7 +469,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");
@@ -490,7 +491,7 @@ public class TextExtractorTest extends BaseTest
 		String displayName = "odt.odt";
 		logger.info("#########  STARTED: Test Open Office Text extraction ");
 
-		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_KEY);
+		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
 		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
@@ -503,7 +504,7 @@ public class TextExtractorTest extends BaseTest
 		content.setDisplayName(displayName);
 		content.setContentHandler(ContentHandler.FILES);
 		AbstractContentTableView table = contentService.addFileContent(getTestSession(), content);
-		boolean result = table.findContentInTableByName(displayName);
+		boolean result = table.isContentPresentInTable(displayName);
 		if (!result)
 		{
 			Assert.fail("file was not uploaded!");

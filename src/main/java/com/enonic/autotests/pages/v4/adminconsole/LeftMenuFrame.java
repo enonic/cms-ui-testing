@@ -238,6 +238,22 @@ public class LeftMenuFrame extends Page
 
 	}
 	/**
+	 * Gets Key value for repository.
+	 * 
+	 * @param repositoryName
+	 * @return key for Repository
+	 */
+	public int getRepositoryKey(String repositoryName)
+	{
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		// 1. expand a 'Content' folder
+		expandContentFolder();
+		String hrefElemntXpath = String.format(CATEGORY_MENU_ITEM, repositoryName) + "//a[contains(@title, 'Key')]";
+		String title = findElement(By.xpath(hrefElemntXpath)).getAttribute("title");
+		String keyString = title.substring(title.indexOf(":")+1,title.indexOf(")"));
+		return Integer.valueOf(keyString);
+	}
+	/**
 	 * Expands 'Sites' folder in Admin Console and click by site-name and opens Info page.
 	 * 
 	 * @param siteName site for opening.

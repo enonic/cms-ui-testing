@@ -91,9 +91,9 @@ public class TestUtils
 				Actions builder = new Actions(testSession.getDriver());
 				//builder.doubleClick(option).perform();//dosent work
 				//builder.doubleClick(option).build().perform();
-				builder.moveToElement(option).click().perform();
+				builder.moveToElement(option).click().build().perform();
 				//Actions builder2 = new Actions(testSession.getDriver());//builder.moveToElement(option).clickAndHold().release().build().perform();
-				builder.moveToElement(option).doubleClick().perform();//builder.moveToElement(option).perform();option
+				builder.moveToElement(option).doubleClick().build().perform();//builder.moveToElement(option).perform();option
 				//Actions builder3 = new Actions(testSession.getDriver());
 				//builder3.moveToElement(testSession.getDriver().findElement(By.xpath("//select[@name='availablect']"))).perform();
 				//option.click();
@@ -379,7 +379,8 @@ public class TestUtils
 		
 		if (elems.size() == 0)
 		{
-			throw new TestFrameworkException("xpath for Expander  is wrong or this folder has no one item!");
+			logger.info("expandFolder:this folder has no one item!"+ expanderXpath);
+			//throw new TestFrameworkException("xpath for Expander  is wrong or this folder has no one item!");
 		}
 		// check if category has + expander:
 		WebElement img = elems.get(0);
