@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -222,6 +223,15 @@ public class TestUtils
 
 	}
 
+	public void scrollWindow(final TestSession testSession, int xnumpixels, int ynumpixels )
+	{
+		String xp = Integer.toString(xnumpixels);
+		String yp = Integer.toString(xnumpixels);
+		String script = String.format("window.scrollBy(%s,%s)", xp,yp);
+		((JavascriptExecutor) testSession.getDriver()).executeScript(script);
+			
+	}
+
 	/**
 	 * @param screenshotFileName
 	 * @param driver
@@ -375,18 +385,21 @@ public class TestUtils
 	public void expandFolder(TestSession session,String expanderXpath)
 	{
 		PageNavigatorV4.switchToFrame(session, AbstractAdminConsolePage.LEFT_FRAME_NAME);
-		List<WebElement> elems = session.getDriver().findElements(By.xpath(expanderXpath));
+		List<WebElement> expanderElems = session.getDriver().findElements(By.xpath(expanderXpath));
 		
-		if (elems.size() == 0)
+		if (expanderElems.size() == 0)
 		{
 			logger.info("expandFolder:this folder has no one item!"+ expanderXpath);
+			return;
 			//throw new TestFrameworkException("xpath for Expander  is wrong or this folder has no one item!");
+			
 		}
 		// check if category has + expander:
-		WebElement img = elems.get(0);
+		WebElement img = expanderElems.get(0);
 		if (img.getAttribute("src").contains(AppConstants.PLUS_ICON_PNG))
 		{
-			elems.get(0).click();
+			expanderElems.get(0).click();
+			
 		} else if (img.getAttribute("src").contains(AppConstants.MINUS_ICON_PNG))
 		{
 			logger.info("the folder with name  already expanded");

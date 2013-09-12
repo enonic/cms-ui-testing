@@ -176,8 +176,7 @@ public class ContentApiTest extends BaseTest
 		String[] parents = { repository.getName(), CATEGORY_NAME };
 		com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus status = contentService.getContentStatus(getTestSession(),
 				UPDATED_ARTICLE_NAME, parents);
-		Assert.assertTrue(status.equals(com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus.PUBLISHED),
-				"expected and actual status are not equals!");
+		Assert.assertTrue(status.equals(com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus.PUBLISHED), "expected and actual status are not equals!");
 		logger.info("$$$$ FINISHED: Update content in API");
 
 	}
@@ -241,6 +240,7 @@ public class ContentApiTest extends BaseTest
 		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_API_TEST_KEY);
 		boolean isPresent = repositoryService.isCategoryPresent(getTestSession(), CATEGORY_NAME, repository.getName());
 		Assert.assertFalse(isPresent, "Category with name:" + CATEGORY_NAME + " should be deleted from the repository:" + repository.getName());
+		logger.info("$$$$ FINISHED: Try to delete a category with content, now set includeContent parameter to true");
 	}
 
 	private int createArticleContent(String articleName)

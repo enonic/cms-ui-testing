@@ -1,0 +1,17 @@
+<contenttype>
+    <config name="ct-tiny" version="1.0">
+        <form>
+            <title name="myTitle" />
+            <block name="TestBlock1">
+                <input name="myTitle" required="true" type="text">
+                    <display>My title</display>
+                    <xpath>contentdata/mytitle</xpath>
+                </input>
+                <input name="myHtmlarea" type="htmlarea">
+                    <display>My htmlarea</display>
+                    <xpath>contentdata/myhtmlarea</xpath>
+                </input>
+            </block>
+        </form>
+    </config>
+</contenttype>

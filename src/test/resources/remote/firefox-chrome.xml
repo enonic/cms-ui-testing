@@ -47,6 +47,7 @@
  			 <class name="com.enonic.autotests.contentimport.AddEntryImageFileContent" />   
   			
   			<class name="com.enonic.autotests.textextractors.TextExtractorTest" />  
+  			<class name="com.enonic.autotests.ContentApiTest"/>
 
 		</classes>
 	</test>

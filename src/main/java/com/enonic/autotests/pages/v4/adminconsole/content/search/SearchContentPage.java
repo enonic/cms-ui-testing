@@ -70,12 +70,14 @@ public class SearchContentPage extends AbstractAdminConsolePage
 			titleFieldRadio.click();
 		}
 		searchButton.click();
+		TestUtils.getInstance().scrollWindow(getSession(),0, 700);
+		TestUtils.getInstance().saveScreenshot(getSession());
+		
 		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
 		if(isAlertPresent)
 		{
 			throw new SearchException("alert dialog appeared when 'Search' button was pressed");
 		}
-		//TODO wait until table appears
 		boolean isResultPresent = TestUtils.getInstance().waitAndFind(By.xpath("//fieldset//td[@class='browsetablecolumnheader']"), getDriver());
 		if(!isResultPresent)
 		{
