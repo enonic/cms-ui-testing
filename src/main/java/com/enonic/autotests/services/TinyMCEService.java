@@ -9,54 +9,92 @@ import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableVi
 import com.enonic.autotests.pages.v4.adminconsole.content.AlignmentText;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentWithTinyMCEWizard;
 
-public class TinyCMEService
+public class TinyMCEService
 {
 	/**
 	 * @param testSession
 	 * @param category
 	 */
+	public void verifyInsertTable(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertTable();
+	}
+	public void verifyInsertImage(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertImage();
+	}
+	/**
+	 * @param testSession
+	 * @param category
+	 */
 	public void verifyBoldItalic(TestSession testSession, ContentCategory category)
-	{  
+	{
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyItalicBoldAndRemoveFormatting();
 	}
-	public void verifyTextAlignment (TestSession testSession, ContentCategory category,AlignmentText align)
+
+	/**
+	 * @param testSession
+	 * @param category
+	 * @param align
+	 */
+	public void verifyTextAlignment(TestSession testSession, ContentCategory category, AlignmentText align)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyTextAlignment(align);
 	}
-	
-	public void verifyAddAnchorInText (TestSession testSession, ContentCategory category)
+
+	/**
+	 * @param testSession
+	 * @param category
+	 */
+	public void verifyAddAnchorInText(TestSession testSession, ContentCategory category)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyAnchorInText();
 	}
-	public void verifyAddHorizontalLine (TestSession testSession, ContentCategory category)
+
+	/**
+	 * @param testSession
+	 * @param category
+	 */
+	public void verifyAddHorizontalLine(TestSession testSession, ContentCategory category)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyHorizontalLine();
 	}
-	public void verifyLinkUnlink (TestSession testSession, ContentCategory category)
+
+	/**
+	 * @param testSession
+	 * @param category
+	 */
+	public void verifyLinkUnlink(TestSession testSession, ContentCategory category)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyLinkUnlink();
 	}
-	
+
 	private String[] getPathToCategory(ContentCategory category)
 	{
 		List<String> path = new ArrayList<>();
 		String[] catParents = category.getParentNames();
-		for(String name: catParents)
+		for (String name : catParents)
 		{
 			path.add(name);
 		}

@@ -15,6 +15,7 @@ import org.testng.Assert;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
+import com.enonic.autotests.model.TinyMCETable;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.services.PageNavigatorV4;
 import com.enonic.autotests.utils.TestUtils;
@@ -37,7 +38,7 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	private final String LINK_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a/span[contains(@class,'mce_cmslink')]";
 	private final String INSERT_LINE_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a/span[contains(@class,'mce_hr')]";
 	private final String INSERT_IMAGE_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_cmsimage')]";
-
+	private final String INSERT_TABLE_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_table')]";
 
 	private final String IFRAME = "//td[contains(@class,'mceIframeContainer')]//iframe";
 	
@@ -78,14 +79,15 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	
 	@FindBy(xpath = LINK_BUTTON_XPATH)
 	private WebElement linkButton;
-	
-	
+		
 	@FindBy(xpath = INSERT_LINE_BUTTON_XPATH)
 	private WebElement insertLineButton;
 	
 	@FindBy(xpath = INSERT_IMAGE_BUTTON_XPATH)
 	private WebElement insertImageButton;
 	
+	@FindBy(xpath = INSERT_TABLE_BUTTON_XPATH)
+	private WebElement insertTableButton;
 	
 	/**
 	 * The constructor.
@@ -97,17 +99,31 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		super(session);
 		
 	}
+
 	/**
 	 * Clicks by 'Insert Image' button, add image and verify: image is present on the page.
 	 */
-	public void verifyAddImage()
+	public void verifyInsertImage()
 	{
 		
 	}
-	public void verifyAddTable()
+
+	
+	public void verifyInsertTable()
+	{
+		insertTableButton.click();
+		TinyMCETable tableToInsert = new TinyMCETable();
+		doInsertTable(tableToInsert);
+		// verify:
+		String expected = String.format("", "");
+		verifyTextInEditor(expected);
+	}
+
+	private void doInsertTable(TinyMCETable tableToInsert)
 	{
 		
 	}
+
 	/**
 	 * Clicks by 'Insert Link' and add new link. Unliks just added link and verify: link disappeared.
 	 */
@@ -127,6 +143,7 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		expected =String.format("<p>google.com",linkText);
 		verifyTextInEditor(expected);
 	}
+
 	private void doAddLink(String linkText)
 	{
 		linkButton.click();
@@ -169,6 +186,7 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		}
 
 	}
+
 	private void verifyTextInEditor(String expected)
 	{
 		
@@ -180,6 +198,7 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 			Assert.fail("actual innerHtml does not contain expected string: "+ expected);
 		}
 	}
+
 	/**
 	 * Clicks by 'Insert Horizontal Line' button, and verify it.
 	 */
@@ -189,8 +208,10 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		String expected ="<hr>";
 		verifyTextInEditor(expected);
 	}
+
 	/**
-	 * Clicks by 'Insert Anchor' button, types data in popup-window and verify Anchor is present in the text
+	 * Clicks by 'Insert Anchor' button, types data in popup-window and verify
+	 * Anchor is present in the text
 	 */
 	public void verifyAnchorInText()
 	{
@@ -228,7 +249,6 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 				}
 			}
 		}
-
 		
 		String expected =String.format("<p><a class=\"mceItemAnchor\" name=\"%s\"></a></p>",anchorText);
 		verifyTextInEditor(expected);
@@ -262,6 +282,7 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 			Assert.fail("actual innerHtml does not contain expected string: "+ expected);
 		}
 	}
+
 	private void selectAlignment(AlignmentText alignValue)
 	{
 		switch (alignValue)
@@ -315,9 +336,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	@Override
 	public void waituntilPageLoaded(long timeout)
 	{
-		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//iframe//body[@class='mceContentBody']")));
+		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By
+				.xpath("//iframe//body[@class='mceContentBody']")));
 		
 	}
+
 	private void selectAll()
 	{
 		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));

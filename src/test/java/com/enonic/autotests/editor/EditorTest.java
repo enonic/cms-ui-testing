@@ -17,7 +17,7 @@ import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.services.RepositoryService;
-import com.enonic.autotests.services.TinyCMEService;
+import com.enonic.autotests.services.TinyMCEService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
 
@@ -38,7 +38,7 @@ public class EditorTest extends BaseTest
 	private RepositoryService repositoryService = new RepositoryService();
 
 	private ContentService contentService = new ContentService();
-	private TinyCMEService tinyCMEService = new TinyCMEService();
+	private TinyMCEService tinyMCEService = new TinyMCEService();
 
 	@Test
 	public void setup()
@@ -77,7 +77,7 @@ public class EditorTest extends BaseTest
 	{
 		logger.info("### STARTED:");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
-		tinyCMEService.verifyBoldItalic(getTestSession(), category);
+		tinyMCEService.verifyBoldItalic(getTestSession(), category);
 		logger.info("$$$$ FINISHED: Format some text as bold anditalic");
 	}
 
@@ -86,7 +86,7 @@ public class EditorTest extends BaseTest
 	{
 		logger.info("### STARTED: test text alignment:" + alignment.getValue());
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
-		tinyCMEService.verifyTextAlignment(getTestSession(), category, alignment);
+		tinyMCEService.verifyTextAlignment(getTestSession(), category, alignment);
 		logger.info("$$$$ FINISHED verify text with text alignment:" + alignment.getValue());
 	}
 
@@ -103,7 +103,7 @@ public class EditorTest extends BaseTest
 	{
 		logger.info("### STARTED: test add an anchor in the text");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
-		tinyCMEService.verifyAddAnchorInText(getTestSession(), category);
+		tinyMCEService.verifyAddAnchorInText(getTestSession(), category);
 
 		logger.info("$$$$ FINISHED verify text with text alignment:");
 	}
@@ -113,17 +113,41 @@ public class EditorTest extends BaseTest
 	{
 		logger.info("### STARTED: Insert Horizontal line ");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
-		tinyCMEService.verifyAddHorizontalLine(getTestSession(), category);
+		tinyMCEService.verifyAddHorizontalLine(getTestSession(), category);
 		logger.info("$$$$ FINISHED Insert Horizontal line ");
 	}
+
 	 @Test(description="Creating a link in the text", dependsOnMethods = "setup")
 	 public void linkAndUnlinkTest()
 	{
 		 logger.info("### STARTED: Creating a link in the text");
 		 ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
-		 tinyCMEService.verifyLinkUnlink(getTestSession(), category);
+		tinyMCEService.verifyLinkUnlink(getTestSession(), category);
 		 logger.info("$$$$ FINISHED verify text with text alignment:");
 		
+	}
+
+	@Test(description = "verify insert image", dependsOnMethods = "setup")
+	public void addImageTest()
+	{
+		logger.info("### STARTED: verify insert image:");
+		//1. create category and upload image.
+		
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		//2. add image to content:
+		tinyMCEService.verifyInsertImage(getTestSession(), category);
+		logger.info("$$$$ FINISHED verify insert image:");
+
+	}
+	@Test(description = "verify insert Table ", dependsOnMethods = "setup")
+	public void insertTableTest()
+	{
+		logger.info("### STARTED: verify insert Table :");
+		
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertTable(getTestSession(), category);
+		logger.info("$$$$ FINISHED verify insert Table ");
+
 	}
 
 }

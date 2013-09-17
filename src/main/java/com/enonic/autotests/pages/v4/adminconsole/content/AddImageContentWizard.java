@@ -11,6 +11,7 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.IContentInfo;
@@ -100,7 +101,7 @@ public class AddImageContentWizard extends AbstractAddContentWizard<ImageContent
 
 		}
 		saveButton.click();
-		waituntilPageLoaded(4l);
+		waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		closeButton.click();
 	}
 }
