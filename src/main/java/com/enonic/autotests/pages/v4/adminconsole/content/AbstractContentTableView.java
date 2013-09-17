@@ -87,7 +87,23 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	 * 
 	 * @return {@link IContentWizard} instance.
 	 */
-	public IContentWizard openAddContentWizardPage(ContentRepository cRepository)
+	public <T> IContentWizard<T> openAddContentWizardPage(ContentRepository cRepository)
+	{
+		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
+		doStartAddContent();
+
+		// 2. verify if wizard opened:
+		String xpath = String.format("//a[text()='%s']", cRepository.getName());
+		boolean isTitleLoaded = TestUtils.getInstance().waitAndFind(By.xpath(xpath), getDriver());
+		if (!isTitleLoaded)
+		{
+			throw new AddContentException("Create Content Wizard was not opened! Repository: " + cRepository.getName());
+		}
+
+		return updateOrCreateWizardFactory(cRepository.getTopCategory().getContentType().getContentHandler());
+	}
+	
+	public void doStartAddContent()
 	{
 		// 1. click by "New" button and show 'add content' and 'add category' menu-items:
 		buttonNew.click();
@@ -98,15 +114,6 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 		}
 		// 2.click by: '(content-type) Content' and open the "add content-wizard":
 		menuItemAddContent.click();
-		// 3. verify if wizard opened:
-		String xpath = String.format("//a[text()='%s']", cRepository.getName());
-		boolean isTitleLoaded = TestUtils.getInstance().waitAndFind(By.xpath(xpath), getDriver());
-		if (!isTitleLoaded)
-		{
-			throw new AddContentException("Create Content Wizard was not opened! Repository: " + cRepository.getName());
-		}
-
-		return updateOrCreateWizardFactory(cRepository.getTopCategory().getContentType().getContentHandler());
 	}
 	public AddImageContentWizard openAddImageContentWizardPage(String repoName )
 	{

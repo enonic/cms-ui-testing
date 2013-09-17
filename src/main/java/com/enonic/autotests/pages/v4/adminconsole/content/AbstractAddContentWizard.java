@@ -17,7 +17,7 @@ import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePage implements IContentWizard<T>
 {
 
-	public static final String GENERAL_TAB_LINK_XPATH = "//a[text()='Content']";
+	public static final String GENERAL_TAB_LINK_XPATH = "//h1//a[text()='Content']";
 
 	// 1 input: draft offline: unsaved draft
 	@FindBy(how = How.ID, using = "_comment")

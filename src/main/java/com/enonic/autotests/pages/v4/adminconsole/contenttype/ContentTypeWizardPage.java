@@ -9,7 +9,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 
 import com.enonic.autotests.TestSession;
-import com.enonic.autotests.exceptions.ContentTypeException;
 import com.enonic.autotests.exceptions.SaveOrUpdateException;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsoleWizardPage;
