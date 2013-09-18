@@ -40,7 +40,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	protected String PUBLISH_CONTENT_LINK = CONTENT_ROW + "//img[@src='images/icon_content_publish.gif']";
 	protected String MOVE_CONTENT_LINK =  CONTENT_ROW + "//img[@src='images/icon_content_move.gif']";
 
-	protected String SELECT_CONTENT_CHECKBOX = CONTENT_ROW + "/td/input[@name='batch_operation']";
+	public String SELECT_CONTENT_CHECKBOX = CONTENT_ROW + "/td/input[@name='batch_operation']";
 	/**
 	 * @param session
 	 */

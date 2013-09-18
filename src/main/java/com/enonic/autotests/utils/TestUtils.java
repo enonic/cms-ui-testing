@@ -31,6 +31,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
@@ -382,7 +383,7 @@ public class TestUtils
 		select.selectByVisibleText(text);
 	}
 	
-	public void expandFolder(TestSession session,String expanderXpath)
+	public boolean expandFolder(TestSession session,String expanderXpath)
 	{
 		PageNavigatorV4.switchToFrame(session, AbstractAdminConsolePage.LEFT_FRAME_NAME);
 		List<WebElement> expanderElems = session.getDriver().findElements(By.xpath(expanderXpath));
@@ -390,13 +391,18 @@ public class TestUtils
 		if (expanderElems.size() == 0)
 		{
 			logger.info("expandFolder:this folder has no one item!"+ expanderXpath);
-			return;
+			return false;
 			//throw new TestFrameworkException("xpath for Expander  is wrong or this folder has no one item!");
 			
 		}
 		// check if category has + expander:
 		WebElement img = expanderElems.get(0);
-		if (img.getAttribute("src").contains(AppConstants.PLUS_ICON_PNG))
+		String attribute = img.getAttribute("src");
+		if(attribute == null)
+		{
+			Assert.fail("Element does not contain attribut 'src', probably wrong xpath");
+		}
+		if (attribute.contains(AppConstants.PLUS_ICON_PNG))
 		{
 			expanderElems.get(0).click();
 			
@@ -404,6 +410,7 @@ public class TestUtils
 		{
 			logger.info("the folder with name  already expanded");
 		}
+		return true;
 	}
 
 	public String createTempFile(String s)

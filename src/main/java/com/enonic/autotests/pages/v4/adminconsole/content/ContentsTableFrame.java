@@ -53,6 +53,10 @@ public class ContentsTableFrame extends AbstractContentTableView
 	@FindBy(how = How.XPATH, using = ADD_CONTENT_TO_SECTION_XPATH)
 	protected WebElement addButton;
 
+	/** this button appears during Inserting content to tinyMCE Editor */
+	@FindBy(how = How.XPATH, using = "//button[text()='Choose']")
+	protected WebElement chooseButton;
+
 	private final String SELECT_TOP_XPATH = "//table[@class='operation-top']//select[@name='batchSelector']";
 
 	/**
@@ -218,6 +222,20 @@ public class ContentsTableFrame extends AbstractContentTableView
 		findElement(By.xpath(checkboxXpath)).click();
 		//2. press the 'Add' button
 		addButton.click();
+	}
+
+	public void doChooseContent(String contentName)
+	{
+		//1. select checkbox for content
+		String checkboxXpath = String.format(SELECT_CONTENT_CHECKBOX, contentName);
+		boolean result = TestUtils.getInstance().waitAndFind(By.xpath(checkboxXpath), getDriver());
+		if(!result)
+		{
+			throw new AddContentException("Content with name:"+ contentName + "was not found!");
+		} 
+		findElement(By.xpath(checkboxXpath)).click();
+		//2. press the 'choose' button
+		chooseButton.click();
 	}
 
 	@Override
