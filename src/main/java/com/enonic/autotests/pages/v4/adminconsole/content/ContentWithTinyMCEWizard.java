@@ -42,6 +42,13 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	private final String INSERT_LINE_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a/span[contains(@class,'mce_hr')]";
 	private final String INSERT_IMAGE_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_cmsimage')]";
 	private final String INSERT_TABLE_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_table')]";
+	private final String INSERT_SPECIAL_SYMBOLS_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_charmap')]";
+	private final String INSERT_DELETION_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_del')]";
+	private final String INSERT_INSERTION_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_ins')]";
+	private final String INSERT_BLOCKQUOTE_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_blockquote')]";
+	private final String INSERT_ABBREVIATION_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_abbr')]";
+	private final String INSERT_ACRONYM_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_acronym')]";
+	private final String INSERT_CITATION_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,' mce_cite')]";
 
 	private final String IFRAME = "//td[contains(@class,'mceIframeContainer')]//iframe";
 	private final String SELECT_CONTENT_POPUP_WINDOW_TITLE = "Enonic CMS - Content repository";
@@ -50,8 +57,14 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 
 	private final String ADD_ANCHOR_POPUP_TITLE = "Insert/Edit Anchor";
 	private final String INSERT_LINK_POPUP_TITLE = "Insert/edit link";
-	
+
 	private final String INSERT_TABLE_POPUP_TITLE = "Insert/Edit Table";
+	private final String INSERT_SPECIAL_CHARACTER_POPUP_TITLE = "Select Special Character";
+	private final String INSERT_DELETION_POPUP_TITLE = "Deletion Element";
+	private final String INSERT_INSERTION_POPUP_TITLE = "Insertion Element";
+	private final String INSERT_ABBREVIATION_POPUP_TITLE = "Abbreviation Element";
+	private final String INSERT_CITATION_POPUP_TITLE = "Citation Element";
+	private final String INSERT_ACRONYM_POPUP_TITLE = "Acronym Element";
 
 	@FindBy(xpath = BOLD_BUTTON_XPATH)
 	private WebElement boldButton;
@@ -95,6 +108,27 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	@FindBy(xpath = INSERT_TABLE_BUTTON_XPATH)
 	private WebElement insertTableButton;
 
+	@FindBy(xpath = INSERT_SPECIAL_SYMBOLS_BUTTON_XPATH)
+	private WebElement insertSpecSymbolsButton;
+
+	@FindBy(xpath = INSERT_DELETION_BUTTON_XPATH)
+	private WebElement insertDeletionButton;
+
+	@FindBy(xpath = INSERT_INSERTION_BUTTON_XPATH)
+	private WebElement insertInsertionButton;
+
+	@FindBy(xpath = INSERT_BLOCKQUOTE_BUTTON_XPATH)
+	private WebElement insertBlockQouteButton;
+
+	@FindBy(xpath = INSERT_ABBREVIATION_BUTTON_XPATH)
+	private WebElement insertAbbreviationButton;
+
+	@FindBy(xpath = INSERT_ACRONYM_BUTTON_XPATH)
+	private WebElement insertAcronymButton;
+
+	@FindBy(xpath = INSERT_CITATION_BUTTON_XPATH)
+	private WebElement insertCitationButton;
+
 	/**
 	 * The constructor.
 	 * 
@@ -107,20 +141,334 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	}
 
 	/**
+	 * Clicks by 'Insert Special Characters' button, and verify: character is
+	 * present.
+	 */
+	public void verifyInsertSpecialCharacters(SpecialCharacters character)
+	{
+		insertSpecSymbolsButton.click();
+		doAddSpecialCharacter(character);
+
+		char[] chars = Character.toChars(Integer.valueOf(character.getValue()));
+		String expectedText = new String(chars);
+		verifyTextInEditor(expectedText);
+
+	}
+
+	/**
+	 * Verifies insert citation
+	 */
+	public void verifyInsertCitation()
+	{
+		String text = "deleteion test";
+		editorArea.sendKeys(text);
+		selectAll();
+		insertCitationButton.click();
+		doAddCitation();
+		String[] expectedText = { "<cite ", text + "</cite>" };
+
+		verifyTextInEditor(expectedText);
+	}
+
+	public void doAddCitation()
+	{
+		Set<String> allWindows = getDriver().getWindowHandles();
+		if (!allWindows.isEmpty())
+		{
+			String whandle = getDriver().getWindowHandle();
+			for (String windowId : allWindows)
+			{
+
+				try
+				{
+					if (getDriver().switchTo().window(windowId).getTitle().equals(INSERT_CITATION_POPUP_TITLE))
+					{
+
+						// 1. click by 'Insert' button
+						findElement(By.xpath("//input[@type='submit' and @name='insert']")).click();
+
+						// 2. switch to mainFrame again:
+						getDriver().switchTo().window(whandle);
+						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+
+						break;
+					}
+				} catch (NoSuchWindowException e)
+				{
+					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
+				}
+			}
+		}
+
+	}
+
+	/**
+	 *  Verifies insert deletion
+	 */
+	public void verifyDeletion()
+	{
+		String text = "deleteion test";
+		editorArea.sendKeys(text);
+		selectAll();
+		insertDeletionButton.click();
+		doAddDeletion();
+		String[] expectedText = { "<del style", text + "</del>" };
+
+		verifyTextInEditor(expectedText);
+	}
+
+	/**
+	 *  Verifies insert insertion
+	 */
+	public void verifyInsertion()
+	{
+		String text = "isertion test";
+		editorArea.sendKeys(text);
+		selectAll();
+		insertInsertionButton.click();
+		doAddInsertion();
+		String[] expectedText = { "<p><ins", text + "</ins>" };
+		verifyTextInEditor(expectedText);
+	}
+
+	/**
+	 *  Verifies insert 'Block Quote'
+	 */
+	public void verifyInsertBlockQuote()
+	{
+		String text = "text test";
+		editorArea.sendKeys(text);
+		selectAll();
+		insertBlockQouteButton.click();
+		String expectedText = "<blockquote><p>" + text;
+		verifyTextInEditor(expectedText);
+	}
+
+	/**
+	 * Verifies insert 'Abbreviation'
+	 */
+	public void verifyInsertAbbreviation()
+	{
+		String text = "text test";
+		editorArea.sendKeys(text);
+		selectAll();
+		insertAbbreviationButton.click();
+		doInsertAbbreviation();
+		String[] expectedText = { "<abbr", text + "</abbr>" };
+		verifyTextInEditor(expectedText);
+	}
+
+	/**
+	 * Verifies insert 'Acronym'
+	 */
+	public void verifyInsertAcronym()
+	{
+		String text = "text test";
+		editorArea.sendKeys(text);
+		selectAll();
+		insertAcronymButton.click();
+		doInsertAcronum();
+		String[] expectedText = { "<acronym", text + "</acronym>" };
+		verifyTextInEditor(expectedText);
+	}
+
+	private void doInsertAcronum()
+	{
+		Set<String> allWindows = getDriver().getWindowHandles();
+		if (!allWindows.isEmpty())
+		{
+			String whandle = getDriver().getWindowHandle();
+			for (String windowId : allWindows)
+			{
+
+				try
+				{
+					if (getDriver().switchTo().window(windowId).getTitle().equals(INSERT_ACRONYM_POPUP_TITLE))
+					{
+
+						// 1. click by 'Insert' button
+						findElement(By.xpath("//input[@type='submit' and @name='insert']")).click();
+
+						// 2. switch to mainFrame again:
+						getDriver().switchTo().window(whandle);
+						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+
+						break;
+					}
+				} catch (NoSuchWindowException e)
+				{
+					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * type data and click by "Insert" button
+	 */
+	public void doInsertAbbreviation()
+	{
+		Set<String> allWindows = getDriver().getWindowHandles();
+		if (!allWindows.isEmpty())
+		{
+			String whandle = getDriver().getWindowHandle();
+			for (String windowId : allWindows)
+			{
+
+				try
+				{
+					if (getDriver().switchTo().window(windowId).getTitle().equals(INSERT_ABBREVIATION_POPUP_TITLE))
+					{
+
+						// 1. click by 'Insert' button
+						findElement(By.xpath("//input[@type='submit' and @name='insert']")).click();
+
+						// 2. switch to mainFrame again:
+						getDriver().switchTo().window(whandle);
+						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+
+						break;
+					}
+				} catch (NoSuchWindowException e)
+				{
+					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
+				}
+			}
+		}
+
+	}
+
+	private void doAddInsertion()
+	{
+
+		Set<String> allWindows = getDriver().getWindowHandles();
+		if (!allWindows.isEmpty())
+		{
+			String whandle = getDriver().getWindowHandle();
+			for (String windowId : allWindows)
+			{
+
+				try
+				{
+					if (getDriver().switchTo().window(windowId).getTitle().equals(INSERT_INSERTION_POPUP_TITLE))
+					{
+						// 1. type a current date:
+						findElement(By.xpath("//a/span[@class='datetime']")).click();
+						// 2. click by 'Insert' button
+						findElement(By.xpath("//input[@type='submit' and @name='insert']")).click();
+
+						// 3. switch to mainFrame again:
+						getDriver().switchTo().window(whandle);
+						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+
+						break;
+					}
+				} catch (NoSuchWindowException e)
+				{
+					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Switches to the popup window, types data and press "Insert" button.
+	 */
+	private void doAddDeletion()
+	{
+		Set<String> allWindows = getDriver().getWindowHandles();
+		if (!allWindows.isEmpty())
+		{
+			String whandle = getDriver().getWindowHandle();
+			for (String windowId : allWindows)
+			{
+
+				try
+				{
+					if (getDriver().switchTo().window(windowId).getTitle().equals(INSERT_DELETION_POPUP_TITLE))
+					{
+						// 1. type a current date:
+						findElement(By.xpath("//input[@name='datetime']")).click();
+						// 2. click by 'Insert' button
+						findElement(By.xpath("//input[@type='submit' and @name='insert']")).click();
+
+						// 3. switch to mainFrame again:
+						getDriver().switchTo().window(whandle);
+						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+
+						break;
+					}
+				} catch (NoSuchWindowException e)
+				{
+					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * Switches to the popup window, selects a character and press "Insert" button.
+	 * 
+	 * @param character
+	 */
+	private void doAddSpecialCharacter(SpecialCharacters character)
+	{
+
+		Set<String> allWindows = getDriver().getWindowHandles();
+
+		if (!allWindows.isEmpty())
+		{
+			String whandle = getDriver().getWindowHandle();
+			for (String windowId : allWindows)
+			{
+
+				try
+				{
+					if (getDriver().switchTo().window(windowId).getTitle().equals(INSERT_SPECIAL_CHARACTER_POPUP_TITLE))
+					{
+
+						// 1. select a character in popup window:
+						String charXpath = String.format("//a[@class='charmaplink' and contains(@onfocus,'%s')]", character.getValue());
+						boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(charXpath), getDriver());
+						if (!isPresent)
+						{
+							Assert.fail("The character : " + character.getValue() + " was not found!, please check xpath");
+						}
+						findElement(By.xpath(charXpath)).click();
+						// 2. switch to main frame again:s
+						getDriver().switchTo().window(whandle);
+						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+
+						break;
+					}
+				} catch (NoSuchWindowException e)
+				{
+					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
+				}
+			}
+		}
+	}
+
+	/**
 	 * Clicks by 'Insert Image' button, add image and verify: image is present on the page.
 	 */
 	public void verifyInsertImage(Content<ImageContentInfo> contentToInsert)
 	{
-		//1. open popup window
+		// 1. open popup window
 		insertImageButton.click();
-		//2. select an image:
+		// 2. select an image:
 		doInsertImage(contentToInsert);
 		// verify: image is present in Editor HTML code:
-		String[] expected = {String.format("<img title=\"%s\"",contentToInsert.getDisplayName())};
+		String[] expected = { String.format("<img title=\"%s\"", contentToInsert.getDisplayName()) };
 		verifyTextInEditor(expected);
 	}
-	
+
 	/**
+	 * Switches to the popup window, select a image and press "Insert" button.
+	 * 
 	 * @param contentToInsert
 	 */
 	private void doInsertImage(Content<ImageContentInfo> contentToInsert)
@@ -138,42 +486,44 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 				{
 					if (getDriver().switchTo().window(windowId).getTitle().equals(SELECT_CONTENT_POPUP_WINDOW_TITLE))
 					{
-						for(int i = 0; i< path.length - 1; i++)
+						for (int i = 0; i < path.length - 1; i++)
 						{
-							//expands repository and parent categories:
-							String expanderFolderXpath = String.format("//td/span[contains(@id,'menuitemText') and contains(.,'%s')]/../../td/a/img", path[i]);
-							boolean result = TestUtils.getInstance().expandFolder(getSession(),expanderFolderXpath);
-							if(!result)
+							// expands repository and parent categories:
+							String expanderFolderXpath = String.format("//td/span[contains(@id,'menuitemText') and contains(.,'%s')]/../../td/a/img",
+									path[i]);
+							boolean result = TestUtils.getInstance().expandFolder(getSession(), expanderFolderXpath);
+							if (!result)
 							{
-								Assert.fail("Error during expanding a folder: "+path[i]);
+								Assert.fail("Error during expanding a folder: " + path[i]);
 							}
 						}
-						// click by category and open 
-						String categoryXpath = String.format("//a[descendant::span[contains(@id,'menuitemText') and contains(.,'%s')]]", path[path.length - 1]);
+						// click by category and open
+						String categoryXpath = String.format("//a[descendant::span[contains(@id,'menuitemText') and contains(.,'%s')]]",
+								path[path.length - 1]);
 						boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(categoryXpath), getDriver());
-						if(!isPresent)
+						if (!isPresent)
 						{
-							throw new AddContentException("Category with name "+path[path.length - 1]+" was not found!");
+							throw new AddContentException("Category with name " + path[path.length - 1] + " was not found!");
 						}
-						//click by category and open Table of content:
+						// click by category and open Table of content:
 						findElement(By.xpath(categoryXpath)).click();
-						//switch to MAINFRAME in popup-window:
+						// switch to MAINFRAME in popup-window:
 						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
 						ContentsTableFrame contentsTable = new ContentsTableFrame(getSession());
 						contentsTable.waituntilPageLoaded(1l);
 						// select checkbox for content and press the butoon 'Add'
 						contentsTable.doChooseContent(contentToInsert.getDisplayName());
 						boolean isFound = TestUtils.getInstance().waitAndFind(By.xpath("//select[@name='size']"), getDriver());
-						if(!isFound)
+						if (!isFound)
 						{
 							Assert.fail("TinyMCE EDITOR: Insert image failed, //select[@name='size']  was not found!");
 						}
 						TestUtils.getInstance().selectByText(getSession(), By.xpath("//select[@name='size']"), "Thumbnail");
 						findElements(By.xpath("//button[@type='button' and @name='insert']")).get(0).click();
-						//popup window closed, so nedd switch to parent window
+						// popup window closed, so nedd switch to parent window
 						getDriver().switchTo().window(whandle);
 						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
-						
+
 						break;
 					}
 				} catch (NoSuchWindowException e)
@@ -183,9 +533,9 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 			}
 		}
 	}
-	
+
 	/**
-	 * Inserts a table and verify: table with defined height and width is present in Editor 
+	 * Inserts a table and verify: table with defined height and width is present in Editor
 	 */
 	public void verifyInsertTable()
 	{
@@ -199,13 +549,14 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		tableToInsert.setWidth(width);
 		doInsertTable(tableToInsert);
 		// verify:
-		String[] expected = {"<table",String.format("height: %dpx;", 70),String.format("width: %dpx",width)};
+		String[] expected = { "<table", String.format("height: %dpx;", 70), String.format("width: %dpx", width) };
 		verifyTextInEditor(expected);
 	}
-	
 
 	/**
-	 * Switches to a "Insert/Edit Table" popup window and types columns number , rows number... etc 
+	 * Switches to a "Insert/Edit Table" popup window and types columns number ,
+	 * rows number... etc
+	 * 
 	 * @param tableToInsert
 	 */
 	private void doInsertTable(TinyMCETable tableToInsert)
@@ -230,33 +581,33 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 						}
 						// 1. insert columns number.
 						TestUtils.getInstance().clearAndType(getSession(), elems.get(0), String.valueOf(tableToInsert.getColumnsNumber()));
-						
-						//2.insert rows number.
+
+						// 2.insert rows number.
 						elems = findElements(By.xpath("//input[@type='text' and @name='rows']"));
 						if (elems.size() == 0)
 						{
 							Assert.fail("input text with name ='rows' was not found!");
 						}
-						
+
 						TestUtils.getInstance().clearAndType(getSession(), elems.get(0), String.valueOf(tableToInsert.getRowsNumber()));
-						// 3. insert  Width.
+						// 3. insert Width.
 						elems = findElements(By.xpath("//input[@type='text' and @name='width']"));
 						if (elems.size() == 0)
 						{
 							Assert.fail("input text with name ='width' was not found!");
 						}
-						
+
 						elems.get(0).sendKeys(String.valueOf(String.valueOf(tableToInsert.getWidth())));
-						
-						// 4. insert  Height.
+
+						// 4. insert Height.
 						elems = findElements(By.xpath("//input[@type='text' and @name='height']"));
 						if (elems.size() == 0)
 						{
 							Assert.fail("input text with name ='height' was not found!");
 						}
-						
+
 						elems.get(0).sendKeys(String.valueOf(String.valueOf(tableToInsert.getHeight())));
-						
+
 						// 2. press the submit button
 						elems = findElements(By.xpath("//input[@type='submit' and @name='insert']"));
 						elems.get(0).click();
@@ -270,17 +621,17 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
 				}
 			}
-			if(!isPopupFound)
+			if (!isPopupFound)
 			{
 				Assert.fail("Popup window was not found!!!");
 			}
-			
-			
+
 		}
 	}
 
 	/**
-	 * Clicks by 'Insert Link' and add new link. Unliks just added link and verify: link disappeared.
+	 * Clicks by 'Insert Link' and add new link. Unliks just added link and
+	 * verify: link disappeared.
 	 */
 	public void verifyLinkUnlink()
 	{
@@ -300,8 +651,9 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	}
 
 	/**
-	 *  Switches to a "Insert/Edit Link" popup window and types text and click 'insert' button.
-	 *   
+	 * Switches to a "Insert/Edit Link" popup window and types text and click
+	 * 'insert' button.
+	 * 
 	 * @param linkText
 	 */
 	private void doAddLink(String linkText)
@@ -348,22 +700,24 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	}
 
 	/**
-	 * Gets HTML code from TinyMCE editor and verify: expected strings are present in the code
+	 * Gets HTML code from TinyMCE editor and verify: expected strings are
+	 * present in the code
+	 * 
 	 * @param expected
 	 */
-	private void verifyTextInEditor(String ...expected)
+	private void verifyTextInEditor(String... expected)
 	{
 		Object obj = ((JavascriptExecutor) getSession().getDriver()).executeScript(TINY_MCE_INNERHTML);
 		String actualInnerHtml = obj.toString();
-		for(String s: expected)
+		for (String s : expected)
 		{
 			boolean result = actualInnerHtml.contains(s);
 			if (!result)
 			{
 				Assert.fail("actual innerHtml does not contain expected string: " + s);
-			}	
+			}
 		}
-		
+
 	}
 
 	/**
@@ -422,33 +776,35 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 
 	}
+
 	public void verifyChangeColorText()
 	{
-		String text =  "test text";
+		String text = "test text";
 		editorArea.sendKeys(text);
 		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-		List<WebElement> elems  = findElements(By.xpath("//a[@title='Select Text Color' and descendant::span[@class='mceIconOnly']]"));
+		List<WebElement> elems = findElements(By.xpath("//a[@title='Select Text Color' and descendant::span[@class='mceIconOnly']]"));
 		elems.get(0).click();
 		TestUtils.getInstance().waitAndFind(By.xpath("//a[@title='Red']"), getDriver());
-		 elems = findElements(By.xpath("//a[@title='Red']"));
-		 elems.get(0).click();
+		elems = findElements(By.xpath("//a[@title='Red']"));
+		elems.get(0).click();
 		String expectedText = "color: rgb(255, 0, 0);";
 		verifyTextInEditor(expectedText);
-		
+
 	}
+
 	public void verifyChangeBackgroundColorText()
 	{
-		String text =  "test text";
+		String text = "test text";
 		editorArea.sendKeys(text);
 		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
-		List<WebElement> elems  = findElements(By.xpath("//a[@title='Select Background Color' and descendant::span[@class='mceIconOnly']]"));
+		List<WebElement> elems = findElements(By.xpath("//a[@title='Select Background Color' and descendant::span[@class='mceIconOnly']]"));
 		elems.get(0).click();
 		TestUtils.getInstance().waitAndFind(By.xpath("//a[@title='Red']"), getDriver());
-		 elems = findElements(By.xpath("//a[@title='Red']"));
-		 elems.get(0).click();
+		elems = findElements(By.xpath("//a[@title='Red']"));
+		elems.get(0).click();
 		String expectedText = "background-color: rgb(255, 0, 0);";
 		verifyTextInEditor(expectedText);
-		
+
 	}
 
 	/**
@@ -510,7 +866,8 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	}
 
 	/**
-	 * Click by 'Bold', 'Italic' and 'Remove Formatting' buttons and verify innerHtml
+	 * Click by 'Bold', 'Italic' and 'Remove Formatting' buttons and verify
+	 * innerHtml
 	 */
 	public void verifyItalicBoldAndRemoveFormatting()
 	{
@@ -538,7 +895,15 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 
 	private void selectAll()
 	{
-		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.indexOf("mac") >= 0)
+		{
+			editorArea.sendKeys(Keys.chord(Keys.COMMAND, "a"));
+		} else
+		{
+			editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		}
+
 	}
 
 }

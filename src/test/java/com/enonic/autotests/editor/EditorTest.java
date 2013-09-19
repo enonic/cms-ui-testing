@@ -15,6 +15,7 @@ import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.pages.v4.adminconsole.content.AlignmentText;
+import com.enonic.autotests.pages.v4.adminconsole.content.SpecialCharacters;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
@@ -221,4 +222,62 @@ public class EditorTest extends BaseTest
 		logger.info("$$$$ FINISHED change text Background colour in Editor  ");
 
 	}
+	@Test(description = "Insert  special characters into the document.  ", dependsOnMethods = "setup")
+	public void insertSpecialCharacters()
+	{
+		logger.info("### STARTED: Insert  special characters into the document.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertSpecialCharacters(getTestSession(), category, SpecialCharacters.EURO);
+		logger.info("$$$$ FINISHED Insert special characters into the document.");
+	}
+
+	@Test(description = "Advanced styling :   Deletion ", dependsOnMethods = "setup")
+	public void insertDeletion()
+	{
+		logger.info("### STARTED: Advanced styling : Deletion.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyDeletion(getTestSession(), category);
+		logger.info("$$$$ FINISHED Advanced styling : Deletion.");
+	}
+	@Test(description = "Advanced styling :  Insertion ", dependsOnMethods = "setup")
+	public void insertInsertion()
+	{
+		logger.info("### STARTED: Advanced styling : Insertion.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertion(getTestSession(), category);
+		logger.info("$$$$ FINISHED Advanced styling : Insertion.");
+	}
+	@Test(description = "Advanced styling :  Block quote ", dependsOnMethods = "setup")
+	public void insertBlockQuote()
+	{
+		logger.info("### STARTED: Advanced styling : Block quote.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertBlockQuote(getTestSession(), category);
+		logger.info("$$$$ FINISHED Advanced styling : Block quote.");
+	}
+	@Test(description = "Advanced styling :  Abbreviation ", dependsOnMethods = "setup")
+	public void insertAbbreviation()
+	{
+		logger.info("### STARTED: Advanced styling : Abbreviation.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertAbbreviation(getTestSession(), category);
+		logger.info("$$$$ FINISHED Advanced styling : Abbreviation.");
+	}
+	@Test(description = "Advanced styling :  Acronym ", dependsOnMethods = "setup")
+	public void insertAcronym()
+	{
+		logger.info("### STARTED: Advanced styling : Acronym.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertAcronym(getTestSession(), category);
+		logger.info("$$$$ FINISHED Advanced styling : Acronym.");
+	}
+	@Test(description = "Advanced styling :  Citation ", dependsOnMethods = "setup")
+	public void insertCitation()
+	{
+		logger.info("### STARTED: Advanced styling : Citation.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertCitation(getTestSession(), category);
+		logger.info("$$$$ FINISHED Advanced styling : Citation.");
+	}
+	//   Superscript Subscript
 }

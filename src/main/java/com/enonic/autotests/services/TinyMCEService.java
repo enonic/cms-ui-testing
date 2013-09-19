@@ -10,6 +10,7 @@ import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.v4.adminconsole.content.AlignmentText;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentWithTinyMCEWizard;
+import com.enonic.autotests.pages.v4.adminconsole.content.SpecialCharacters;
 
 /**
  * Service for TinyMCE HTML WYSIWYG editor.
@@ -38,6 +39,10 @@ public class TinyMCEService
 		wizard.verifyChangeColorText();
 	}
 	
+	/**
+	 * @param testSession
+	 * @param category
+	 */
 	public void verifyChangeBackgroundColorText(TestSession testSession, ContentCategory category)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
@@ -45,7 +50,61 @@ public class TinyMCEService
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyChangeBackgroundColorText();
 	}
+	/**
+	 * @param testSession
+	 * @param category
+	 */
+	public void verifyInsertSpecialCharacters(TestSession testSession, ContentCategory category, SpecialCharacters character)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertSpecialCharacters(character);
+	}
 	
+	
+	public void verifyDeletion(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyDeletion();
+	}
+	public void verifyInsertion(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertion();
+	}
+	public void verifyInsertBlockQuote(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertBlockQuote();
+	}
+	public void verifyInsertAbbreviation(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertAbbreviation();
+	}
+	public void verifyInsertAcronym(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertAcronym();
+	}
+	public void verifyInsertCitation(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertCitation();
+	}
 
 	/**
 	 * Inserts an Image and verify: image is present in HTML code
