@@ -5,6 +5,7 @@ import java.util.List;
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
+import com.enonic.autotests.model.PageTemplate;
 import com.enonic.autotests.model.Section;
 import com.enonic.autotests.model.Site;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
@@ -12,6 +13,7 @@ import com.enonic.autotests.pages.v4.adminconsole.site.AddSectionWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteInfoPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
+import com.enonic.autotests.pages.v4.adminconsole.site.SiteTemplatesPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
 
 /**
@@ -90,6 +92,20 @@ public class SiteService
 		sectionwizard.doTypeDataAndSave(section);
 		siteMenuItems.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return siteMenuItems;
+	}
+	
+	public SiteTemplatesPage addPageTemplate(TestSession testSession,String siteName, PageTemplate templ)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
+		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
+	     // SiteMenuItemsTablePage contains all Menu Items for this site.
+		SiteTemplatesPage siteTemplPage = leftmenu.openSitePageTemplates(siteName);
+		//2. click by 'New' button and select 'Section', open add section wizard:
+		siteTemplPage.doCreatePageTemplate(templ);
+		
+		siteTemplPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return siteTemplPage;
 	}
 	
 	

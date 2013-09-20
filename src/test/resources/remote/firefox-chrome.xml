@@ -38,7 +38,7 @@
 
 		<classes>
 			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
-			<class name="com.enonic.autotests.ContentTypeTests" /> 
+			<class name="com.enonic.autotests.general.ContentTypeTests" /> 
  			<class name="com.enonic.autotests.ContentRepositoryTests" /> 
  			<class name="com.enonic.autotests.contentimport.ContentImportTest" />
  			

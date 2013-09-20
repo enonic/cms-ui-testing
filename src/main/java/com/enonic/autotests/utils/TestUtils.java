@@ -125,7 +125,13 @@ public class TestUtils
 	{
 		String os = System.getProperty("os.name").toLowerCase();
 		logger.info("clearAndType: OS System is " + os);
+		if (os.indexOf("mac") >= 0)
+		{
+			input.sendKeys(Keys.chord(Keys.COMMAND, "a"), text);
+		} else
+		{
 		input.sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
+		}
 
 	}
 

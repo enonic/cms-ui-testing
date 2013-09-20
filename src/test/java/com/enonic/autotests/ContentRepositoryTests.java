@@ -55,7 +55,7 @@ public class ContentRepositoryTests extends BaseTest
 	@Test(description="set up: create content types: Image and File")
 	public  void settingsForContentRepository()
 	{
-		logger.info("@@@@@@@@@@@@@@ TESTS STARTED:  ContentRepositoryTests");
+		logger.info("### TESTS STARTED:  ContentRepositoryTests");
 		logger.info("checks for the existance  of Content type, creates new content type if it does not exist");
 		ContentType imagesType = new ContentType();
 		imagesType.setName("Image");

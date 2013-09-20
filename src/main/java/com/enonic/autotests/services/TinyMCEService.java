@@ -105,6 +105,48 @@ public class TinyMCEService
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertCitation();
 	}
+	public void verifyInsertSuperscript(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertSuperscript();
+	}
+	public void verifyInsertSubscript(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertSubscript();
+	}
+	public void verifyInsertBulletedList(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertBulletedList();
+	}
+	public void verifyInsertNumberedList(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyInsertNumberedList();
+	}
+	public void verifyIncreaseDecreaseIndents(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyIncreaseDecreaseIndents();
+	}
+	public void verifyUndoRedo(TestSession testSession, ContentCategory category)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
+		wizard.verifyUndoRedo();
+	}
 
 	/**
 	 * Inserts an Image and verify: image is present in HTML code

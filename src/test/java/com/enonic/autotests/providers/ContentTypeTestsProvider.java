@@ -10,8 +10,8 @@ import javax.xml.bind.Unmarshaller;
 
 import org.testng.annotations.DataProvider;
 
-import com.enonic.autotests.ContentTypeTests;
 import com.enonic.autotests.exceptions.TestFrameworkException;
+import com.enonic.autotests.general.ContentTypeTests;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.testdata.contenttype.ContentTypeTestData;
 import com.enonic.autotests.testdata.contenttype.ContentTypeXml;

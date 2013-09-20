@@ -1,4 +1,4 @@
-package com.enonic.autotests;
+package com.enonic.autotests.general;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import java.util.Random;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.enonic.autotests.BaseTest;
 import com.enonic.autotests.exceptions.SaveOrUpdateException;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
@@ -52,7 +53,7 @@ public class ContentTypeTests extends BaseTest
 		ContentType ctype = ContentConvertor.convertXmlDataToContentType(ctypeXML);
 		ctype.setName(name);
 		contentTypeService.createContentType(getTestSession(), ctype);
-
+		
 	}
 	
 	@Test(dependsOnMethods = "testCreateContentTypePositive")

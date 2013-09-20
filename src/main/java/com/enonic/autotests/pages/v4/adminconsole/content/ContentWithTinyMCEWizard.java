@@ -49,6 +49,17 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	private final String INSERT_ABBREVIATION_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_abbr')]";
 	private final String INSERT_ACRONYM_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_acronym')]";
 	private final String INSERT_CITATION_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,' mce_cite')]";
+	private final String INSERT_SUPERSCRIPT_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_sup')]";
+	private final String INSERT_SUBSCRIPT_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_sub')]";
+	private final String INSERT_BULLIST_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_bullist')]";
+	private final String INSERT_NUMLIST_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_numlist')]";
+	private final String INCREASE_INDENT_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_indent')]";
+	private final String DECREASE_INDENT_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_outdent')]";
+	private final String UNDO_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_undo')]";
+	private final String REDO_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_redo')]";
+	
+	
+	
 
 	private final String IFRAME = "//td[contains(@class,'mceIframeContainer')]//iframe";
 	private final String SELECT_CONTENT_POPUP_WINDOW_TITLE = "Enonic CMS - Content repository";
@@ -129,6 +140,30 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	@FindBy(xpath = INSERT_CITATION_BUTTON_XPATH)
 	private WebElement insertCitationButton;
 
+	@FindBy(xpath = INSERT_SUPERSCRIPT_BUTTON_XPATH)
+	private WebElement insertSuperscriptButton;
+	
+	@FindBy(xpath = INSERT_SUBSCRIPT_BUTTON_XPATH)
+	private WebElement insertSubscriptButton;
+	
+	@FindBy(xpath = INSERT_BULLIST_BUTTON_XPATH)
+	private WebElement insertBulListButton;
+	
+	@FindBy(xpath = INSERT_NUMLIST_BUTTON_XPATH)
+	private WebElement insertNumListButton;
+	
+	@FindBy(xpath = INCREASE_INDENT_BUTTON_XPATH)
+	private WebElement increaseIndentButton;
+	
+	@FindBy(xpath = DECREASE_INDENT_BUTTON_XPATH)
+	private WebElement decreaseIndentButton;
+	
+	@FindBy(xpath = REDO_BUTTON_XPATH)
+	private WebElement redoButton;
+	
+	@FindBy(xpath = UNDO_BUTTON_XPATH)
+	private WebElement undoButton;
+
 	/**
 	 * The constructor.
 	 * 
@@ -140,6 +175,141 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 
 	}
 
+	public void verifyUndoRedo()
+	{
+		String string1 = "string1";
+		editorArea.sendKeys(string1);
+		editorArea.sendKeys("\n");
+		String string2 = "string2";
+		editorArea.sendKeys(string2);
+		
+		String expectedText = string1+ " " +string2;
+		boolean isPresent1 = verifyTextInEditor(string1);
+		boolean isPresent2 = verifyTextInEditor(string2);
+		//1. both string should be present
+		if(!isPresent1 && !isPresent2 )
+		{
+			Assert.fail("actual innerHtml does not contain expected string: " + expectedText);
+		}
+		
+		undoButton.click();
+		isPresent1 = verifyTextInEditor(string1);
+		isPresent2 = verifyTextInEditor(string2);
+		if(!isPresent1 && isPresent2 )
+		{
+			Assert.fail("Undo action failed, only string1 should be present in the editor  " + expectedText);
+		}
+		redoButton.click();
+		isPresent1 = verifyTextInEditor(string1);
+		isPresent2 = verifyTextInEditor(string2);
+		if(!isPresent1 && !isPresent2 )
+		{
+			Assert.fail("Redo action failed, both strings should be present in editor " + expectedText);
+		}
+	
+		
+	}
+	/**
+	 * Types a string, clicks by 'Increase Indent' button , verify style: padding-left: 30px; click by 'Decrease Indent' after that.
+	 */
+	public void verifyIncreaseDecreaseIndents()
+	{
+		
+		String text = "test text";
+		editorArea.sendKeys(text);
+		increaseIndentButton.click();
+		String expectedText = "<p style=\"padding-left: 30px;\">"+text;
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string: " + expectedText);
+		}
+		
+		decreaseIndentButton.click();
+		expectedText = "padding-left: 30px;";
+		isPresent = verifyTextInEditor(expectedText);
+		if(isPresent)
+		{
+			Assert.fail("actual innerHtml contains string: " + expectedText+ "but this text should be present!");
+		}
+	}
+	
+	/**
+	 * Clicks by 'Bulleted List' button and types two strings.
+	 */
+	public void verifyInsertBulletedList()
+	{
+		insertBulListButton.click();
+		String text1 = "test1";
+		String text2 = "test2";
+		editorArea.sendKeys(text1);
+		editorArea.sendKeys("\n");
+		editorArea.sendKeys(text2);
+				
+		String[] expectedText = { "<ul><li>"+ text1+"</li>", text2 + "</li></ul>" };
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings: ");
+		}
+	}
+
+	
+
+	/**
+	 * Clicks by 'Numbered List' button and types two strings.
+	 */
+	public void verifyInsertNumberedList()
+	{
+		insertNumListButton.click();
+		String text1 = "test1";
+		String text2 = "test2";
+		editorArea.sendKeys(text1);
+		editorArea.sendKeys("\n");
+		editorArea.sendKeys(text2);
+				
+		String[] expectedText = { "<ol><li>"+ text1+"</li>", text2 + "</li></ol>" };
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings: ");
+		}
+	}
+
+	/**
+	 * Types text, select all and clicks by 'Superscript' button
+	 */
+	public void verifyInsertSuperscript()
+	{
+		String text = "superscript test";
+		editorArea.sendKeys(text);
+		selectAll(); 
+		insertSuperscriptButton.click();
+		String expectedText =  "<sup>"+ text ;
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string: " + expectedText);
+		}
+	}
+
+	/**
+	 * Types text, select all and clicks by 'Subscript' button
+	 */
+	public void verifyInsertSubscript()
+	{
+		String text = "subscript test";
+		editorArea.sendKeys(text);
+		
+		selectAll();
+		insertSubscriptButton.click();
+		String expectedText =  "<sub>"+ text+"</sub>" ;
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings: "+expectedText);
+		}
+	}
 	/**
 	 * Clicks by 'Insert Special Characters' button, and verify: character is
 	 * present.
@@ -151,7 +321,12 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 
 		char[] chars = Character.toChars(Integer.valueOf(character.getValue()));
 		String expectedText = new String(chars);
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings: "+ expectedText);
+		}
+		
 
 	}
 
@@ -167,7 +342,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		doAddCitation();
 		String[] expectedText = { "<cite ", text + "</cite>" };
 
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings ");
+		}
 	}
 
 	public void doAddCitation()
@@ -214,7 +393,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		doAddDeletion();
 		String[] expectedText = { "<del style", text + "</del>" };
 
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string: ");
+		}
 	}
 
 	/**
@@ -228,7 +411,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		insertInsertionButton.click();
 		doAddInsertion();
 		String[] expectedText = { "<p><ins", text + "</ins>" };
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings ");
+		}
 	}
 
 	/**
@@ -241,7 +428,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		selectAll();
 		insertBlockQouteButton.click();
 		String expectedText = "<blockquote><p>" + text;
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string: "+ expectedText);
+		}
 	}
 
 	/**
@@ -255,7 +446,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		insertAbbreviationButton.click();
 		doInsertAbbreviation();
 		String[] expectedText = { "<abbr", text + "</abbr>" };
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings ");
+		}
 	}
 
 	/**
@@ -269,7 +464,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		insertAcronymButton.click();
 		doInsertAcronum();
 		String[] expectedText = { "<acronym", text + "</acronym>" };
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings ");
+		}
 	}
 
 	private void doInsertAcronum()
@@ -462,8 +661,12 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		// 2. select an image:
 		doInsertImage(contentToInsert);
 		// verify: image is present in Editor HTML code:
-		String[] expected = { String.format("<img title=\"%s\"", contentToInsert.getDisplayName()) };
-		verifyTextInEditor(expected);
+		String[] expectedText = { String.format("<img title=\"%s\"", contentToInsert.getDisplayName()) };
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings ");
+		}
 	}
 
 	/**
@@ -549,8 +752,12 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		tableToInsert.setWidth(width);
 		doInsertTable(tableToInsert);
 		// verify:
-		String[] expected = { "<table", String.format("height: %dpx;", 70), String.format("width: %dpx", width) };
-		verifyTextInEditor(expected);
+		String[] expectedText = { "<table", String.format("height: %dpx;", 70), String.format("width: %dpx", width) };
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string: ");
+		}
 	}
 
 	/**
@@ -639,15 +846,23 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		// 1. click by Link button and create new link:
 		doAddLink(linkText);
 		// verify:
-		String expected = String.format("<a href=\"http://%s\"", linkText);
-		verifyTextInEditor(expected);
+		String expectedText = String.format("<a href=\"http://%s\"", linkText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings "+ expectedText);
+		}
 		// 2. select all
 		selectAll();
 		// 3. click by unlink button
 		unlinkButton.click();
 		// 4. verify
-		expected = String.format("<p>google.com", linkText);
-		verifyTextInEditor(expected);
+		expectedText = String.format("<p>google.com", linkText);
+		isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string "+ expectedText);
+		}
 	}
 
 	/**
@@ -705,18 +920,20 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	 * 
 	 * @param expected
 	 */
-	private void verifyTextInEditor(String... expected)
+	private boolean verifyTextInEditor(String... expected)
 	{
+		boolean result = true;
 		Object obj = ((JavascriptExecutor) getSession().getDriver()).executeScript(TINY_MCE_INNERHTML);
 		String actualInnerHtml = obj.toString();
 		for (String s : expected)
 		{
-			boolean result = actualInnerHtml.contains(s);
-			if (!result)
-			{
-				Assert.fail("actual innerHtml does not contain expected string: " + s);
-			}
+			result &= actualInnerHtml.contains(s);
+//			if (!result)
+//			{
+//				Assert.fail("actual innerHtml does not contain expected string: " + s);
+//			}
 		}
+		return result;
 
 	}
 
@@ -726,8 +943,12 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	public void verifyHorizontalLine()
 	{
 		insertLineButton.click();
-		String expected = "<hr>";
-		verifyTextInEditor(expected);
+		String expectedText = "<hr>";
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings ");
+		}
 	}
 
 	/**
@@ -771,9 +992,13 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 			}
 		}
 
-		String expected = String.format("<p><a class=\"mceItemAnchor\" name=\"%s\"></a></p>", anchorText);
-		verifyTextInEditor(expected);
-		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		String expectedText = String.format("<p><a class=\"mceItemAnchor\" name=\"%s\"></a></p>", anchorText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings: ");
+		}
+		//editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 
 	}
 
@@ -788,7 +1013,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		elems = findElements(By.xpath("//a[@title='Red']"));
 		elems.get(0).click();
 		String expectedText = "color: rgb(255, 0, 0);";
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected strings ");
+		}
 
 	}
 
@@ -803,7 +1032,11 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		elems = findElements(By.xpath("//a[@title='Red']"));
 		elems.get(0).click();
 		String expectedText = "background-color: rgb(255, 0, 0);";
-		verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string: ");
+		}
 
 	}
 
@@ -876,13 +1109,21 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 
 		boldButton.click();
-		String expected = "<strong>" + text + "</strong>";
-		verifyTextInEditor(expected);
+		String expectedText = "<strong>" + text + "</strong>";
+		boolean isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string: ");
+		}
 		removeFormatButton.click();
 
 		italicButton.click();
-		expected = "<em>" + text + "</em>";
-		verifyTextInEditor(expected);
+		expectedText = "<em>" + text + "</em>";
+		isPresent = verifyTextInEditor(expectedText);
+		if(!isPresent)
+		{
+			Assert.fail("actual innerHtml does not contain expected string ");
+		}
 	}
 
 	@Override

@@ -223,7 +223,7 @@ public class EditorTest extends BaseTest
 
 	}
 	@Test(description = "Insert  special characters into the document.  ", dependsOnMethods = "setup")
-	public void insertSpecialCharacters()
+	public void insertSpecialCharactersTest()
 	{
 		logger.info("### STARTED: Insert  special characters into the document.");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
@@ -232,7 +232,7 @@ public class EditorTest extends BaseTest
 	}
 
 	@Test(description = "Advanced styling :   Deletion ", dependsOnMethods = "setup")
-	public void insertDeletion()
+	public void insertDeletionTest()
 	{
 		logger.info("### STARTED: Advanced styling : Deletion.");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
@@ -240,7 +240,7 @@ public class EditorTest extends BaseTest
 		logger.info("$$$$ FINISHED Advanced styling : Deletion.");
 	}
 	@Test(description = "Advanced styling :  Insertion ", dependsOnMethods = "setup")
-	public void insertInsertion()
+	public void insertInsertionTest()
 	{
 		logger.info("### STARTED: Advanced styling : Insertion.");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
@@ -248,7 +248,7 @@ public class EditorTest extends BaseTest
 		logger.info("$$$$ FINISHED Advanced styling : Insertion.");
 	}
 	@Test(description = "Advanced styling :  Block quote ", dependsOnMethods = "setup")
-	public void insertBlockQuote()
+	public void insertBlockQuoteTest()
 	{
 		logger.info("### STARTED: Advanced styling : Block quote.");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
@@ -256,7 +256,7 @@ public class EditorTest extends BaseTest
 		logger.info("$$$$ FINISHED Advanced styling : Block quote.");
 	}
 	@Test(description = "Advanced styling :  Abbreviation ", dependsOnMethods = "setup")
-	public void insertAbbreviation()
+	public void insertAbbreviationTest()
 	{
 		logger.info("### STARTED: Advanced styling : Abbreviation.");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
@@ -264,7 +264,7 @@ public class EditorTest extends BaseTest
 		logger.info("$$$$ FINISHED Advanced styling : Abbreviation.");
 	}
 	@Test(description = "Advanced styling :  Acronym ", dependsOnMethods = "setup")
-	public void insertAcronym()
+	public void insertAcronymTest()
 	{
 		logger.info("### STARTED: Advanced styling : Acronym.");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
@@ -272,12 +272,61 @@ public class EditorTest extends BaseTest
 		logger.info("$$$$ FINISHED Advanced styling : Acronym.");
 	}
 	@Test(description = "Advanced styling :  Citation ", dependsOnMethods = "setup")
-	public void insertCitation()
+	public void insertCitationTest()
 	{
 		logger.info("### STARTED: Advanced styling : Citation.");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
 		tinyMCEService.verifyInsertCitation(getTestSession(), category);
 		logger.info("$$$$ FINISHED Advanced styling : Citation.");
 	}
-	//   Superscript Subscript
+	@Test(description = "Advanced styling :  Superscript ", dependsOnMethods = "setup")
+	public void insertSuperscriptTest()
+	{
+		logger.info("### STARTED: insert Superscript.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertSuperscript(getTestSession(), category);
+		logger.info("$$$$ FINISHED insert  Superscript.");
+	}
+	@Test(description = "Advanced styling :  Subscript ", dependsOnMethods = "setup")
+	public void insertSubscriptTest()
+	{
+		logger.info("### STARTED: insert Subscript.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertSubscript(getTestSession(), category);
+		logger.info("$$$$ FINISHED insert : Subscript.");
+	}
+	@Test(description = "Insert bulleted list .", dependsOnMethods = "setup")
+	public void insertBulletedListTest()
+	{
+		logger.info("### STARTED: Insert bulleted list .");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertBulletedList(getTestSession(), category);
+		logger.info("$$$$ FINISHED  Insert bulleted list .");
+	}
+	@Test(description = "Insert numbered list .", dependsOnMethods = "setup")
+	public void insertNumberedListTest()
+	{
+		logger.info("### STARTED: Insert numbered list .");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyInsertNumberedList(getTestSession(), category);
+		logger.info("$$$$ FINISHED  Insert numbered list .");
+	}
+	@Test(description = "Increase and decrease Indents . Verify: text moved right, then left. ", dependsOnMethods = "setup")
+	public void increaseDecreaseIndentTets()
+	{
+		logger.info("### STARTED: Increase and decrease Indents . Verify: text moved right, then left.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyIncreaseDecreaseIndents(getTestSession(), category);
+		logger.info("$$$$ FINISHED  Increase and decrease Indents . Verify: text moved right, then left.");
+	}
+	@Test(description = "Undo / Redo . Test the undo button for  different steps", dependsOnMethods = "setup")
+	public void undoRedoTets()
+	{
+		logger.info("### STARTED: Undo / Redo . Test the undo button for  different steps.");
+		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
+		tinyMCEService.verifyUndoRedo(getTestSession(), category);
+		logger.info("$$$$ FINISHED  Undo / Redo . Test the undo button for  different steps.");
+	}
+	
+	
 }

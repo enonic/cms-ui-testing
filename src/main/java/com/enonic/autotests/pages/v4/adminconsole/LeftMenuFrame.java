@@ -21,6 +21,7 @@ import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteInfoPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
+import com.enonic.autotests.pages.v4.adminconsole.site.SiteTemplatesPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.system.SystemFrame;
 import com.enonic.autotests.services.PageNavigatorV4;
@@ -46,6 +47,7 @@ public class LeftMenuFrame extends Page
 	private String SITE_EXPANDER_IMG_XPATH =  SITENAME_LINK_XPATH + "/../../td/a/img";
 		
 	private String SITE_MENU_LINK_XPATH = SITENAME_LINK_XPATH + "/../../following-sibling::tr//span[@id='menuitemText' and contains(.,'Menu')]";
+	private String SITE_PAGE_TEMPLATES_LINK_XPATH = SITENAME_LINK_XPATH + "/../../following-sibling::tr//span[@id='menuitemText' and contains(.,'Page templates')]";
 	private String SITE_MENU_EXPANDER_IMG_XPATH =  SITE_MENU_LINK_XPATH + "/../../../td/a/img";
 	
 	/** locator for section menu item */
@@ -303,6 +305,28 @@ public class LeftMenuFrame extends Page
 		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
 		SiteMenuItemsTablePage siteMenuItems = new SiteMenuItemsTablePage(getSession());
 		return siteMenuItems;
+	}
+	
+	public SiteTemplatesPage openSitePageTemplates(String siteName)
+	{
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		//1. expand 'Sites' folder
+		expandSitesFolder();
+		//2. expand site folder
+		String siteExpanderXpath = String.format(SITE_EXPANDER_IMG_XPATH, siteName);
+		TestUtils.getInstance().expandFolder(getSession(), siteExpanderXpath);
+		//3. click by 'Page templates' link, located under the Site.
+		String menuXpath = String.format(SITE_PAGE_TEMPLATES_LINK_XPATH, siteName);
+		boolean isPresentMenuLink = TestUtils.getInstance().waitAndFind(By.xpath(menuXpath), getDriver());
+		if(!isPresentMenuLink)
+		{
+			throw new TestFrameworkException("'Page templates' link for Site "+siteName +" was not found!, probably wrong xpath! ");
+		}
+		//4.click by Menu:
+		findElement(By.xpath(menuXpath)).click();
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
+		SiteTemplatesPage siteTemplates = new SiteTemplatesPage(getSession());
+		return siteTemplates;
 	}
 	
 	/**
