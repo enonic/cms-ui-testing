@@ -10,7 +10,7 @@ import org.testng.Assert;
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.SaveOrUpdateException;
-import com.enonic.autotests.model.Site;
+import com.enonic.autotests.model.site.Site;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.utils.TestUtils;
 

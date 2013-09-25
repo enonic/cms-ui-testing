@@ -1,4 +1,4 @@
-package com.enonic.autotests.model;
+package com.enonic.autotests.model.site;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,16 +35,20 @@ public class Site
 		
 		
 	}
+	private String pathToPublicResources;
+	
+	private String pathToInternalResources;
+	
+
 	private String dispalyName;
 	
 	private String language;
 	
 	private String statisticsUrl;
 	
-	//Allowed page types
-	AllowedPageTypes [] allowedPageTypes;
+	//Allowed page types: 1)label 	2)URL  3) section 	
+	private AllowedPageTypes [] allowedPageTypes;
 	
-	// Getters and Setters:
 
 	public AllowedPageTypes[] getAllowedPageTypes()
 	{
@@ -84,5 +88,24 @@ public class Site
 	public void setStatisticsUrl(String statisticsUrl)
 	{
 		this.statisticsUrl = statisticsUrl;
+	}
+	public String getPathToPublicResources()
+	{
+		return pathToPublicResources;
+	}
+
+	public void setPathToPublicResources(String pathToPublicResources)
+	{
+		this.pathToPublicResources = pathToPublicResources;
+	}
+
+	public String getPathToInternalResources()
+	{
+		return pathToInternalResources;
+	}
+
+	public void setPathToInternalResources(String pathToInternalResources)
+	{
+		this.pathToInternalResources = pathToInternalResources;
 	}
 }

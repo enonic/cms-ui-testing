@@ -12,7 +12,7 @@ import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.FileContentInfo;
 import com.enonic.autotests.model.ImageContentInfo;
-import com.enonic.autotests.model.Section;
+import com.enonic.autotests.model.site.SectionMenuItem;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.v4.adminconsole.content.AddFileContentWizard;
@@ -114,14 +114,14 @@ public class ContentService
 	 * @param content
 	 * @param section
 	 */
-	public void doPublishContentToSection(TestSession testSession,Content<?> content,Section section)
+	public void doPublishContentToSection(TestSession testSession,Content<?> content,SectionMenuItem section)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);		
 		ContentsTableFrame contentTableFrame = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
 		contentTableFrame.doPublishToSection(content.getDisplayName(), section);
 		contentTableFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 	}
-	public void doPublishContentToSectionAnMoveToEnd(TestSession testSession,Content<?> content,Section section)
+	public void doPublishContentToSectionAnMoveToEnd(TestSession testSession,Content<?> content,SectionMenuItem section)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);		
 		ContentsTableFrame contentTableFrame = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());

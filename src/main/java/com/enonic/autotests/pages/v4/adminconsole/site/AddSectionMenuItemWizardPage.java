@@ -5,38 +5,21 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.model.Section;
-import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
+import com.enonic.autotests.model.site.MenuItem;
+import com.enonic.autotests.model.site.SectionMenuItem;
 
 /**
  * Page object for "Add new section" Menu Item wizard.
  *
  */
-public class AddSectionWizardPage extends AbstractAdminConsolePage
+public class AddSectionMenuItemWizardPage extends AbstractMenuItemWizardPage<SectionMenuItem>
 {
-
-	private final String GENERAL_TAB_NAME_XPATH = "//a[text()='General']";
-	
-	@FindBy(name = "displayname")
-	private WebElement displaynameInput;
-	
-	@FindBy(name = "menu-name")
-	private WebElement menunameInput;
-	
-	@FindBy(name = "visibility")
-	private WebElement showInMenuCheckBox;
-	
 	
 	@FindBy(name = "availablect")
 	private WebElement avaiableContentTypeNames;
-	
-	@FindBy(name = "save")
-	private WebElement saveButton;
 	
 	@FindBy(name = "section_ordered")
 	private WebElement orderedRadio;
@@ -44,7 +27,7 @@ public class AddSectionWizardPage extends AbstractAdminConsolePage
 	/**
 	 *The Constructor
 	 */
-	public AddSectionWizardPage( TestSession session )
+	public AddSectionMenuItemWizardPage( TestSession session )
 	{
 		super(session);
 		
@@ -57,7 +40,8 @@ public class AddSectionWizardPage extends AbstractAdminConsolePage
 	 * @param ctype
 	 *            {@link ContentType} instance.
 	 */
-	public void doTypeDataAndSave(Section section)
+	@Override
+	public void doTypeDataAndSave(SectionMenuItem section)
 	{
 		String dispalayName = section.getDisplayName();
 		if(dispalayName == null )
@@ -94,16 +78,11 @@ public class AddSectionWizardPage extends AbstractAdminConsolePage
 //		{
 //			TestUtils.getInstance().doubleClickActionByOption(getSession(), allOptions, name);
 //		}
-		saveButton.click();
-		
-		
+		saveButton.click();	
 	}
 
-	@Override
-	public void waituntilPageLoaded(long timeout)
-	{
-		new WebDriverWait(getSession().getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(GENERAL_TAB_NAME_XPATH)));
-		
-	}
+
+	
+
 
 }

@@ -56,7 +56,7 @@ public abstract class AbstractAdminConsoleWizardPage extends AbstractAdminConsol
 	/**
 	 * @param session
 	 */
-	public void checkAlerts(TestSession session)
+	public void checkAlerts()
 	{
 		if (!TestUtils.getInstance().alertIsPresent(getSession(), 1l))
 		{

@@ -90,8 +90,8 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 			}
 		}
 		saveButton.click();
-		checkAlerts(getSession());
-		checkErrorMessages(getSession());
+		checkAlerts();
+		checkErrorMessages();
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 			getLogger().warning("wrong configuration");
 		}
 		saveButton.click();
-		checkAlerts(getSession());
+		checkAlerts();
 
 	}
 
@@ -126,13 +126,12 @@ public class ContentTypeWizardPage extends AbstractAdminConsoleWizardPage
 	/**
 	 * Check error message above the name field.
 	 * 
-	 * @param session
 	 */
-	private void checkErrorMessages(TestSession session)
+	private void checkErrorMessages()
 	{
 		if (TestUtils.getInstance().waitAndFind(By.xpath(ERROR_IMAGE_XPATH), getSession().getDriver()))
 		{
-			getLogger().error("Error image and Error message appears during creation the content type:", session);
+			getLogger().error("Error image and Error message appears during creation the content type:", getSession());
 			TestUtils.getInstance().saveScreenshot(getSession());
 			String message = null;
 			List<WebElement> elems = getSession().getDriver().findElements(By.xpath(ERROR_MESSAGE_XPATH));

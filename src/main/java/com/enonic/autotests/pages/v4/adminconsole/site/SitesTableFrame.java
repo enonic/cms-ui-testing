@@ -14,7 +14,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
-import com.enonic.autotests.model.Site;
+import com.enonic.autotests.model.site.Site;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.utils.TestUtils;
 
@@ -144,7 +144,7 @@ public class SitesTableFrame extends AbstractAdminConsolePage
 	{
 		buttonNew.click();
 		AddSiteWizardPage wizard = new AddSiteWizardPage(getSession());
-		wizard.waituntilPageLoaded(1l);
+		wizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		wizard.doTypeDataAndSave(site);
 	}
 

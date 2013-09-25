@@ -17,7 +17,7 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.AddContentException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
-import com.enonic.autotests.model.Section;
+import com.enonic.autotests.model.site.SectionMenuItem;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.services.PageNavigatorV4;
 import com.enonic.autotests.utils.TestUtils;
@@ -139,7 +139,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 	 * 
 	 * @param contentDisplayName
 	 */
-	public void doPublishToSection(String contentDisplayName, Section section)
+	public void doPublishToSection(String contentDisplayName, SectionMenuItem section)
 	{
 		String publishIcon = String.format(PUBLISH_CONTENT_LINK, contentDisplayName);
 		// 1. verify 'approve and publish'-icon is present.
@@ -172,7 +172,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 	 * @param contentDisplayName
 	 * @param section
 	 */
-	public void doPublishToSectionAndMoveToEnd(String contentDisplayName, Section section)
+	public void doPublishToSectionAndMoveToEnd(String contentDisplayName, SectionMenuItem section)
 	{
 		if(!section.isOrdered())
 		{

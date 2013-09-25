@@ -11,9 +11,9 @@ import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.FileContentInfo;
-import com.enonic.autotests.model.Section;
-import com.enonic.autotests.model.Site;
-import com.enonic.autotests.model.Site.AllowedPageTypes;
+import com.enonic.autotests.model.site.SectionMenuItem;
+import com.enonic.autotests.model.site.Site;
+import com.enonic.autotests.model.site.Site.AllowedPageTypes;
 import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
@@ -342,7 +342,7 @@ public class ContentRepositoryTests extends BaseTest
 	{
 		logger.info("##### STARTED : add to Site new section menu item ");
 		Site site = (Site)getTestSession().get(TEST_SITE);			
-		Section section = new Section();
+		SectionMenuItem section = new SectionMenuItem();
 		section.setDisplayName("section1");
 		section.setShowInMenu(true);
 		section.setMenuName("section1");
@@ -369,7 +369,7 @@ public class ContentRepositoryTests extends BaseTest
 	{
 		logger.info("#### STARTED: add new ordered section menu item to the  Site ");
 		Site site = (Site)getTestSession().get(TEST_SITE);			
-		Section section = new Section();
+		SectionMenuItem section = new SectionMenuItem();
 		section.setDisplayName("ordered");
 		section.setShowInMenu(true);
 		section.setMenuName("ordered");
@@ -413,7 +413,7 @@ public class ContentRepositoryTests extends BaseTest
 		contents.add(sectionContent2);
 		addCategoryAndContent(contents, repository,TEST_PUBLISH_FILE_CATEGORY_NAME);
 		//2. get section from, that was created in previous tests: 'addSectionTest'
-		Section section = (Section)getTestSession().get(TEST_ORDEREDSECTION_FILE_CTYPE);	
+		SectionMenuItem section = (SectionMenuItem)getTestSession().get(TEST_ORDEREDSECTION_FILE_CTYPE);	
 		
 		//3. open category and press 'approve and publish'-button, (publish content to the section)
 		contentService.doPublishContentToSection(getTestSession(), sectionContent, section);
@@ -456,7 +456,7 @@ public class ContentRepositoryTests extends BaseTest
 		//1. preparation: create new category and add content to the category
 		addCategoryAndContent(contents, repository,TEST_PUBLISH_FILE_CATEGORY_NAME);
 		//2. get section from, that was created in previous tests: 'addSectionTest'
-		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);	
+		SectionMenuItem section = (SectionMenuItem)getTestSession().get(TEST_SECTION_FILE_CTYPE);	
 		
 		//3. open category and press 'approve and publish'-button, (publish content to the section)
 		contentService.doPublishContentToSection(getTestSession(), sectionContent, section);
@@ -474,7 +474,7 @@ public class ContentRepositoryTests extends BaseTest
 	public void addContentToSectionTest()
 	{
 		logger.info("#### STARTED :add content to section, verify: content visible in section view");
-		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);
+		SectionMenuItem section = (SectionMenuItem)getTestSession().get(TEST_SECTION_FILE_CTYPE);
 		
 		Content<FileContentInfo> content = (Content<FileContentInfo>)getTestSession().get(FILE_CONTENT);
 		ContentRepository repository = findRepositoryByHandler( content.getContentHandler().toString());
@@ -528,7 +528,7 @@ public class ContentRepositoryTests extends BaseTest
 	public void removeFromSectionTest()
 	{
 		logger.info("##### STARTED :add content to section, verify: content visible in section view");
-		Section section = (Section)getTestSession().get(TEST_SECTION_FILE_CTYPE);
+		SectionMenuItem section = (SectionMenuItem)getTestSession().get(TEST_SECTION_FILE_CTYPE);
 		Site site = (Site)getTestSession().get(TEST_SITE);
 		SectionContentsTablePage table = siteService.removeContentFromSection(getTestSession(), site.getDispalyName(), section.getDisplayName(), SECTION_CONTENT_ADD_NAME);
 		boolean result = table.verifyIsPresent(SECTION_CONTENT_ADD_NAME);

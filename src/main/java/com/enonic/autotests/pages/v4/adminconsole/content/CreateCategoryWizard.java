@@ -46,6 +46,6 @@ public class CreateCategoryWizard extends AbstractAdminConsoleWizardPage
 			TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_XPATH), contentTypeName);
 		}
 		buttonSave.click();
-		checkAlerts(getSession());		
+		checkAlerts();		
 	}	
 }

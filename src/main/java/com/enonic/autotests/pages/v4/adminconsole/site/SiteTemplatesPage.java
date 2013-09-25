@@ -6,8 +6,9 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
-import com.enonic.autotests.model.PageTemplate;
+import com.enonic.autotests.model.site.PageTemplate;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 
 public class SiteTemplatesPage extends  AbstractAdminConsolePage
@@ -33,6 +34,7 @@ public class SiteTemplatesPage extends  AbstractAdminConsolePage
 	{
 		newButton.click();
 		AddPageTemplateWizard templatewizard = new AddPageTemplateWizard(getSession());
+		templatewizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		templatewizard.doTypeDataAndSave(templ);
 	}
 

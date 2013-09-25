@@ -5,11 +5,15 @@ import java.util.List;
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
-import com.enonic.autotests.model.PageTemplate;
-import com.enonic.autotests.model.Section;
-import com.enonic.autotests.model.Site;
+import com.enonic.autotests.model.site.MenuItem;
+import com.enonic.autotests.model.site.PageMenuItem;
+import com.enonic.autotests.model.site.PageTemplate;
+import com.enonic.autotests.model.site.SectionMenuItem;
+import com.enonic.autotests.model.site.Site;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
-import com.enonic.autotests.pages.v4.adminconsole.site.AddSectionWizardPage;
+import com.enonic.autotests.pages.v4.adminconsole.site.AbstractMenuItemWizardPage;
+import com.enonic.autotests.pages.v4.adminconsole.site.AddPageMenuItemWizardPage;
+import com.enonic.autotests.pages.v4.adminconsole.site.AddSectionMenuItemWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteInfoPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
@@ -77,21 +81,32 @@ public class SiteService
 	 * @param section
 	 * @return
 	 */
-	public SiteMenuItemsTablePage addSection(TestSession testSession,String siteName,Section section)
+	public SiteMenuItemsTablePage addSection(TestSession testSession,String siteName,SectionMenuItem section)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
-		SiteMenuItemsTablePage siteMenuItems = leftmenu.openSiteMenuItems(siteName);
+		SiteMenuItemsTablePage menuItemsPage = leftmenu.openSiteMenuItems(siteName);
 		
 		
 		//2. click by 'New' button and select 'Section', open add section wizard:
-		AddSectionWizardPage sectionwizard = siteMenuItems.startAddNewSection();
+		AddSectionMenuItemWizardPage sectionwizard = menuItemsPage.startAddNewSection();
 		//3. populate data and save.
 		sectionwizard.doTypeDataAndSave(section);
-		siteMenuItems.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
-		return siteMenuItems;
+		menuItemsPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return menuItemsPage;
+	}
+	public SiteMenuItemsTablePage addPageMenuItem(TestSession testSession,String siteName, PageMenuItem menuItem)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
+		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
+	     // SiteMenuItemsTablePage contains all Menu Items for this site.
+		SiteMenuItemsTablePage menuItemsPage = leftmenu.openSiteMenuItems(siteName);
+		AddPageMenuItemWizardPage wizard = menuItemsPage.startAddNewPage(menuItem.getPageTemplateName());
+		wizard.doTypeDataAndSave(menuItem);
+		return menuItemsPage;
 	}
 	
 	public SiteTemplatesPage addPageTemplate(TestSession testSession,String siteName, PageTemplate templ)
@@ -108,6 +123,22 @@ public class SiteService
 		return siteTemplPage;
 	}
 	
+	public SiteMenuItemsTablePage addMenuItem(TestSession testSession,String siteName, MenuItem menuItem)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
+		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
+	     // SiteMenuItemsTablePage contains all Menu Items for this site.
+		SiteMenuItemsTablePage siteMenuItemsPage = leftmenu.openSiteMenuItems(siteName);
+		//2. click by 'New' button and select 'Section', open add section wizard:
+		//siteMenuItemsPage.startAddNewPage(templateName)
+		
+		siteMenuItemsPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return siteMenuItemsPage;
+	}
+	
+	
+	
 	
 	/**
 	 * Opens a section, clicks by 'Add' button and add new content to a section.
@@ -117,7 +148,7 @@ public class SiteService
 	 * @param content content to add.
 	 * @return
 	 */
-	public SectionContentsTablePage addContentToSection(TestSession testSession,Section section,Content<?> content)
+	public SectionContentsTablePage addContentToSection(TestSession testSession,SectionMenuItem section,Content<?> content)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
@@ -135,7 +166,7 @@ public class SiteService
 	 * @param contentName
 	 * @return true if content published, otherwise false.
 	 */
-	public boolean isContentFromSectionPublished(TestSession testSession, Section section,String contentName)
+	public boolean isContentFromSectionPublished(TestSession testSession, SectionMenuItem section,String contentName)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
@@ -151,7 +182,7 @@ public class SiteService
 	 * @param section
 	 * @return
 	 */
-	public List<String> getContentNamesFromSection(TestSession testSession, Section section)
+	public List<String> getContentNamesFromSection(TestSession testSession, SectionMenuItem section)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);

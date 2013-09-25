@@ -1,5 +1,6 @@
 package com.enonic.autotests.model;
 
-public class Publishing {
+public class Publishing
+{
 
 }

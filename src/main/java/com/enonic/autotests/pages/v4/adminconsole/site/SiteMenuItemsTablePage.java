@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
@@ -66,9 +67,9 @@ public class SiteMenuItemsTablePage extends  AbstractAdminConsolePage
 	}
 	/**
 	 * Click by 'new' button and opens the AddSectionWizardPage. 
-	 * @return {@link AddSectionWizardPage} instance. 
+	 * @return {@link AddSectionMenuItemWizardPage} instance. 
 	 */
-	public AddSectionWizardPage startAddNewSection()
+	public AddSectionMenuItemWizardPage startAddNewSection()
 	{
 		//1. click by 'New' button
 		newButton.click();
@@ -81,9 +82,27 @@ public class SiteMenuItemsTablePage extends  AbstractAdminConsolePage
 		//3. select 'Section' option from drop down list.
 		TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_TYPE_OF_MENU_ITEMS), "Section");
 		//4. wait until wizard opened.
-		AddSectionWizardPage sectionWizard = new AddSectionWizardPage(getSession());
-		sectionWizard.waituntilPageLoaded(1l);
+		AddSectionMenuItemWizardPage sectionWizard = new AddSectionMenuItemWizardPage(getSession());
+		sectionWizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sectionWizard;
+	}
+	public AddPageMenuItemWizardPage startAddNewPage(String templateName)
+	{
+		//1. click by 'New' button
+		newButton.click();
+		//2. verify: 'select type' drop down list appeared:
+		boolean isPresent = TestUtils.getInstance().waitUntilClickableNoException(getSession(), By.xpath(SELECT_TYPE_OF_MENU_ITEMS), 1l);
+		if(!isPresent)
+		{
+			throw new TestFrameworkException("Select with Names of content types was not found!");
+		}
+		//3. select 'Section' option from drop down list.
+		String typeText = String.format("Page (%s)",templateName);
+		TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_TYPE_OF_MENU_ITEMS), typeText);//
+		//4. wait until wizard opened.
+		AddPageMenuItemWizardPage wizard = new AddPageMenuItemWizardPage(getSession());
+		wizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return wizard;
 	}
 
 }

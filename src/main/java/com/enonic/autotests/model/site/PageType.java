@@ -1,4 +1,4 @@
-package com.enonic.autotests.model;
+package com.enonic.autotests.model.site;
 
 public enum PageType
 {
