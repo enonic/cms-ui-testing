@@ -23,10 +23,24 @@ public class SiteInfoPage extends AbstractAdminConsolePage
 	
 	@FindBy(xpath = DELTE_SITE_BUTTON_XPATH)
 	private WebElement deleteSiteButton;
+	
 	private final String CLEAR_CACHE_BUTTON_XPATH = "//input[@title = 'Clear Page Cache']"; 
+	
+	
+	@FindBy(xpath = "//button[@title='Open in In Context Editing']")
+	private WebElement openInICEButton;
+	/**
+	 * The Constructor.
+	 * 
+	 * @param session
+	 */
 	public SiteInfoPage( TestSession session )
 	{
 		super(session);
+	}
+	public void doOpenSiteInICE()
+	{
+		openInICEButton.click();
 	}
 
 	@Override

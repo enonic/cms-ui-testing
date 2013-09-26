@@ -1,6 +1,10 @@
 package com.enonic.autotests.model.site;
 
 
+/**
+ * Model for Page Template.
+ *
+ */
 public class PageTemplate
 {
 	private String name;
@@ -9,7 +13,7 @@ public class PageTemplate
 	
 	private PageType type;
 	
-	private TemplateStylesheet stylesheet;
+	private STKResource stylesheet;
 	
 	public String getName()
 	{
@@ -41,38 +45,38 @@ public class PageTemplate
 		this.type = type;
 	}
 
-	public TemplateStylesheet getStylesheet()
+	public STKResource getStylesheet()
 	{
 		return stylesheet;
 	}
 
-	public void setStylesheet(TemplateStylesheet stylesheet)
+	public void setStylesheet(STKResource stylesheet)
 	{
 		this.stylesheet = stylesheet;
 	}
 
 	
 	
-	public static class TemplateStylesheet
-	{
-		private String[] path;
-		private String name;
-		public String[] getPath()
-		{
-			return path;
-		}
-		public void setPath(String... path)
-		{
-			this.path = path;
-		}
-		public String getName()
-		{
-			return name;
-		}
-		public void setName(String name)
-		{
-			this.name = name;
-		}
-		
-	}
+//	public static class TemplateStylesheet
+//	{
+//		private String[] path;
+//		private String name;
+//		public String[] getPath()
+//		{
+//			return path;
+//		}
+//		public void setPath(String... path)
+//		{
+//			this.path = path;
+//		}
+//		public String getName()
+//		{
+//			return name;
+//		}
+//		public void setName(String name)
+//		{
+//			this.name = name;
+//		}
+//		
+//	}
 }

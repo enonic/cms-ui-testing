@@ -9,36 +9,42 @@ import java.util.Map;
  */
 public class Site
 {
-	public enum AllowedPageTypes {
+	public enum AllowedPageTypes
+	{
 
 		SECTION("section page"), URL("URL page"), LABEL("label page");
 		private String name;
 
-		public String getName() {
+		public String getName()
+		{
 			return name;
 		}
 
 		private final static Map<String, AllowedPageTypes> map = new HashMap<String, AllowedPageTypes>();
-		static {
-			for (AllowedPageTypes page : values()) {
+		static
+		{
+			for (AllowedPageTypes page : values())
+			{
 				map.put(page.name, page);
 			}
 		}
 
-		private AllowedPageTypes(String name) {
+		private AllowedPageTypes( String name )
+		{
 			this.name = name;
 		}
 
-		public static AllowedPageTypes findByValue(String value) {
+		public static AllowedPageTypes findByValue(String value)
+		{
 			return value != null ? map.get(value) : null;
 		}
 		
-		
 	}
+		
 	private String pathToPublicResources;
 	
 	private String pathToInternalResources;
-	
+	private STKResource deviceClassification;
 
 	private String dispalyName;
 	
@@ -49,7 +55,6 @@ public class Site
 	//Allowed page types: 1)label 	2)URL  3) section 	
 	private AllowedPageTypes [] allowedPageTypes;
 	
-
 	public AllowedPageTypes[] getAllowedPageTypes()
 	{
 		return allowedPageTypes;
@@ -89,6 +94,7 @@ public class Site
 	{
 		this.statisticsUrl = statisticsUrl;
 	}
+
 	public String getPathToPublicResources()
 	{
 		return pathToPublicResources;
@@ -107,5 +113,15 @@ public class Site
 	public void setPathToInternalResources(String pathToInternalResources)
 	{
 		this.pathToInternalResources = pathToInternalResources;
+	}
+
+	public STKResource getDeviceClassification()
+	{
+		return deviceClassification;
+	}
+
+	public void setDeviceClassification(STKResource deviceClassification)
+	{
+		this.deviceClassification = deviceClassification;
 	}
 }

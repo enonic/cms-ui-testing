@@ -25,10 +25,6 @@ import com.enonic.autotests.utils.TestUtils;
  */
 public class AddPageTemplateWizard extends AbstractAdminConsoleWizardPage
 {
-	private String ROOT_RESOURCE_IN_POPUP_WINDOW_XPATH = "//tr[@id='id-resources']/td/table/tbody/tr/td[2]/a/span[contains(.,'%s')]";
-	private String RESOURCE_EXPANDER = "/../../../td[1]//img[contains(@src,'plus.png')]";
-	private final String CHOOSE_STYLESHEET_POPUP_WINDOW_TITLE = "Choose resource";
-	private final String LEFT_FRAME_NAME_IN_POPUP_WINDOW = "list";
 	@FindBy(name = "name")
 	private WebElement nameInput;
 
@@ -99,58 +95,8 @@ public class AddPageTemplateWizard extends AbstractAdminConsoleWizardPage
 		{
 			throw new TestFrameworkException("Button 'Choose' stylesheet was not found on the 'Page configuration' tab!");
 		}
-		Set<String> allWindows = getSession().getDriver().getWindowHandles();
-		if (!allWindows.isEmpty())
-		{
-			String whandle = getSession().getDriver().getWindowHandle();
-			for (String windowId : allWindows)
-			{
-				try
-				{
-					//switch to POPUP-WINDOW
-					if (getDriver().switchTo().window(windowId).getTitle().contains(CHOOSE_STYLESHEET_POPUP_WINDOW_TITLE))
-					{
-						//switch to LEFT-FRAME in the POPUP-WINDOW
-						PageNavigatorV4.switchToFrame(getSession(), LEFT_FRAME_NAME_IN_POPUP_WINDOW);
-						String rootResourceSpanXpath = String.format(ROOT_RESOURCE_IN_POPUP_WINDOW_XPATH, path[0]);
-                        //finds a root-Folder with name is 'path[0]'
-						String expanderXpath = rootResourceSpanXpath + RESOURCE_EXPANDER;
-						if (findElements(By.xpath(expanderXpath)).size() > 0)
-						{
-							//expands a root-Folder with name is 'path[0]'
-							findElements(By.xpath(expanderXpath)).get(0).click();
-						}
-						//expand child folders: 
-						for (int i = 1; i < path.length; i++)
-						{
-							String childFolderNameXpath = rootResourceSpanXpath + String.format("/../../../../..//span[contains(.,'%s')]", path[i]);
-							String expander = childFolderNameXpath + RESOURCE_EXPANDER;
-							if (findElements(By.xpath(expander)).size() > 0)
-							{   //expands a folder if '+' is present near the folder
-								findElements(By.xpath(expander)).get(0).click();
-							} else
-							{
-                                // else clicks by folder and opens right Frame for  selecting a 'xsl'- page 
-								findElements(By.xpath(childFolderNameXpath)).get(0).click();
-							}
-						}
-
-						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
-						// finds resource in the table: 
-						String pageNameXpath = String.format("//td[contains(@title,'%s')]", resName);
-						List<WebElement> ee = findElements(By.xpath(pageNameXpath));
-						ee.get(0).click();
-						// POPUP WINDOW CLOSED, need to switch to the main  window
-						getSession().getDriver().switchTo().window(whandle);
-						PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
-						break;
-					}
-				} catch (NoSuchWindowException e)
-				{
-					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
-				}
-			}
-		}
+		ChooseResourcePopupWindow popup = new ChooseResourcePopupWindow(getSession());
+		popup.doChooseResource(path, resName);
 	}
 
 	@Override

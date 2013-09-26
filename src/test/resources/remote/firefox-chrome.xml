@@ -13,7 +13,7 @@
 <!-- 		<parameter name="base.url" value="http://10.0.6.79:8080/admin/" /> -->
 <!-- 		<parameter name="platform" value="windows" /> -->
 <!-- 		<parameter name="browser" value="firefox" /> -->
-<!-- 		<parameter name="browserVersion" value="23.0.1" /> -->
+<!-- 		<parameter name="browserVersion" value="24.0" /> -->
 <!-- 		<classes> -->
 <!-- 			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" /> -->
 <!-- 			<class name="com.enonic.autotests.ContentTypeTests" />   -->
@@ -38,13 +38,16 @@
 
 		<classes>
 			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
+			
 			<class name="com.enonic.autotests.general.ContentTypeTests" /> 
- 			<class name="com.enonic.autotests.ContentRepositoryTests" /> 
- 			<class name="com.enonic.autotests.contentimport.ContentImportTest" />
+			<class name="com.enonic.autotests.general.CreateSiteWithSTKTemplateTest" /> 
  			
+ 			<class name="com.enonic.autotests.ContentRepositoryTests" /> 
+ 			
+ 			<class name="com.enonic.autotests.contentimport.ContentImportTest" />			
  			<class name="com.enonic.autotests.contentimport.ImportContentUpdateStrategyTest" />  
  			<class name="com.enonic.autotests.contentimport.ImportContentWithBlockGroup" />  
- 			 <class name="com.enonic.autotests.contentimport.AddEntryImageFileContent" />   
+ 			<class name="com.enonic.autotests.contentimport.AddEntryImageFileContent" />   
   			
   			<class name="com.enonic.autotests.textextractors.TextExtractorTest" />  
   			<class name="com.enonic.autotests.ContentApiTest"/>

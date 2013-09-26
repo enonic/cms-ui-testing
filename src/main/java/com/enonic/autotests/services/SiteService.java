@@ -1,22 +1,26 @@
 package com.enonic.autotests.services;
 
 import java.util.List;
+import java.util.Set;
+
+import org.openqa.selenium.NoSuchWindowException;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.Content;
-import com.enonic.autotests.model.site.MenuItem;
 import com.enonic.autotests.model.site.PageMenuItem;
 import com.enonic.autotests.model.site.PageTemplate;
+import com.enonic.autotests.model.site.Portlet;
 import com.enonic.autotests.model.site.SectionMenuItem;
 import com.enonic.autotests.model.site.Site;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
-import com.enonic.autotests.pages.v4.adminconsole.site.AbstractMenuItemWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.AddPageMenuItemWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.AddSectionMenuItemWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteInfoPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
+import com.enonic.autotests.pages.v4.adminconsole.site.SitePortletsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteTemplatesPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
 
@@ -75,7 +79,7 @@ public class SiteService
 	}
 	
 	/**
-	 * Add new section "Menu item" to Site
+	 * Add a new section(menu item) to Site
 	 * @param testSession
 	 * @param siteName
 	 * @param section
@@ -97,6 +101,14 @@ public class SiteService
 		menuItemsPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return menuItemsPage;
 	}
+	/**
+	 * Adds a new 'Page' menu item
+	 * 
+	 * @param testSession
+	 * @param siteName
+	 * @param menuItem
+	 * @return
+	 */
 	public SiteMenuItemsTablePage addPageMenuItem(TestSession testSession,String siteName, PageMenuItem menuItem)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
@@ -109,6 +121,14 @@ public class SiteService
 		return menuItemsPage;
 	}
 	
+	/**
+	 * Adds a 'Page Template' to the Site
+	 * 
+	 * @param testSession
+	 * @param siteName
+	 * @param templ
+	 * @return
+	 */
 	public SiteTemplatesPage addPageTemplate(TestSession testSession,String siteName, PageTemplate templ)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
@@ -123,18 +143,27 @@ public class SiteService
 		return siteTemplPage;
 	}
 	
-	public SiteMenuItemsTablePage addMenuItem(TestSession testSession,String siteName, MenuItem menuItem)
+
+	/**
+	 * Adds a portlet to a Site
+	 * 
+	 * @param testSession
+	 * @param siteName
+	 * @param portlet
+	 * @return
+	 */
+	public SitePortletsTablePage addPortlet(TestSession testSession,String siteName, Portlet portlet)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
-		SiteMenuItemsTablePage siteMenuItemsPage = leftmenu.openSiteMenuItems(siteName);
+		SitePortletsTablePage sitePortletsPage = leftmenu.openSitePortletsTable(siteName);
 		//2. click by 'New' button and select 'Section', open add section wizard:
-		//siteMenuItemsPage.startAddNewPage(templateName)
+		sitePortletsPage.doCreatePortlet(portlet);
 		
-		siteMenuItemsPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
-		return siteMenuItemsPage;
+		sitePortletsPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return sitePortletsPage;
 	}
 	
 	
@@ -240,6 +269,35 @@ public class SiteService
 		sitesFrame.doEditSite(siteName, newSite);
 		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sitesFrame;
+	}
+	public boolean doOpenInICEAndVerify(TestSession testSession, String siteName,String ... params)
+	{
+		boolean result = false;
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		
+		SiteInfoPage siteInfoPage = menu.openSiteInfoPage( siteName);
+		siteInfoPage.doOpenSiteInICE();	
+		//pageItem - siteSTK1060897999
+		Set<String> allWindows = testSession.getDriver().getWindowHandles();
+		if (!allWindows.isEmpty())
+		{
+			for (String windowId : allWindows)
+			{
+				try
+				{
+					//try to find and switch to POPUP-WINDOW:
+					if (testSession.getDriver().switchTo().window(windowId).getTitle().contains(siteName))
+					{
+						result =true;
+					}
+				} catch (NoSuchWindowException e)
+				{
+					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
+				}
+			}
+		}
+		return result;
 	}
 	
 	/**
