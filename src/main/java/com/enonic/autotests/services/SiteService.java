@@ -9,6 +9,7 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.Content;
+import com.enonic.autotests.model.site.MenuItem;
 import com.enonic.autotests.model.site.PageMenuItem;
 import com.enonic.autotests.model.site.PageTemplate;
 import com.enonic.autotests.model.site.Portlet;
@@ -109,13 +110,13 @@ public class SiteService
 	 * @param menuItem
 	 * @return
 	 */
-	public SiteMenuItemsTablePage addPageMenuItem(TestSession testSession,String siteName, PageMenuItem menuItem)
+	public SiteMenuItemsTablePage addPageMenuItem(TestSession testSession, PageMenuItem menuItem)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
-		SiteMenuItemsTablePage menuItemsPage = leftmenu.openSiteMenuItems(siteName);
+		SiteMenuItemsTablePage menuItemsPage = leftmenu.openSiteMenuItems(menuItem.getSiteName());
 		AddPageMenuItemWizardPage wizard = menuItemsPage.startAddNewPage(menuItem.getPageTemplateName());
 		wizard.doTypeDataAndSave(menuItem);
 		return menuItemsPage;
@@ -152,13 +153,13 @@ public class SiteService
 	 * @param portlet
 	 * @return
 	 */
-	public SitePortletsTablePage addPortlet(TestSession testSession,String siteName, Portlet portlet)
+	public SitePortletsTablePage addPortlet(TestSession testSession, Portlet portlet)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
-		SitePortletsTablePage sitePortletsPage = leftmenu.openSitePortletsTable(siteName);
+		SitePortletsTablePage sitePortletsPage = leftmenu.openSitePortletsTable(portlet.getSiteName());
 		//2. click by 'New' button and select 'Section', open add section wizard:
 		sitePortletsPage.doCreatePortlet(portlet);
 		
@@ -166,9 +167,27 @@ public class SiteService
 		return sitePortletsPage;
 	}
 	
-	
-	
-	
+	/**
+	 * opens for edit a 'menu item' and changes a data.
+	 * 
+	 * @param testSession
+	 * @param itemToUpdate
+	 * @param itemNew
+	 * @return
+	 */
+	public SiteMenuItemsTablePage editMenuItem(TestSession testSession, MenuItem itemToUpdate, MenuItem itemNew)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
+		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
+	     // SiteMenuItemsTablePage contains all Menu Items for this site.
+		SiteMenuItemsTablePage siteMenuItems = leftmenu.openSiteMenuItems(itemToUpdate.getSiteName());
+		siteMenuItems.doEditMenuItem(itemToUpdate, itemNew);
+
+		return siteMenuItems;
+	}
+
+
 	/**
 	 * Opens a section, clicks by 'Add' button and add new content to a section.
 	 * 
@@ -270,7 +289,15 @@ public class SiteService
 		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sitesFrame;
 	}
-	public boolean doOpenInICEAndVerify(TestSession testSession, String siteName,String ... params)
+	/**
+	 * Opens site in ICE and get sources, verify: expected text is present in sources.
+	 * 
+	 * @param testSession
+	 * @param siteName
+	 * @param text
+	 * @return
+	 */
+	public boolean doOpenInICEAndVerifyText(TestSession testSession, String siteName,String text)
 	{
 		boolean result = false;
 		PageNavigatorV4.navgateToAdminConsole(testSession);
@@ -278,7 +305,6 @@ public class SiteService
 		
 		SiteInfoPage siteInfoPage = menu.openSiteInfoPage( siteName);
 		siteInfoPage.doOpenSiteInICE();	
-		//pageItem - siteSTK1060897999
 		Set<String> allWindows = testSession.getDriver().getWindowHandles();
 		if (!allWindows.isEmpty())
 		{
@@ -289,7 +315,12 @@ public class SiteService
 					//try to find and switch to POPUP-WINDOW:
 					if (testSession.getDriver().switchTo().window(windowId).getTitle().contains(siteName))
 					{
-						result =true;
+						String source = testSession.getDriver().getPageSource();
+						if(source.contains(text))
+						{
+							result =true;
+						}
+						
 					}
 				} catch (NoSuchWindowException e)
 				{

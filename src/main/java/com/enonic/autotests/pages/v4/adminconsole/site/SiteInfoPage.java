@@ -38,6 +38,9 @@ public class SiteInfoPage extends AbstractAdminConsolePage
 	{
 		super(session);
 	}
+	/**
+	 * Clicks by 'Open in ICE' button.
+	 */
 	public void doOpenSiteInICE()
 	{
 		openInICEButton.click();

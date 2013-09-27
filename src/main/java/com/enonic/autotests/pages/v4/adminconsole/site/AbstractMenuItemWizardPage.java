@@ -7,8 +7,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.TestSession;
-import com.enonic.autotests.model.site.MenuItem;
-import com.enonic.autotests.model.site.SectionMenuItem;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
 
 public abstract class AbstractMenuItemWizardPage<T> extends AbstractAdminConsolePage
@@ -39,6 +37,7 @@ public abstract class AbstractMenuItemWizardPage<T> extends AbstractAdminConsole
 	}
 	
 	abstract public void doTypeDataAndSave(T menuItem);
+	abstract public void doEdit(T menuItemToUpdate, T newMenuItem);
 
 	@Override
 	public void waituntilPageLoaded(long timeout)

@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.site.MenuItem;
 import com.enonic.autotests.model.site.SectionMenuItem;
@@ -79,6 +80,14 @@ public class AddSectionMenuItemWizardPage extends AbstractMenuItemWizardPage<Sec
 //			TestUtils.getInstance().doubleClickActionByOption(getSession(), allOptions, name);
 //		}
 		saveButton.click();	
+	}
+
+
+	@Override
+	public void doEdit(SectionMenuItem menuItemToUpdate, SectionMenuItem newMenuItem)
+	{
+		throw new TestFrameworkException("Not implemented yet!");
+		
 	}
 
 
