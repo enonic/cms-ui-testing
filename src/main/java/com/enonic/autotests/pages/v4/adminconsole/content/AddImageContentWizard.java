@@ -95,7 +95,7 @@ public class AddImageContentWizard extends AbstractAddContentWizard<ImageContent
 		fileInputType.sendKeys(localFile.getAbsolutePath());
 		
 		//6.  fill the display name:
-		if (!nameInput.getAttribute("value").equals(newcontent.getDisplayName()))
+		if (newcontent.getDisplayName()!=null && !nameInput.getAttribute("value").equals(newcontent.getDisplayName()))
 		{
 			TestUtils.getInstance().clearAndType(getSession(), nameInput, newcontent.getDisplayName());
 

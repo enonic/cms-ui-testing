@@ -4,10 +4,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.site.Portlet;
 import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsoleWizardPage;
+import com.enonic.autotests.pages.v4.adminconsole.content.ContentSourceTab;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
@@ -17,6 +19,8 @@ import com.enonic.autotests.utils.TestUtils;
 public class AddPortletWizardPage extends AbstractAdminConsoleWizardPage
 {
 
+	private final String DATASOURCE_TAB_LINK = "//span[contains(@class,'tab')]/a[text()='Datasource']";
+	
 	@FindBy(name = "name")
 	private WebElement nameInput;
 	/**
@@ -38,6 +42,11 @@ public class AddPortletWizardPage extends AbstractAdminConsoleWizardPage
 		nameInput.sendKeys(portlet.getName());
 		
 		doSelectStylesheet(portlet.getStylesheet().getPath(), portlet.getStylesheet().getName());
+		if(portlet.getDatasource()!=null)
+		{
+			doSetDatasource(portlet.getDatasource());
+		}
+		
 		saveButton.click();
 		checkAlerts();
 
@@ -62,6 +71,23 @@ public class AddPortletWizardPage extends AbstractAdminConsoleWizardPage
 		}
 		ChooseResourcePopupWindow popup = new ChooseResourcePopupWindow(getSession());
 		popup.doChooseResource(path, resName);
+	}
+
+	public void doSetDatasource(String datasource)
+	{
+		getDriver().findElement(By.xpath(DATASOURCE_TAB_LINK)).click();
+		PortletDatasourceTab dsTab = new PortletDatasourceTab(getSession());
+		dsTab.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		dsTab.setDatasource(datasource);
+		
+	}
+	
+	public String getPreviewDatasourceContent()
+	{
+		getDriver().findElement(By.xpath(DATASOURCE_TAB_LINK)).click();
+		PortletDatasourceTab dsTab = new PortletDatasourceTab(getSession());
+		dsTab.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return dsTab.getPreviewDatasourceContent();
 	}
 
 }

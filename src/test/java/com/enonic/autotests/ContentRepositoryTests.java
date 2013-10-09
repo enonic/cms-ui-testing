@@ -351,7 +351,7 @@ public class ContentRepositoryTests extends BaseTest
 		list.add("File");
 		section.setAvailableContentTypes(list );
 		//1. try to add a new section to Site:
-		SiteMenuItemsTablePage siteItems = siteService.addSection(getTestSession(), site.getDispalyName(), section );
+		SiteMenuItemsTablePage siteItems = siteService.addSectionMenuItem(getTestSession(), site.getDispalyName(), section );
 		//2. verify: section present
 		boolean result = siteItems.verifyIsPresent(section.getDisplayName());
 		Assert.assertTrue(result,"section was not found in the table!");
@@ -379,11 +379,11 @@ public class ContentRepositoryTests extends BaseTest
 		list.add("File");
 		section.setAvailableContentTypes(list );
 		//1. try to add a new section to Site:
-		SiteMenuItemsTablePage siteItems = siteService.addSection(getTestSession(), site.getDispalyName(), section );
+		SiteMenuItemsTablePage siteItems = siteService.addSectionMenuItem(getTestSession(), site.getDispalyName(), section );
 		//2. verify: section present
 		boolean result = siteItems.verifyIsPresent(section.getDisplayName());
 		Assert.assertTrue(result,"section was not found in the table!");
-		logger.info("TEST FINISHED: add to Site new section menu item ");
+		
 		// put new created section to the session.
 		getTestSession().put(TEST_ORDEREDSECTION_FILE_CTYPE, section);	
 		logger.info("$$$$$ FINISHED: addOrderedSectionTest. #########");

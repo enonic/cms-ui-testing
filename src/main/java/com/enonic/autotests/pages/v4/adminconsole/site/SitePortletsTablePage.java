@@ -48,6 +48,22 @@ public class SitePortletsTablePage extends  AbstractAdminConsolePage
 		portletWizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		portletWizard.doTypeDataAndSave(portlet);
 	}
+	
+	/**
+	 * Opens Portlet for editing.
+	 * 
+	 * @param portletName
+	 */
+	public AddPortletWizardPage openPortletForEdit(String portletName)
+	{
+		//1.select by name
+		getDriver().findElement(By.xpath(String.format(PORTLET_TITLE_XPATH,portletName))).click();
+		//2. open a 'portlet' wizard page
+		AddPortletWizardPage portletWizard = new AddPortletWizardPage(getSession());
+		portletWizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return portletWizard;
+		
+	}
 	/**
 	 * Verifies: is present portlet in the table.
 	 * 

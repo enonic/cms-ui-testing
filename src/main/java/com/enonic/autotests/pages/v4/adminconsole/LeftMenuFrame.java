@@ -241,6 +241,25 @@ public class LeftMenuFrame extends Page
 		return view;
 
 	}
+	public int getCategoryKey(String catName, String ... parents )
+	{
+		PageNavigatorV4.switchToFrame(getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		// 1. expand a 'Content' folder
+		expandContentFolder();
+		//2 . expands parents:
+		for(String p: parents)
+		{
+			String catXpath = String.format(CATEGORY_EXPANDER_IMG_XPATH,p);
+			getLogger().info("try to expand a folder: "+p);
+			//expandFolder(catXpath);
+			TestUtils.getInstance().expandFolder(getSession(),catXpath);
+		}
+		String hrefElemntXpath = String.format(CATEGORY_MENU_ITEM, catName) + "//a[contains(@title, 'Key')]";
+		String title = findElement(By.xpath(hrefElemntXpath)).getAttribute("title");
+		String keyString = title.substring(title.indexOf(":")+1,title.indexOf(")"));
+		return Integer.valueOf(keyString);
+		
+	}
 	/**
 	 * Gets Key value for repository.
 	 * 

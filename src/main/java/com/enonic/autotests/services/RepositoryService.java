@@ -32,6 +32,13 @@ public class RepositoryService
 		return menu.getRepositoryKey(repositoryName);
 	}
 
+	public int getCategoryKey(TestSession testSession,String catName, String ... parents )
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		return menu.getCategoryKey(catName, parents);
+	}
+
 	public RepositoriesListFrame createContentRepository(TestSession testSession, ContentRepository repository)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);

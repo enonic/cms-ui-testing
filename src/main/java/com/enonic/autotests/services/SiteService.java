@@ -17,6 +17,7 @@ import com.enonic.autotests.model.site.SectionMenuItem;
 import com.enonic.autotests.model.site.Site;
 import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.v4.adminconsole.site.AddPageMenuItemWizardPage;
+import com.enonic.autotests.pages.v4.adminconsole.site.AddPortletWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.AddSectionMenuItemWizardPage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
 import com.enonic.autotests.pages.v4.adminconsole.site.SiteInfoPage;
@@ -86,7 +87,7 @@ public class SiteService
 	 * @param section
 	 * @return
 	 */
-	public SiteMenuItemsTablePage addSection(TestSession testSession,String siteName,SectionMenuItem section)
+	public SiteMenuItemsTablePage addSectionMenuItem(TestSession testSession,String siteName,SectionMenuItem section)
 	{
 		PageNavigatorV4.navgateToAdminConsole(testSession);
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
@@ -288,6 +289,22 @@ public class SiteService
 		sitesFrame.doEditSite(siteName, newSite);
 		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sitesFrame;
+	}
+	
+	/**
+	 * Clicks by site's name and opens 'edit portlet' wizard page, go to 'Datasource' tab and click by 'preview datasource' button.
+	 * 
+	 * @param testSession
+	 * @param portlet portlet with datasource
+	 * @return datasource content.
+	 */
+	public String getPreviewDatasourceContent(TestSession testSession,  Portlet portlet)
+	{
+		PageNavigatorV4.navgateToAdminConsole(testSession);
+		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
+		SitePortletsTablePage sitePortletsPage = leftmenu.openSitePortletsTable(portlet.getSiteName());
+		AddPortletWizardPage wizard = sitePortletsPage.openPortletForEdit(portlet.getName());
+		return wizard.getPreviewDatasourceContent();		
 	}
 	/**
 	 * Opens site in ICE and get sources, verify: expected text is present in sources.

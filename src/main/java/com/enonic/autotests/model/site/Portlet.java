@@ -8,6 +8,9 @@ public class Portlet
 {
 	private String name;
 	private String siteName;
+	private String datasource;
+
+
 
 	private STKResource stylesheet;
 	private STKResource borderStylesheet;
@@ -50,5 +53,14 @@ public class Portlet
 	public void setSiteName(String siteName)
 	{
 		this.siteName = siteName;
+	}
+	public String getDatasource()
+	{
+		return datasource;
+	}
+
+	public void setDatasource(String datasource)
+	{
+		this.datasource = datasource;
 	}
 }
