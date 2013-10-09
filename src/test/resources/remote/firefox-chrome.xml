@@ -41,6 +41,7 @@
 			
 			<class name="com.enonic.autotests.general.ContentTypeTests" /> 
 			<class name="com.enonic.autotests.general.CreateSiteWithSTKTemplateTest" /> 
+			<class name="com.enonic.autotests.general.PortletPreviewDatasourceTest" /> 
  			
  			<class name="com.enonic.autotests.ContentRepositoryTests" /> 
  			

@@ -58,11 +58,11 @@ public class PortletPreviewDatasourceTest extends BaseTest
 	@Test(description = "setup: create preconditions. Create a site with section and portlet. Create a repository and category with image ctype, and publish content to the section")
 	public void setup()
 	{
+		createImageCType();
 		createSite();
 		allowSection();
 		addSection();
 
-		createImageCType();
 		createRepositoryAndCategory();
 		addImageContentAndPublish();
 		addPortlet();

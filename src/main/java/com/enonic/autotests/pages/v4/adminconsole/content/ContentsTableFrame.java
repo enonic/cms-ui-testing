@@ -94,6 +94,12 @@ public class ContentsTableFrame extends AbstractContentTableView
        {
     	   return ContentStatus.PUBLISHED;
        }
+       if(elems.get(0).getAttribute("src").contains("pending.gif"))
+       {
+    	   return ContentStatus.PENDING;
+       }
+       getLogger().info("STATUS IS :"+elems.get(0).getAttribute("src"));
+       
        throw new TestFrameworkException("unknown status");
 	}
 	/**
