@@ -12,12 +12,12 @@ import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
-import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
+import com.enonic.autotests.pages.adminconsole.content.ContentStatus;
+import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
+import com.enonic.autotests.pages.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.PageNavigatorV4;
+import com.enonic.autotests.services.PageNavigator;
 import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.Person;
@@ -187,7 +187,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		// GET_EVENTS_BEFORE_ from session:
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_BLOCK_GROUPS_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		ContentsTableFrame table = (ContentsTableFrame) PageNavigatorV4.openContentsTableView(getTestSession(), pathToCategory);
+		ContentsTableFrame table = (ContentsTableFrame) PageNavigator.openContentsTableView( getTestSession(), pathToCategory );
 		// 2. get events before import and update content
 		logger.info("try to get all events from UI for Person with name:" + PERSON_EVENT_PURGE_TEST);
 		List<UserEvent> eventsBefore = ImportUtils.getEventsFromUI(getSessionDriver(), table, PERSON_EVENT_PURGE_TEST);
@@ -220,7 +220,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_BLOCK_GROUPS_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		ContentsTableFrame table = (ContentsTableFrame) PageNavigatorV4.openContentsTableView(getTestSession(), pathToCategory);
+		ContentsTableFrame table = (ContentsTableFrame) PageNavigator.openContentsTableView( getTestSession(), pathToCategory );
 		// 2. get status before import 
 		ContentStatus statusBeforeImport = table.getContentStatus(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertTrue(statusBeforeImport.equals(ContentStatus.DRAFT),"expected status and actual are not equals!");
@@ -250,7 +250,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_BLOCK_GROUPS_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		ContentsTableFrame table = (ContentsTableFrame) PageNavigatorV4.openContentsTableView(getTestSession(), pathToCategory);
+		ContentsTableFrame table = (ContentsTableFrame) PageNavigator.openContentsTableView( getTestSession(), pathToCategory );
 		// 2. finds person in the table before a import
 		boolean isPresentPersonBeforeImport = table.isContentPresentInTable(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertTrue(isPresentPersonBeforeImport,"the person with name: "+ CONTENT_PURGE_PERSON_NAME + "is present in the table!");	

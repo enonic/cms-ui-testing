@@ -13,16 +13,16 @@ import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.FileContentInfo;
 import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.model.site.SectionMenuItem;
-import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
-import com.enonic.autotests.pages.v4.adminconsole.content.AddFileContentWizard;
-import com.enonic.autotests.pages.v4.adminconsole.content.AddImageContentWizard;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentIndexes;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.IContentWizard;
-import com.enonic.autotests.pages.v4.adminconsole.content.PersonImportWizardPage;
-import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
+import com.enonic.autotests.pages.adminconsole.LeftMenuFrame;
+import com.enonic.autotests.pages.adminconsole.content.AbstractContentTableView;
+import com.enonic.autotests.pages.adminconsole.content.AddFileContentWizard;
+import com.enonic.autotests.pages.adminconsole.content.AddImageContentWizard;
+import com.enonic.autotests.pages.adminconsole.content.ContentIndexes;
+import com.enonic.autotests.pages.adminconsole.content.ContentStatus;
+import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
+import com.enonic.autotests.pages.adminconsole.content.IContentWizard;
+import com.enonic.autotests.pages.adminconsole.content.PersonImportWizardPage;
+import com.enonic.autotests.pages.adminconsole.content.RepositoriesListFrame;
 
 public class ContentService
 {
@@ -35,7 +35,7 @@ public class ContentService
 	 */
 	public  List<String> doSearchContentByName(TestSession testSession, String contentName)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		RepositoriesListFrame frame = menu.openRepositoriesTableFrame();
 		return frame.doSearchContent(contentName);
@@ -49,7 +49,7 @@ public class ContentService
 	 */
 	public ContentStatus getContentStatus(TestSession testSession, String contentName, String[] parents)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		ContentsTableFrame table = menu.openCategoryViewFrame(parents);
 		return table.getContentStatus(contentName);
@@ -66,7 +66,7 @@ public class ContentService
 	 */
 	public ContentsTableFrame doImportContent(TestSession testSession,String importName,String fileName,String... categoryPath)
 	{		
-		ContentsTableFrame tableOfContent = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, categoryPath );
+		ContentsTableFrame tableOfContent = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession, categoryPath );
 		//1. clicks by 'Import' button.
 		tableOfContent.startImportContent();
 		// check if import name equals: import-person-xml or import-person-csv
@@ -87,7 +87,7 @@ public class ContentService
 	}
 	public ContentsTableFrame doImportTmpFileContent(TestSession testSession,String importName,File tmp,String... categoryPath)
 	{		
-		ContentsTableFrame tableOfContent = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, categoryPath );
+		ContentsTableFrame tableOfContent = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession, categoryPath );
 		//1. clicks by 'Import' button.
 		tableOfContent.startImportContent();
 		// check if import name equals: import-person-xml or import-person-csv
@@ -116,15 +116,17 @@ public class ContentService
 	 */
 	public void doPublishContentToSection(TestSession testSession,Content<?> content,SectionMenuItem section)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);		
-		ContentsTableFrame contentTableFrame = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		PageNavigator.navgateToAdminConsole( testSession );
+		ContentsTableFrame contentTableFrame = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession,
+                                                                                                         content.getParentNames() );
 		contentTableFrame.doPublishToSection(content.getDisplayName(), section);
 		contentTableFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 	}
 	public void doPublishContentToSectionAnMoveToEnd(TestSession testSession,Content<?> content,SectionMenuItem section)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);		
-		ContentsTableFrame contentTableFrame = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		PageNavigator.navgateToAdminConsole( testSession );
+		ContentsTableFrame contentTableFrame = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession,
+                                                                                                         content.getParentNames() );
 		contentTableFrame.doPublishToSectionAndMoveToEnd(content.getDisplayName(), section);
 		contentTableFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 	}
@@ -138,7 +140,7 @@ public class ContentService
 	 */
 	public <T> AbstractContentTableView addContent(TestSession testSession, ContentRepository cRepository, Content<T> content)//
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
 		IContentWizard<T> wizard = tableViewFrame.openAddContentWizardPage(cRepository);
 		wizard.typeDataAndSave(content);
 		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
@@ -147,14 +149,14 @@ public class ContentService
 	
 	public <T> String getContentKeyPropery(TestSession testSession, Content<T> content)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
 		IContentWizard<?> wizard = tableViewFrame.openEditContentWizard(content);
 		return wizard.getContentKey();
 		
 	}
 	public <T> Map<ContentIndexes,String> getContentIndexedValues(TestSession testSession, Content<T> content)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
 		IContentWizard<?> wizard = tableViewFrame.openEditContentWizard(content);
 		
 		return wizard.getIndexedValues();
@@ -163,7 +165,7 @@ public class ContentService
 	
 	public AbstractContentTableView addimageContent(TestSession testSession,  Content<ImageContentInfo> content)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
 		AddImageContentWizard wizard = tableViewFrame.openAddImageContentWizardPage(content.getParentNames()[0]);
 		wizard.typeDataAndSave(content);
 		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
@@ -172,7 +174,7 @@ public class ContentService
 	}
 	public AbstractContentTableView addFileContent(TestSession testSession,  Content<FileContentInfo> content)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, content.getParentNames());
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
 		AddFileContentWizard wizard = tableViewFrame.openAddFileContentWizardPage(content.getParentNames()[0]);
 		wizard.typeDataAndSave(content);
 		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
@@ -213,7 +215,7 @@ public class ContentService
 		{
 			throw new IllegalArgumentException("path to content should contains repository name and category name, array-size should be more than 1 ");
 		}
-		ContentsTableFrame contentTableFrame = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(session, parentNames);
+		ContentsTableFrame contentTableFrame = (ContentsTableFrame) PageNavigator.openContentsTableView( session, parentNames );
 		contentTableFrame.doDeleteContent(contentDisplayName);
 		return contentTableFrame;
 		
@@ -227,7 +229,7 @@ public class ContentService
 	 */
 	public ContentsTableFrame openCategory(TestSession session,String ...destinationNames )
 	{
-		 return (ContentsTableFrame)PageNavigatorV4.openContentsTableView(session, destinationNames);
+		 return (ContentsTableFrame) PageNavigator.openContentsTableView( session, destinationNames );
 	}
 	/**
 	 * Opens category, finds content in table and moves this content to the destination folder.
@@ -239,7 +241,7 @@ public class ContentService
 	 */
 	public ContentsTableFrame moveContent(TestSession session, Content<?> content,String ...destinationNames)
 	{
-		ContentsTableFrame contentTableFrame = (ContentsTableFrame)PageNavigatorV4.openContentsTableView(session, content.getParentNames());
+		ContentsTableFrame contentTableFrame = (ContentsTableFrame) PageNavigator.openContentsTableView( session, content.getParentNames() );
 		contentTableFrame.doMoveContent(content.getDisplayName(), destinationNames[0],destinationNames[1]);
 		contentTableFrame.waituntilPageLoaded(2l);
 		return contentTableFrame;

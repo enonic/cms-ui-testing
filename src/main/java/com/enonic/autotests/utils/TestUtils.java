@@ -38,8 +38,8 @@ import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.ContentRepositoryException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.logger.Logger;
-import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
-import com.enonic.autotests.services.PageNavigatorV4;
+import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
+import com.enonic.autotests.services.PageNavigator;
 
 public class TestUtils
 {
@@ -391,7 +391,7 @@ public class TestUtils
 	
 	public boolean expandFolder(TestSession session,String expanderXpath)
 	{
-		PageNavigatorV4.switchToFrame(session, AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		PageNavigator.switchToFrame( session, AbstractAdminConsolePage.LEFT_FRAME_NAME );
 		List<WebElement> expanderElems = session.getDriver().findElements(By.xpath(expanderXpath));
 		
 		if (expanderElems.size() == 0)

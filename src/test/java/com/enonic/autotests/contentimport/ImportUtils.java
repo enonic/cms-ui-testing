@@ -14,7 +14,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import com.enonic.autotests.AppConstants;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
+import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.UserEvent;
 

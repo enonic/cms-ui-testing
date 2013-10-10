@@ -8,11 +8,11 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentRepository;
-import com.enonic.autotests.pages.v4.adminconsole.AbstractAdminConsolePage;
-import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
-import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
-import com.enonic.autotests.pages.v4.adminconsole.content.CreateCategoryWizard;
-import com.enonic.autotests.pages.v4.adminconsole.content.RepositoriesListFrame;
+import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
+import com.enonic.autotests.pages.adminconsole.LeftMenuFrame;
+import com.enonic.autotests.pages.adminconsole.content.AbstractContentTableView;
+import com.enonic.autotests.pages.adminconsole.content.CreateCategoryWizard;
+import com.enonic.autotests.pages.adminconsole.content.RepositoriesListFrame;
 
 /**
  * Repository Service
@@ -27,21 +27,21 @@ public class RepositoryService
 	 */
 	public int getRepositoryKey(TestSession testSession,String repositoryName)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		return menu.getRepositoryKey(repositoryName);
 	}
 
 	public int getCategoryKey(TestSession testSession,String catName, String ... parents )
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		return menu.getCategoryKey(catName, parents);
 	}
 
 	public RepositoriesListFrame createContentRepository(TestSession testSession, ContentRepository repository)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 
 		RepositoriesListFrame frame = menu.openRepositoriesTableFrame();
@@ -57,7 +57,7 @@ public class RepositoryService
 	public void addCategory(TestSession testSession, ContentCategory newCategory)
 	{
 		// 1. open admin-console, expand the "Content" folder, click by RepositoryName, open repository view and click by 'New-Category' button
-		AbstractContentTableView repoview = PageNavigatorV4.openContentsTableView(testSession, newCategory.getParentNames());
+		AbstractContentTableView repoview = PageNavigator.openContentsTableView( testSession, newCategory.getParentNames() );
 
 		// 2. 'New-Category' button ->opened 'add category wizard'
 		CreateCategoryWizard wizard = repoview.openAddCategoryWizard();
@@ -78,9 +78,9 @@ public class RepositoryService
 	 */
 	public Boolean isCategoryPresent(TestSession session, String categoryName, String... parents)
 	{
-		PageNavigatorV4.navgateToAdminConsole(session);
+		PageNavigator.navgateToAdminConsole( session );
 		LeftMenuFrame menu = new LeftMenuFrame(session);
-		PageNavigatorV4.switchToFrame(session, AbstractAdminConsolePage.LEFT_FRAME_NAME);
+		PageNavigator.switchToFrame( session, AbstractAdminConsolePage.LEFT_FRAME_NAME );
 		WebElement result = menu.findCategoryInContentFolder(categoryName, parents);
 		if (result != null)
 		{
@@ -102,7 +102,7 @@ public class RepositoryService
 
 	public void deleteRepository(TestSession session, String repositoryName)
 	{
-		PageNavigatorV4.navgateToAdminConsole(session);
+		PageNavigator.navgateToAdminConsole( session );
 		LeftMenuFrame menu = new LeftMenuFrame(session);
 		menu.doDeleteRepository(repositoryName);
 	}
@@ -113,7 +113,7 @@ public class RepositoryService
 	 */
 	public List<String> getAllRepositoryNames(TestSession session)
 	{
-		PageNavigatorV4.navgateToAdminConsole(session);
+		PageNavigator.navgateToAdminConsole( session );
 		LeftMenuFrame menu = new LeftMenuFrame(session);
 		RepositoriesListFrame frame = menu.openRepositoriesTableFrame();
 		return frame.getRepositoryNames();

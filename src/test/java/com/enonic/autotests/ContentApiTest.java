@@ -174,9 +174,10 @@ public class ContentApiTest extends BaseTest
 		Assert.assertTrue(result.contains(UPDATED_ARTICLE_NAME), "updated Content  with content-api was not found!");
 		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_API_TEST_KEY);
 		String[] parents = { repository.getName(), CATEGORY_NAME };
-		com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus status = contentService.getContentStatus(getTestSession(),
+		com.enonic.autotests.pages.adminconsole.content.ContentStatus status = contentService.getContentStatus(getTestSession(),
 				UPDATED_ARTICLE_NAME, parents);
-		Assert.assertTrue(status.equals(com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus.PUBLISHED) || status.equals(com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus.PENDING), "expected and actual status are not equals!");
+		Assert.assertTrue(status.equals( com.enonic.autotests.pages.adminconsole.content.ContentStatus.PUBLISHED) || status.equals(
+            com.enonic.autotests.pages.adminconsole.content.ContentStatus.PENDING), "expected and actual status are not equals!");
 		logger.info("$$$$ FINISHED: Update content in API");
 
 	}

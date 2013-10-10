@@ -3,8 +3,8 @@ package com.enonic.autotests.services;
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
-import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
+import com.enonic.autotests.pages.adminconsole.LeftMenuFrame;
+import com.enonic.autotests.pages.adminconsole.contenttype.ContentTypesFrame;
 
 /**
  * 
@@ -20,7 +20,7 @@ public class ContentTypeService
 	 */
 	public ContentTypesFrame createContentType(TestSession testSession, ContentType ctype)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		ContentTypesFrame frame = menu.openContentTypesFrame(testSession);
 		frame.createContentType(ctype);
@@ -35,7 +35,7 @@ public class ContentTypeService
 	 */
 	public boolean findContentType(TestSession testSession, String typename)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		ContentTypesFrame frame = menu.openContentTypesFrame(testSession);
 		return frame.verifyIsPresent(typename);
@@ -50,7 +50,7 @@ public class ContentTypeService
 	 */
 	public ContentTypesFrame deleteContentType(TestSession testSession, String contentTypeName)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		ContentTypesFrame frame = menu.openContentTypesFrame(testSession);
 		frame.deleteContentType(contentTypeName);
@@ -64,7 +64,7 @@ public class ContentTypeService
 	 */
 	public void delteAllContentTypes(TestSession testSession)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		ContentTypesFrame ctypesFrame = menu.openContentTypesFrame(testSession);
 		ctypesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
@@ -79,7 +79,7 @@ public class ContentTypeService
 	 */
 	public void editContentType(TestSession testSession, String ctypeName, String cfg)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		ContentTypesFrame ctypesFrame = menu.openContentTypesFrame(testSession);
 		ctypesFrame.doChangeConfiguration(ctypeName, cfg);

@@ -7,10 +7,10 @@ import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ImageContentInfo;
-import com.enonic.autotests.pages.v4.adminconsole.content.AbstractContentTableView;
-import com.enonic.autotests.pages.v4.adminconsole.content.AlignmentText;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentWithTinyMCEWizard;
-import com.enonic.autotests.pages.v4.adminconsole.content.SpecialCharacters;
+import com.enonic.autotests.pages.adminconsole.content.AbstractContentTableView;
+import com.enonic.autotests.pages.adminconsole.content.AlignmentText;
+import com.enonic.autotests.pages.adminconsole.content.ContentWithTinyMCEWizard;
+import com.enonic.autotests.pages.adminconsole.content.SpecialCharacters;
 
 /**
  * Service for TinyMCE HTML WYSIWYG editor.
@@ -26,14 +26,14 @@ public class TinyMCEService
 	 */
 	public void verifyInsertTable(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertTable();
 	}
 	public void verifyChangeColorText(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyChangeColorText();
@@ -45,7 +45,7 @@ public class TinyMCEService
 	 */
 	public void verifyChangeBackgroundColorText(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyChangeBackgroundColorText();
@@ -56,7 +56,7 @@ public class TinyMCEService
 	 */
 	public void verifyInsertSpecialCharacters(TestSession testSession, ContentCategory category, SpecialCharacters character)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertSpecialCharacters(character);
@@ -65,84 +65,84 @@ public class TinyMCEService
 	
 	public void verifyDeletion(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyDeletion();
 	}
 	public void verifyInsertion(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertion();
 	}
 	public void verifyInsertBlockQuote(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertBlockQuote();
 	}
 	public void verifyInsertAbbreviation(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertAbbreviation();
 	}
 	public void verifyInsertAcronym(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertAcronym();
 	}
 	public void verifyInsertCitation(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertCitation();
 	}
 	public void verifyInsertSuperscript(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertSuperscript();
 	}
 	public void verifyInsertSubscript(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertSubscript();
 	}
 	public void verifyInsertBulletedList(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertBulletedList();
 	}
 	public void verifyInsertNumberedList(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertNumberedList();
 	}
 	public void verifyIncreaseDecreaseIndents(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyIncreaseDecreaseIndents();
 	}
 	public void verifyUndoRedo(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyUndoRedo();
@@ -156,7 +156,7 @@ public class TinyMCEService
 	 */
 	public void verifyInsertImage(TestSession testSession, ContentCategory category,Content<ImageContentInfo> contentToInsert)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyInsertImage(contentToInsert);
@@ -170,7 +170,7 @@ public class TinyMCEService
 	 */
 	public void verifyBoldItalic(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyItalicBoldAndRemoveFormatting();
@@ -184,7 +184,7 @@ public class TinyMCEService
 	 */
 	public void verifyTextAlignment(TestSession testSession, ContentCategory category, AlignmentText align)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyTextAlignment(align);
@@ -196,7 +196,7 @@ public class TinyMCEService
 	 */
 	public void verifyAddAnchorInText(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyAnchorInText();
@@ -208,7 +208,7 @@ public class TinyMCEService
 	 */
 	public void verifyAddHorizontalLine(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyHorizontalLine();
@@ -220,7 +220,7 @@ public class TinyMCEService
 	 */
 	public void verifyLinkUnlink(TestSession testSession, ContentCategory category)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigatorV4.openContentsTableView(testSession, getPathToCategory(category));
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, getPathToCategory( category ) );
 		tableViewFrame.doStartAddContent();
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.verifyLinkUnlink();

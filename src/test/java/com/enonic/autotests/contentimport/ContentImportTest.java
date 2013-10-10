@@ -12,12 +12,12 @@ import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentStatus;
-import com.enonic.autotests.pages.v4.adminconsole.content.ContentsTableFrame;
-import com.enonic.autotests.pages.v4.adminconsole.contenttype.ContentTypesFrame;
+import com.enonic.autotests.pages.adminconsole.content.ContentStatus;
+import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
+import com.enonic.autotests.pages.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.PageNavigatorV4;
+import com.enonic.autotests.services.PageNavigator;
 import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
@@ -187,7 +187,7 @@ public class ContentImportTest extends BaseTest
 		logger.info("#### STARTED: Set the <import .. status='2'> in import");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		ContentsTableFrame table = (ContentsTableFrame) PageNavigatorV4.openContentsTableView(getTestSession(), pathToCategory);
+		ContentsTableFrame table = (ContentsTableFrame) PageNavigator.openContentsTableView( getTestSession(), pathToCategory );
 		// delete all content
 		table.doDeleteAllContent();
 
@@ -219,7 +219,7 @@ public class ContentImportTest extends BaseTest
 		logger.info("T#### STARTED:Import source where entries in source points to other entries in source as related,");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		ContentsTableFrame table = (ContentsTableFrame) PageNavigatorV4.openContentsTableView(getTestSession(), pathToCategory);
+		ContentsTableFrame table = (ContentsTableFrame) PageNavigator.openContentsTableView( getTestSession(), pathToCategory );
 	}
 
 	@Test(dependsOnMethods = "importingFromCSVTest", description = "Add entry of type uploadfile, specify file-data (base64-encoded binary data) in import source (XML only) ")
@@ -264,7 +264,7 @@ public class ContentImportTest extends BaseTest
 		logger.info("### STARTED: Mapping input fields of type relatedcontent");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_RELATED_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		ContentsTableFrame table = (ContentsTableFrame) PageNavigatorV4.openContentsTableView(getTestSession(), pathToCategory);
+		ContentsTableFrame table = (ContentsTableFrame) PageNavigator.openContentsTableView( getTestSession(), pathToCategory );
 		table.doDeleteAllContent();
 
 		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(PERSON_RELATED_CFG);

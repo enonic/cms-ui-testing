@@ -15,16 +15,16 @@ import com.enonic.autotests.model.site.PageTemplate;
 import com.enonic.autotests.model.site.Portlet;
 import com.enonic.autotests.model.site.SectionMenuItem;
 import com.enonic.autotests.model.site.Site;
-import com.enonic.autotests.pages.v4.adminconsole.LeftMenuFrame;
-import com.enonic.autotests.pages.v4.adminconsole.site.AddPageMenuItemWizardPage;
-import com.enonic.autotests.pages.v4.adminconsole.site.AddPortletWizardPage;
-import com.enonic.autotests.pages.v4.adminconsole.site.AddSectionMenuItemWizardPage;
-import com.enonic.autotests.pages.v4.adminconsole.site.SectionContentsTablePage;
-import com.enonic.autotests.pages.v4.adminconsole.site.SiteInfoPage;
-import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
-import com.enonic.autotests.pages.v4.adminconsole.site.SitePortletsTablePage;
-import com.enonic.autotests.pages.v4.adminconsole.site.SiteTemplatesPage;
-import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
+import com.enonic.autotests.pages.adminconsole.LeftMenuFrame;
+import com.enonic.autotests.pages.adminconsole.site.AddPageMenuItemWizardPage;
+import com.enonic.autotests.pages.adminconsole.site.AddPortletWizardPage;
+import com.enonic.autotests.pages.adminconsole.site.AddSectionMenuItemWizardPage;
+import com.enonic.autotests.pages.adminconsole.site.SectionContentsTablePage;
+import com.enonic.autotests.pages.adminconsole.site.SiteInfoPage;
+import com.enonic.autotests.pages.adminconsole.site.SiteMenuItemsTablePage;
+import com.enonic.autotests.pages.adminconsole.site.SitePortletsTablePage;
+import com.enonic.autotests.pages.adminconsole.site.SiteTemplatesPage;
+import com.enonic.autotests.pages.adminconsole.site.SitesTableFrame;
 
 /**
  *   Site service 
@@ -39,7 +39,7 @@ public class SiteService
 	 */
 	public void delteAllSites(TestSession testSession)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
 		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
@@ -54,7 +54,7 @@ public class SiteService
 	 */
 	public List<String> getAllSiteNames(TestSession testSession)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
 		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
@@ -70,7 +70,7 @@ public class SiteService
 	 */
 	public SitesTableFrame createSite(TestSession testSession, Site site)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
 		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
@@ -89,7 +89,7 @@ public class SiteService
 	 */
 	public SiteMenuItemsTablePage addSectionMenuItem(TestSession testSession,String siteName,SectionMenuItem section)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
@@ -113,7 +113,7 @@ public class SiteService
 	 */
 	public SiteMenuItemsTablePage addPageMenuItem(TestSession testSession, PageMenuItem menuItem)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
@@ -133,7 +133,7 @@ public class SiteService
 	 */
 	public SiteTemplatesPage addPageTemplate(TestSession testSession,String siteName, PageTemplate templ)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
@@ -156,7 +156,7 @@ public class SiteService
 	 */
 	public SitePortletsTablePage addPortlet(TestSession testSession, Portlet portlet)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
@@ -178,7 +178,7 @@ public class SiteService
 	 */
 	public SiteMenuItemsTablePage editMenuItem(TestSession testSession, MenuItem itemToUpdate, MenuItem itemNew)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 	     // SiteMenuItemsTablePage contains all Menu Items for this site.
@@ -199,7 +199,7 @@ public class SiteService
 	 */
 	public SectionContentsTablePage addContentToSection(TestSession testSession,SectionMenuItem section,Content<?> content)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 		SectionContentsTablePage sectionContentsTable = leftmenu.openSiteSection(section.getSiteName(), section.getDisplayName());
 		String[] parents = content.getParentNames();
@@ -217,7 +217,7 @@ public class SiteService
 	 */
 	public boolean isContentFromSectionPublished(TestSession testSession, SectionMenuItem section,String contentName)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 		SectionContentsTablePage sectionContentsTable = leftmenu.openSiteSection(section.getSiteName(), section.getDisplayName());
 		
@@ -233,7 +233,7 @@ public class SiteService
 	 */
 	public List<String> getContentNamesFromSection(TestSession testSession, SectionMenuItem section)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 		SectionContentsTablePage sectionContentsTable = leftmenu.openSiteSection(section.getSiteName(), section.getDisplayName());
 		return sectionContentsTable.getAllContentNames();		
@@ -250,7 +250,7 @@ public class SiteService
 	 */
 	public SectionContentsTablePage removeContentFromSection(TestSession testSession,String siteName,String sectionName,String contentName)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 		SectionContentsTablePage sectionContentsTable = leftmenu.openSiteSection(siteName, sectionName);
 		sectionContentsTable.doRemoveContent(contentName);
@@ -266,7 +266,7 @@ public class SiteService
 	 */
 //	public SectionContentsTablePage changePublishStatusInSection(TestSession testSession,String siteName,String sectionName,String contentName)
 //	{
-//		PageNavigatorV4.navgateToAdminConsole(testSession);
+//		PageNavigator.navgateToAdminConsole(testSession);
 //		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 //		SectionContentsTablePage sectionContentsTable = leftmenu.openSiteSection(siteName, sectionName);
 //		//String[] parents = content.getParentNames();
@@ -283,7 +283,7 @@ public class SiteService
 	 */
 	public SitesTableFrame editSite(TestSession testSession, String siteName, Site newSite)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		SitesTableFrame sitesFrame = menu.openSitesTableFrame(testSession);
 		sitesFrame.doEditSite(siteName, newSite);
@@ -300,7 +300,7 @@ public class SiteService
 	 */
 	public String getPreviewDatasourceContent(TestSession testSession,  Portlet portlet)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 		SitePortletsTablePage sitePortletsPage = leftmenu.openSitePortletsTable(portlet.getSiteName());
 		AddPortletWizardPage wizard = sitePortletsPage.openPortletForEdit(portlet.getName());
@@ -317,7 +317,7 @@ public class SiteService
 	public boolean doOpenInICEAndVerifyText(TestSession testSession, String siteName,String text)
 	{
 		boolean result = false;
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		
 		SiteInfoPage siteInfoPage = menu.openSiteInfoPage( siteName);
@@ -357,7 +357,7 @@ public class SiteService
 	 */
 	public SitesTableFrame deleteSite(TestSession testSession, String siteName)
 	{
-		PageNavigatorV4.navgateToAdminConsole(testSession);
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		SiteInfoPage siteInfo = menu.openSiteInfoPage( siteName);
 		siteInfo.doDeleteSite();

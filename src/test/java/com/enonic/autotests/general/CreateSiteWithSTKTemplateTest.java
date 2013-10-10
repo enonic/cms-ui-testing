@@ -15,9 +15,9 @@ import com.enonic.autotests.model.site.PageTemplate;
 import com.enonic.autotests.model.site.Portlet;
 import com.enonic.autotests.model.site.STKResource;
 import com.enonic.autotests.model.site.Site;
-import com.enonic.autotests.pages.v4.adminconsole.site.SiteMenuItemsTablePage;
-import com.enonic.autotests.pages.v4.adminconsole.site.SitePortletsTablePage;
-import com.enonic.autotests.pages.v4.adminconsole.site.SitesTableFrame;
+import com.enonic.autotests.pages.adminconsole.site.SiteMenuItemsTablePage;
+import com.enonic.autotests.pages.adminconsole.site.SitePortletsTablePage;
+import com.enonic.autotests.pages.adminconsole.site.SitesTableFrame;
 import com.enonic.autotests.services.SiteService;
 
 public class CreateSiteWithSTKTemplateTest extends BaseTest
