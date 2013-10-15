@@ -17,6 +17,7 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.AddContentException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
+import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.site.SectionMenuItem;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.services.PageNavigator;
@@ -47,6 +48,9 @@ public class ContentsTableFrame extends AbstractContentTableView
 	@FindBy(xpath= "//button[text()='Import']")
 	protected WebElement importButton;
 	
+	@FindBy(xpath= "//button[text()='Edit']")
+	protected WebElement editButton;
+	
 	
 	/** this button appears during add content to section */
 	private final String ADD_CONTENT_TO_SECTION_XPATH = "//button[text()='Add']";
@@ -70,6 +74,14 @@ public class ContentsTableFrame extends AbstractContentTableView
 
 	}
 	
+	public void doEditCategory(ContentCategory categoryToEdit)
+	{
+		editButton.click();
+		CreateCategoryWizard wizard = new CreateCategoryWizard(getSession());
+		wizard.doChangeACL(categoryToEdit.getAclEntries());
+		
+		
+	}
 	public ContentStatus getContentStatus(String contentName)
 	{
        String statusImageXpath  = String.format("//tr[contains(@class,'tablerowpainter')]//td[3][contains(@class,'browsetablecell')]/div[contains(@style,'font-weight: bold') and text()='%s']/../../td[6]/img",contentName);

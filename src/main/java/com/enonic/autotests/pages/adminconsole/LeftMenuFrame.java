@@ -20,6 +20,7 @@ import com.enonic.autotests.pages.adminconsole.site.SitePortletsTablePage;
 import com.enonic.autotests.pages.adminconsole.site.SiteTemplatesPage;
 import com.enonic.autotests.pages.adminconsole.site.SitesTableFrame;
 import com.enonic.autotests.pages.adminconsole.system.SystemFrame;
+import com.enonic.autotests.pages.adminconsole.userstores.UsersTableFrame;
 import com.enonic.autotests.services.PageNavigator;
 import com.enonic.autotests.utils.TestUtils;
 
@@ -58,6 +59,7 @@ public class LeftMenuFrame extends Page
 
 	public static String CONTENT_TYPES_MENU_ITEM_XPATH = "//a[text()='Content types']";
 	public static String SITES_MENU_ITEM_XPATH = "//a/span[@id='menuitemText' and contains(.,'Sites')]";
+	public static String USERS_MENU_ITEM_XPATH = "//a[child::img[contains(@src,'icon_users.gif')] and text()='Users']";
 	public static String SYSTEM_MENU_ITEM_XPATH = "//a[child::img[@src='images/icon_system.gif'] and text()='System']";
 	
 	
@@ -84,16 +86,19 @@ public class LeftMenuFrame extends Page
 		return sitesframe;
 
 	}
-//	public SitesTableFrame openContentTypesTableFrame(TestSession testSession)
-//	{
-//		
-//		PageNavigator.clickMenuItemAndSwitchToRightFrame(testSession, SITES_MENU_ITEM_XPATH);
-//		ContentTypesFrame ctypesFrame = new SitesTableFrame(testSession);
-//		ctypesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
-//		return ctypesFrame;
-//
-//	}
-//	ctypesFrame
+	public UsersTableFrame openUsersTableFrame(TestSession testSession)
+	{
+		UsersTableFrame usersframe = new UsersTableFrame(getSession());
+		//1 expand a userstores
+		String userstoresExpanderXpath = "//img[@id = 'img-system-userstores']";
+		TestUtils.getInstance().expandFolder(testSession, userstoresExpanderXpath);
+		//2 expand a default
+		String defaultExpanderXpath = "//img[@id='img-domain1']";
+		TestUtils.getInstance().expandFolder(testSession, defaultExpanderXpath);
+		//3 click by Users
+		PageNavigator.clickMenuItemAndSwitchToRightFrame( testSession, USERS_MENU_ITEM_XPATH );
+		return usersframe;
+	}
 	
 	/**
 	 * Clicks by 'Sites' link and open frame with table of sites.

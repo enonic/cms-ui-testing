@@ -11,6 +11,7 @@ import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.adminconsole.content.AbstractContentTableView;
+import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.adminconsole.content.CreateCategoryWizard;
 import com.enonic.autotests.pages.adminconsole.content.RepositoriesListFrame;
 
@@ -62,11 +63,36 @@ public class RepositoryService
 		// 2. 'New-Category' button ->opened 'add category wizard'
 		CreateCategoryWizard wizard = repoview.openAddCategoryWizard();
 		// 3. populate all fields and click by 'Save' and 'Close' buttons
-		wizard = new CreateCategoryWizard(testSession);
 		wizard.doAddCategory(newCategory);
 		repoview.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 
 	}
+	public void editCategory(TestSession testSession, ContentCategory categoryToEdit)
+	{
+		
+		
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		PageNavigator.switchToFrame( testSession, AbstractAdminConsolePage.LEFT_FRAME_NAME );
+		//ContentsTableFrame contentTableFrame = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession, parentNames );
+		WebElement result = menu.findCategoryInContentFolder(categoryToEdit.getName(), categoryToEdit.getParentNames());
+		if (result != null)
+		{
+			//click by category and switch to main frame
+			result.click();
+			PageNavigator.switchToFrame( testSession, AbstractAdminConsolePage.MAIN_FRAME_NAME );
+			
+		} else
+		{
+			
+		}
+
+		
+		ContentsTableFrame frame =new ContentsTableFrame(testSession);
+		frame.doEditCategory(categoryToEdit);
+		
+
+	}
+
 
 	/**
 	 * Finds category by Name and names of parent folders.

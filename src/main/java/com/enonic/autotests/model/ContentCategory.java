@@ -1,5 +1,9 @@
 package com.enonic.autotests.model;
 
+import java.util.List;
+
+import com.enonic.autotests.model.userstores.AclEntry;
+
 /**
  * Model class for 'Category' cms-object
  * 
@@ -10,6 +14,8 @@ public class ContentCategory
 	private String name;
 	private String description;
 	private String contentTypeName;
+	private List<AclEntry> aclEntries;
+	
 	
 	public String getName()
 	{
@@ -51,4 +57,14 @@ public class ContentCategory
 		this.parentNames = parentNames;
 	}
 	
+
+	public List<AclEntry> getAclEntries()
+	{
+		return aclEntries;
+	}
+
+	public void setAclEntries(List<AclEntry> aclEntries)
+	{
+		this.aclEntries = aclEntries;
+	}
 }

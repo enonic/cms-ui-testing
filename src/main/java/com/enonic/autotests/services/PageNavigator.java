@@ -9,7 +9,7 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.logger.Logger;
-import com.enonic.autotests.model.User;
+import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.pages.HomePage;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.adminconsole.LeftMenuFrame;

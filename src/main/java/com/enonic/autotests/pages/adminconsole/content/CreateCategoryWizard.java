@@ -1,5 +1,7 @@
 package com.enonic.autotests.pages.adminconsole.content;
 
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,6 +9,7 @@ import org.openqa.selenium.support.How;
 
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.ContentCategory;
+import com.enonic.autotests.model.userstores.AclEntry;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsoleWizardPage;
 import com.enonic.autotests.utils.TestUtils;
 
@@ -48,4 +51,26 @@ public class CreateCategoryWizard extends AbstractAdminConsoleWizardPage
 		buttonSave.click();
 		checkAlerts();		
 	}	
+	
+	public void doEditCategory(ContentCategory category)
+	{
+		//do edit general tab
+		//2. do edit security tab:
+		doChangeACL(category.getAclEntries());
+		buttonSave.click();
+		checkAlerts();		
+	}
+	
+	/**
+	 * @param aclentries
+	 */
+	public void doChangeACL(List<AclEntry> aclentries)
+	{
+		if(aclentries!=null && !aclentries.isEmpty())
+		{
+			
+		}
+		
+	}
+	
 }
