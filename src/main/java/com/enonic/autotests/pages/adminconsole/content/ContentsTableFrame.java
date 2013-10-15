@@ -78,7 +78,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 	{
 		editButton.click();
 		CreateCategoryWizard wizard = new CreateCategoryWizard(getSession());
-		wizard.doChangeACL(categoryToEdit.getAclEntries());
+		wizard.doEditCategory(categoryToEdit, false);
 		
 		
 	}

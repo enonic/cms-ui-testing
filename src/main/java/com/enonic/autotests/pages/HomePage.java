@@ -54,7 +54,7 @@ public class HomePage extends Page {
 		}
 		TestUtils.getInstance().waitUntilVisible(getSession(), By.name(AbstractAdminConsolePage.LEFT_FRAME_NAME),AppConstants.PAGELOAD_TIMEOUT);
 		TestUtils.getInstance().waitUntilVisible(getSession(), By.name(AbstractAdminConsolePage.MAIN_FRAME_NAME), AppConstants.PAGELOAD_TIMEOUT);
-		TestUtils.getInstance().saveScreenshot(getSession());
+		//TestUtils.getInstance().saveScreenshot(getSession());
 	}
 
 	/**

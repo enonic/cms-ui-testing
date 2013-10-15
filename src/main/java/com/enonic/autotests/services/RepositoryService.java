@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
@@ -69,8 +70,7 @@ public class RepositoryService
 	}
 	public void editCategory(TestSession testSession, ContentCategory categoryToEdit)
 	{
-		
-		
+		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		PageNavigator.switchToFrame( testSession, AbstractAdminConsolePage.LEFT_FRAME_NAME );
 		//ContentsTableFrame contentTableFrame = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession, parentNames );
@@ -93,6 +93,22 @@ public class RepositoryService
 
 	}
 
+
+ public ContentsTableFrame findCategoryInContentAndOpen(TestSession testSession, ContentCategory category)
+ {
+	   LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		PageNavigator.switchToFrame( testSession, AbstractAdminConsolePage.LEFT_FRAME_NAME );
+		WebElement result = menu.findCategoryInContentFolder(category.getName(), category.getParentNames());
+		if(result == null)
+		{
+			throw new TestFrameworkException("category was not found!  " +category.getName());
+		}
+		result.click();
+		PageNavigator.switchToFrame( testSession, AbstractAdminConsolePage.MAIN_FRAME_NAME );
+		ContentsTableFrame frame =new ContentsTableFrame(testSession);
+		
+		return frame;
+ }
 
 	/**
 	 * Finds category by Name and names of parent folders.

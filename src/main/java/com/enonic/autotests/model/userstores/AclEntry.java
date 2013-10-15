@@ -10,13 +10,30 @@ public class AclEntry
 		USER, GROUP
 	}
 
+	public enum AvailableOperations
+	{
+		
+		READ("right=read"), BROWSE("right=adminread"),CREATE("right=create"),APPROVE("right=approve"),
+		ADMINISTRATE("right=administrate");
+		private AvailableOperations(String value)
+		{
+			this.uiValue = value;
+		}
+		private String uiValue;
+		
+		public String getUiValue()
+		{
+			return uiValue;
+		}
+	}
+
 	private String principalName;
 
 	private PrincipalType type;
 
 	private boolean allow;
 
-	private List<String> operations;
+	private List<String> permissions;
 
 	// ------------------------------------------------------
 
@@ -30,14 +47,14 @@ public class AclEntry
 		this.allow = allow;
 	}
 
-	public List<String> getOperations()
+	public List<String> getPermissions()
 	{
-		return operations;
+		return permissions;
 	}
 
-	public void setOperations(List<String> operations)
+	public void setPermissions(List<String> permissions)
 	{
-		this.operations = operations;
+		this.permissions = permissions;
 	}
 
 	public String getPrincipalName()

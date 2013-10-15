@@ -90,7 +90,7 @@ public class AddUserWizardPage extends  AbstractAdminConsolePage
 		getDriver().findElement(By.xpath(addGroupsButtonXpath)).click();
 		//3. select all groups to add and close popup window
 		ChooseGroupPopupWindow popupWin = new ChooseGroupPopupWindow(getSession());
-		popupWin.doChooseGroups(groupNames);
+		popupWin.doChoosePrincipals(groupNames);
 		
 		
 		
