@@ -157,7 +157,6 @@ public class ACLTest extends BaseTest
 	{
 		User contrubutor = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
 		getTestSession().setUser(contrubutor);
-		PageNavigator.navgateToAdminConsole(getTestSession());
 		ContentCategory category = (ContentCategory) getTestSession().get(CONTRIBUTOR_CATEGORY_KEY);
 		boolean result = repositoryService.isCategoryPresent(getTestSession(), category.getName(), category.getParentNames());
 
