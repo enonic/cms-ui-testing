@@ -49,6 +49,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 	@Test(description = "add user to  check AÑL-contributor")
 	public void createUserTest()
 	{
+		logger.info("STARTED###: try to  add user.");
 		User user = new User();
 		user.setPassword(PASSWORD);
 		String name = "contrib" + Math.abs(new Random().nextInt());
@@ -56,6 +57,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		user.setEmail(name + "@mail.com");
 		accountService.addUser(getTestSession(), user);
 		getTestSession().put(CONTRIBUTOR_USER_KEY, user);
+		logger.info("FINISHED ###:   user with name:"+user.getName() +" was created!");
 	}
 	
 
@@ -161,7 +163,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 	@Test(description = "Verify that user with no admin-browse is not able to browse category", dependsOnMethods = "addContentAndGrantAccessTest")
 	public void verifyBrowseCategory1()
 	{
-		logger.info("finished $$$: Setup category with content. Give user read access  but not admin-browse on category");
+		logger.info("STARTED ###: Verify that user with no admin-browse is not able to browse category");
 		User contrubutor = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
 		getTestSession().setUser(contrubutor);
 		PageNavigator.navgateToAdminConsole(getTestSession());
@@ -169,13 +171,14 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		boolean result = repositoryService.isCategoryPresent(getTestSession(), category.getName(), category.getParentNames());
 
 		Assert.assertFalse(result, "user able to browse category!");
+		logger.info("FINISHED $$$: Verify that user with no admin-browse is not able to browse category");
 
 	}
 	
 	@Test(description = "change the category by adding admin-browse for user", dependsOnMethods = "verifyBrowseCategory1")
 	public void editCaregoryAddAdminBrowsePermissionTest()
 	{
-		
+		logger.info("STARTED ### edit category and add 'Browse' permission for user");
 		ContentCategory categoryToEdit = (ContentCategory) getTestSession().get(CONTRIBUTOR_CATEGORY_KEY);
 		
 		AclEntry entry = new AclEntry();
@@ -191,13 +194,14 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		getTestSession().setUser(null);
 		repositoryService.editCategory(getTestSession(), categoryToEdit);	
 		logger.info("Setup category with content. Give user read access  but not admin-browse on category");
+		logger.info("FINISHED $$$ edit category and add 'Browse' permission for user");
 
 	}
 
 	@Test(description = "Verify that user is allowed to browse category", dependsOnMethods = "editCaregoryAddAdminBrowsePermissionTest")
 	public void verifyBrowseCategory2()
 	{
-		logger.info("");
+		logger.info("Verify that user is allowed to browse category, when permission 'browse' added to category");
 		User contrubutor = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
 		getTestSession().setUser(contrubutor);
 		ContentCategory category = (ContentCategory) getTestSession().get(CONTRIBUTOR_CATEGORY_KEY);
@@ -207,6 +211,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		result = frame.isContentPresentInTable(CONTENT_NAME);
 		TestUtils.getInstance().saveScreenshot(getTestSession());
 		Assert.assertTrue(result, "content was not found!");
+		logger.info("Finished $$$$ user is allowed to browse category, when permission 'browse' added to category");
 
 	}
 	@Test(description="Contributors should not be able to edit the HTML-code.", dependsOnMethods ="verifyBrowseCategory2")
