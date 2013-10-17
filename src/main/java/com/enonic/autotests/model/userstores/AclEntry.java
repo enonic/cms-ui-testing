@@ -10,12 +10,28 @@ public class AclEntry
 		USER, GROUP
 	}
 
-	public enum AvailableOperations
+	public enum CategoryAvailableOperations
 	{
 		
 		READ("right=read"), BROWSE("right=adminread"),CREATE("right=create"),APPROVE("right=approve"),
 		ADMINISTRATE("right=administrate");
-		private AvailableOperations(String value)
+		private CategoryAvailableOperations(String value)
+		{
+			this.uiValue = value;
+		}
+		private String uiValue;
+		
+		public String getUiValue()
+		{
+			return uiValue;
+		}
+	}
+	public enum ContentAvailableOperations
+	{
+		
+		READ("right=read"), UPDATE("right=update"),DELETE("right=delete");
+		
+		private ContentAvailableOperations(String value)
 		{
 			this.uiValue = value;
 		}

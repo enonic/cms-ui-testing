@@ -1,5 +1,6 @@
 package com.enonic.autotests.general;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,14 +14,15 @@ import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.model.ImageContentInfo;
+import com.enonic.autotests.model.ContentWithEditorInfo;
 import com.enonic.autotests.model.userstores.AclEntry;
-import com.enonic.autotests.model.userstores.AclEntry.AvailableOperations;
+import com.enonic.autotests.model.userstores.AclEntry.CategoryAvailableOperations;
+import com.enonic.autotests.model.userstores.AclEntry.ContentAvailableOperations;
 import com.enonic.autotests.model.userstores.AclEntry.PrincipalType;
 import com.enonic.autotests.model.userstores.BuiltInGroups;
 import com.enonic.autotests.model.userstores.User;
-import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
+import com.enonic.autotests.pages.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.services.AccountService;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
@@ -28,7 +30,7 @@ import com.enonic.autotests.services.PageNavigator;
 import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.utils.TestUtils;
 
-public class ACLTest extends BaseTest
+public class ContributorACLCategoryBrowseTest extends BaseTest
 {
 
 	private AccountService accountService = new AccountService();
@@ -41,6 +43,8 @@ public class ACLTest extends BaseTest
 	private final String CONTRIBUTOR_USER_KEY = "contributor_key";
 	private final String CONTRIBUTOR_CATEGORY_KEY = "contributor_cat_key";
 	private final String CONTENT_NAME = "contentacl";
+	
+	private final String TINY_MCE_CFG = "test-data/contenttype/tiny-editor.xml";
 
 	@Test(description = "add user to  check AÑL-contributor")
 	public void createUserTest()
@@ -53,75 +57,111 @@ public class ACLTest extends BaseTest
 		accountService.addUser(getTestSession(), user);
 		getTestSession().put(CONTRIBUTOR_USER_KEY, user);
 	}
+	
 
 	@Test(description = "add user to Contrubutors group", dependsOnMethods = "createUserTest")
 	public void addUserToContributorsTest()
 	{
+		logger.info("STARTED###:  add user to the Contrubutors group");
 		User contrubutor = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
 		List<String> groups = new ArrayList<>();
 		groups.add(BuiltInGroups.CONTRIBUTORS.getValue());
 		contrubutor.setGroups(groups);
 
 		accountService.editUser(getTestSession(), contrubutor.getName(), contrubutor);
+		logger.info("FINISHED ###:   user with name:"+contrubutor.getName() +" was added  to the  Contrubutors group");
 	}
+	
+
 
 	@Test(description = "add catrgory and content, admin browse not allowed", dependsOnMethods = "addUserToContributorsTest")
 	public void addContentAndGrantAccessTest()
 	{
-		ContentType imagesType = new ContentType();
-		String contentTypeName = "Image";
-		imagesType.setName(contentTypeName);
-		imagesType.setContentHandler(ContentHandler.IMAGES);
-		imagesType.setDescription("images ctype");
-		boolean isExist = contentTypeService.findContentType(getTestSession(), contentTypeName);
-		if (!isExist)
+		logger.info("STARTED###:  Setup category with content. Give user read access  but not admin-browse on category");
+		// create content type with editor
+		ContentType editorCtype = new ContentType();
+		String contentTypeName = "Editor" + Math.abs(new Random().nextInt());
+		editorCtype.setName(contentTypeName);
+		editorCtype.setContentHandler(ContentHandler.CUSTOM_CONTENT);
+		editorCtype.setDescription("content type with html area tinyMCE");
+		InputStream in = ContributorACLCategoryBrowseTest.class.getClassLoader().getResourceAsStream(TINY_MCE_CFG);
+		String editorCFG = TestUtils.getInstance().readConfiguration(in);
+		editorCtype.setConfiguration(editorCFG);
+		ContentTypesFrame frame = contentTypeService.createContentType(getTestSession(), editorCtype);
+		boolean isCreated = frame.verifyIsPresent(contentTypeName);
+		if (!isCreated)
 		{
-			contentTypeService.createContentType(getTestSession(), imagesType);
-			logger.info("New content type with 'Images' handler was created");
+			Assert.fail("error during creation of a content type!");
 		}
-
+        //2. create a repository
 		ContentRepository repository = new ContentRepository();
-		repository.setName("acltest" + Math.abs(new Random().nextInt()));
+		repository.setName("contrib" + Math.abs(new Random().nextInt()));
 		repositoryService.createContentRepository(getTestSession(), repository);
-		// getTestSession().put(EDITOR_REPOSITORY_KEY, repository);
-
+		logger.info("repository was created. repository  name: " + repository.getName());
+		
+		
+        //3. start to add category to the repository
 		ContentCategory category = new ContentCategory();
 		category.setContentTypeName(contentTypeName);
-		category.setName("contrib");
+		category.setName("cat");
 		String[] parentNames = { repository.getName() };
 		category.setParentNames(parentNames);
-		List<AclEntry> aclEntries = new ArrayList<>();
-		AclEntry entry = new AclEntry();
+		// 4. set ACL(Read permission, but not browse) for Category:
+		List<AclEntry> catAclEntries = new ArrayList<>();
+		AclEntry categoryAclEntry = new AclEntry();
 		String principalName = ((User) getTestSession().get(CONTRIBUTOR_USER_KEY)).getName();
-		entry.setPrincipalName(principalName);
+		categoryAclEntry.setPrincipalName(principalName);
 		
-		entry.setType(PrincipalType.USER);
-		List<String> operations = new ArrayList<>();
-		operations.add(AvailableOperations.READ.getUiValue());
-		entry.setPermissions(operations);
-		entry.setAllow(true);
-		aclEntries.add(entry);
-		category.setAclEntries(aclEntries);
+		categoryAclEntry.setType(PrincipalType.USER);
+		List<String> categoryPerm = new ArrayList<>();
+		categoryPerm.add(CategoryAvailableOperations.READ.getUiValue());
+		categoryAclEntry.setPermissions(categoryPerm);
+		categoryAclEntry.setAllow(true);
+		catAclEntries.add(categoryAclEntry);
+		category.setAclEntries(catAclEntries);
 		getTestSession().put(CONTRIBUTOR_CATEGORY_KEY, category);
+		
+		//5. create category in the just added repository
 		repositoryService.addCategory(getTestSession(), category);
-
-		String pathToFile = "test-data/contentrepository/test.jpg";
-		Content<ImageContentInfo> content = new Content<>();
+		logger.info("category was added. category  name: " + category.getName());
+		
+       // 6. add  content to the category
 		String[] pathToContent = new String[] { repository.getName(), category.getName() };
-		content.setParentNames(pathToContent);
-		ImageContentInfo contentTab = new ImageContentInfo();
-		contentTab.setPathToFile(pathToFile);
-		contentTab.setDescription("image for import test");
-		content.setContentTab(contentTab);
+
+		Content<ContentWithEditorInfo> content = new Content<>();
 		content.setDisplayName(CONTENT_NAME);
-		content.setContentHandler(ContentHandler.IMAGES);
-		contentService.addimageContent(getTestSession(), content);
+		content.setParentNames(pathToContent);
+		ContentWithEditorInfo contentTab = new ContentWithEditorInfo();
+		contentTab.setHtmlareaText("test text");
+		content.setContentTab(contentTab);
+		content.setContentHandler(ContentHandler.CUSTOM_CONTENT);
+		
+		List<AclEntry> contentAclEntries = new ArrayList<>();
+		AclEntry contentAclEntry = new AclEntry();
+		contentAclEntry.setPrincipalName(principalName);		
+		contentAclEntry.setType(PrincipalType.USER);
+		
+		List<String> contentPermissions = new ArrayList<>();
+		contentPermissions.add(ContentAvailableOperations.READ.getUiValue());
+		contentPermissions.add(ContentAvailableOperations.UPDATE.getUiValue());
+		contentAclEntry.setPermissions(contentPermissions);
+		
+		contentAclEntry.setAllow(true);
+		contentAclEntries.add(contentAclEntry);
+		content.setAclEntries(contentAclEntries);
+		
+		contentService.addContentWithEditor(getTestSession(), content);
+		logger.info("content was added to the categry with name: " + content.getDisplayName());
+		
+		logger.info("finished $$$: Setup category with content. Give user read access  but not admin-browse on category");
 
 	} 
 
+	
 	@Test(description = "Verify that user with no admin-browse is not able to browse category", dependsOnMethods = "addContentAndGrantAccessTest")
 	public void verifyBrowseCategory1()
 	{
+		logger.info("finished $$$: Setup category with content. Give user read access  but not admin-browse on category");
 		User contrubutor = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
 		getTestSession().setUser(contrubutor);
 		PageNavigator.navgateToAdminConsole(getTestSession());
@@ -135,6 +175,7 @@ public class ACLTest extends BaseTest
 	@Test(description = "change the category by adding admin-browse for user", dependsOnMethods = "verifyBrowseCategory1")
 	public void editCaregoryAddAdminBrowsePermissionTest()
 	{
+		
 		ContentCategory categoryToEdit = (ContentCategory) getTestSession().get(CONTRIBUTOR_CATEGORY_KEY);
 		
 		AclEntry entry = new AclEntry();
@@ -143,18 +184,20 @@ public class ACLTest extends BaseTest
 		
 		entry.setType(PrincipalType.USER);
 		List<String> operations = new ArrayList<>();
-		operations.add(AvailableOperations.BROWSE.getUiValue());
+		operations.add(CategoryAvailableOperations.BROWSE.getUiValue());
 		entry.setPermissions(operations);
 		entry.setAllow(true);
 		categoryToEdit.getAclEntries().add(entry);
 		getTestSession().setUser(null);
-		repositoryService.editCategory(getTestSession(), categoryToEdit);		
+		repositoryService.editCategory(getTestSession(), categoryToEdit);	
+		logger.info("Setup category with content. Give user read access  but not admin-browse on category");
 
 	}
 
 	@Test(description = "Verify that user is allowed to browse category", dependsOnMethods = "editCaregoryAddAdminBrowsePermissionTest")
 	public void verifyBrowseCategory2()
 	{
+		logger.info("");
 		User contrubutor = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
 		getTestSession().setUser(contrubutor);
 		ContentCategory category = (ContentCategory) getTestSession().get(CONTRIBUTOR_CATEGORY_KEY);
@@ -165,6 +208,11 @@ public class ACLTest extends BaseTest
 		TestUtils.getInstance().saveScreenshot(getTestSession());
 		Assert.assertTrue(result, "content was not found!");
 
+	}
+	@Test(description="Contributors should not be able to edit the HTML-code.", dependsOnMethods ="verifyBrowseCategory2")
+	public void verifyContributorTest()
+	{
+		//contentService.editContent(session, content, newName)
 	}
 
 }

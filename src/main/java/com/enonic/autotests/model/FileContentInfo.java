@@ -58,7 +58,7 @@ public class FileContentInfo implements IContentInfo<FileContentInfo>
 	}
 
 	@Override
-	public FileContentInfo getContentTabInfo()
+	public FileContentInfo getInfo()
 	{
 		return this;
 	}

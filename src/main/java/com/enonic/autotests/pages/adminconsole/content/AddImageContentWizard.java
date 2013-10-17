@@ -46,33 +46,33 @@ public class AddImageContentWizard extends AbstractAddContentWizard<ImageContent
 	public void typeDataAndSave(Content<ImageContentInfo> newcontent)
 	{
 		IContentInfo<ImageContentInfo> contentTab = newcontent.getContentTab();
-		String comment = contentTab.getContentTabInfo().getComment();
+		String comment = contentTab.getInfo().getComment();
 		//1. fill a comments field
 		if (comment != null && !commentInput.getAttribute("value").equals(comment))
 		{
-			commentInput.sendKeys(contentTab.getContentTabInfo().getComment());
+			commentInput.sendKeys(contentTab.getInfo().getComment());
 		}
-		String description = contentTab.getContentTabInfo().getDescription();
+		String description = contentTab.getInfo().getDescription();
 		//2. fill a description field
 		if (description != null && !descriptionTextarea.getAttribute("value").equals(description))
 		{
-			descriptionTextarea.sendKeys(contentTab.getContentTabInfo().getDescription());
+			descriptionTextarea.sendKeys(contentTab.getInfo().getDescription());
 		}
         //3. fill a photographername field.
-		String phName = contentTab.getContentTabInfo().getPhotographerName();
+		String phName = contentTab.getInfo().getPhotographerName();
 		if (phName != null && !photographername.getAttribute("value").equals(phName))
 		{
-			photographername.sendKeys(newcontent.getContentTab().getContentTabInfo().getPhotographerName());
+			photographername.sendKeys(newcontent.getContentTab().getInfo().getPhotographerName());
 		}
 		//4. fill a photographeremail field.
-		String phEmail = contentTab.getContentTabInfo().getPhotographerEmail();
+		String phEmail = contentTab.getInfo().getPhotographerEmail();
 		if (phEmail!=null && !photographeremail.getAttribute("value").equals(phEmail))
 		{
-			photographeremail.sendKeys(newcontent.getContentTab().getContentTabInfo().getPhotographerEmail());
+			photographeremail.sendKeys(newcontent.getContentTab().getInfo().getPhotographerEmail());
 		}
 
 		//5. specify a path to the file: 		
-		String pathTofile = newcontent.getContentTab().getContentTabInfo().getPathToFile();
+		String pathTofile = newcontent.getContentTab().getInfo().getPathToFile();
 		//if (!findElement(By.id("origimagefilename")).getText().equals(pathTofile))
 		//{
 		//	getDriver().findElement(By.id("origimagefilename")).sendKeys(pathTofile);

@@ -1,5 +1,9 @@
 package com.enonic.autotests.model;
 
+import java.util.List;
+
+import com.enonic.autotests.model.userstores.AclEntry;
+
 /**
  * Base class for all types of content.
  * 
@@ -19,6 +23,19 @@ public class Content<T>
 
 	private Publishing publishingTab;
 	
+	private List<AclEntry> aclEntries;
+	
+	
+	public List<AclEntry> getAclEntries()
+	{
+		return aclEntries;
+	}
+
+	public void setAclEntries(List<AclEntry> aclEntries)
+	{
+		this.aclEntries = aclEntries;
+	}
+
 	public IContentInfo<T> getContentTab()
 	{
 		return contentTab;

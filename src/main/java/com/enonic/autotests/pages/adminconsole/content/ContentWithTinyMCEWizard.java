@@ -13,10 +13,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
+import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.AddContentException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.Content;
+import com.enonic.autotests.model.ContentWithEditorInfo;
 import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.model.TinyMCETable;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
@@ -27,7 +29,7 @@ import com.enonic.autotests.utils.TestUtils;
  * Content Wizard page, that contains TinyMCE HTML WYSIWYG editor.
  * 
  */
-public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
+public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWithEditorInfo> 
 {
 	private final String BOLD_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a/span[contains(@class,'mce_bold')]";
 	private final String ITALIC_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a/span[contains(@class,'mce_italic')]";
@@ -58,6 +60,7 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	private final String UNDO_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_undo')]";
 	private final String REDO_BUTTON_XPATH = "//td[contains(@class,'mceToolbar')]//a[@role='button' and contains(@class,'mce_redo')]";
 	
+	private String EDIT_HTML_BUTTON_XPATH = "//a[contains(@class,'mceButtonEnabled ') and @title='Edit HTML Source']";
 	
 	
 
@@ -174,7 +177,27 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		super(session);
 
 	}
+	 public boolean isPresentEditHtmlButton()
+	 {
+		 return TestUtils.getInstance().waitAndFind(By.xpath(EDIT_HTML_BUTTON_XPATH), getDriver());
+	 }
+	
+	@Override
+	public void typeDataAndSave(Content<ContentWithEditorInfo> content)
+	{
+		boolean result = TestUtils.getInstance().waitAndFind(By.xpath("//input[@name='myTitle']"), getDriver());
+		if(!result)
+		{
+			throw new TestFrameworkException("input  myTitle was not found");
+		}
+		getDriver().findElement(By.xpath("//input[@name='myTitle']")).sendKeys(content.getDisplayName());
+		editorArea.sendKeys(content.getContentTab().getInfo().getHtmlareaText());
+		
+		doSetACL(content.getAclEntries());
+		saveButton.click();
+		closeButton.click();
 
+	}
 	public void verifyUndoRedo()
 	{
 		String string1 = "string1";
@@ -928,10 +951,7 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 		for (String s : expected)
 		{
 			result &= actualInnerHtml.contains(s);
-//			if (!result)
-//			{
-//				Assert.fail("actual innerHtml does not contain expected string: " + s);
-//			}
+
 		}
 		return result;
 
@@ -1129,8 +1149,7 @@ public class ContentWithTinyMCEWizard extends AbstractAdminConsolePage
 	@Override
 	public void waituntilPageLoaded(long timeout)
 	{
-		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By
-				.xpath("//iframe//body[@class='mceContentBody']")));
+		new WebDriverWait(getDriver(), timeout).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(GENERAL_TAB_LINK_XPATH)));
 
 	}
 

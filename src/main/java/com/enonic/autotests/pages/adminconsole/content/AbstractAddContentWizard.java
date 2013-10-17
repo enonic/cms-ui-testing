@@ -1,5 +1,6 @@
 package com.enonic.autotests.pages.adminconsole.content;
 
+import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.By;
@@ -11,8 +12,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
+import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.Content;
+import com.enonic.autotests.model.userstores.AclEntry;
+import com.enonic.autotests.model.userstores.AclEntry.PrincipalType;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
+import com.enonic.autotests.pages.adminconsole.userstores.ChooseUserOrGroupPopupWindow;
+import com.enonic.autotests.utils.TestUtils;
 
 public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePage implements IContentWizard<T>
 {
@@ -39,6 +45,9 @@ public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePa
 	
 	@FindBy(how = How.ID, using = "name")
 	protected WebElement nameInput;
+	
+	@FindBy(xpath = "//span[contains(@class,'tab')]/a[text()='Security']")
+	private WebElement securityTab;
 	
 	private final String PROPERTIES_TAB_LINK = "//span[contains(@class,'tab')]/a[text()='Properties']";
 	private final String SOURCE_TAB_LINK = "//span[contains(@class,'tab')]/a[text()='Source']";
@@ -79,7 +88,55 @@ public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePa
 		return sourceTab.getIndexedVaues();
 	}
 
-
+	public void doSetACL(List<AclEntry> aclentries)
+	{
+		
+		if(aclentries!=null)
+		{
+			getLogger().info("CATEGORY: goto security tab");
+			securityTab.click();
+			for(AclEntry entry:aclentries)
+			{
+				if(entry.getType().equals(PrincipalType.USER))
+				{
+					doAddUserPrincipal(entry.getPrincipalName());
+					doSetPermissions(entry);
+				}
+			}
+			
+		}
+		
+	}
+	private void doSetPermissions(AclEntry entry)
+	{
+		String checkboxXpath = "//tbody[@id='accessRightTable']//td[contains(.,'%s')]/..//input[contains(@name,'%s')]";
+		for(String op: entry.getPermissions())
+		{
+			WebElement checkbox = getDriver().findElement(By.xpath(String.format(checkboxXpath, entry.getPrincipalName(),op)));
+			if(!checkbox.isSelected() && entry.isAllow() )
+			{
+				checkbox.click();
+				TestUtils.getInstance().saveScreenshot(getSession());
+			}
+			
+		}
+	}
+	private void doAddUserPrincipal(String pname)
+	{
+		String addButtonXpath = "//button[@name= 'butAddAccesRightRow']";
+		boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(addButtonXpath), getDriver());
+		if(!isPresent)
+		{
+			throw new TestFrameworkException("button 'add'  was not found");
+		}
+		//click by 'add' button:
+		getDriver().findElement(By.xpath(addButtonXpath)).click();
+		ChooseUserOrGroupPopupWindow popup = new ChooseUserOrGroupPopupWindow(getSession());
+		// choose a user
+		popup.doChoosePrincipals(pname);
+		waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+	}
+	
 	@Override
 	public abstract  void typeDataAndSave(Content<T> content);
 	

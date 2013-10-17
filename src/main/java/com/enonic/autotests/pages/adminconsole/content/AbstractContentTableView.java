@@ -55,14 +55,20 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	 */
 	public <T> IContentWizard<T> openEditContentWizard(Content<T> content)
 	{
-		String nameXpath = String.format(EDIT_CONTENT_LINK, content.getDisplayName() );
+
+		doStartEditContent(content.getDisplayName());
+		return updateOrCreateWizardFactory(content.getContentHandler());
+	}
+	
+	public void doStartEditContent(String contentDisplayName)
+	{
+		String nameXpath = String.format(EDIT_CONTENT_LINK, contentDisplayName );
 		boolean isEditButtonPresent = TestUtils.getInstance().waitAndFind(By.xpath(nameXpath), getDriver());
 		if (!isEditButtonPresent)
 		{
 			throw new AddContentException("'Edit Content' link was not found");
 		}
 		findElement(By.xpath(nameXpath)).click();
-		return updateOrCreateWizardFactory(content.getContentHandler());
 	}
 	
 	/**

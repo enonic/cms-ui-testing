@@ -86,7 +86,7 @@ public class ImageContentInfo implements IContentInfo<ImageContentInfo>
 	}
 
 	@Override
-	public ImageContentInfo getContentTabInfo()
+	public ImageContentInfo getInfo()
 	{
 
 		return this;

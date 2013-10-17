@@ -38,17 +38,17 @@ public class AddFileContentWizard extends AbstractAddContentWizard<FileContentIn
 	public void typeDataAndSave(Content<FileContentInfo> newcontent)
 	{
 		IContentInfo<FileContentInfo> contentTab = newcontent.getContentTab();
-		String comment = contentTab.getContentTabInfo().getComment();
+		String comment = contentTab.getInfo().getComment();
 		if(comment !=null &&!commentInput.getAttribute("value").equals(comment))
 		{
-			commentInput.sendKeys(contentTab.getContentTabInfo().getComment());
+			commentInput.sendKeys(contentTab.getInfo().getComment());
 		}
-		if(contentTab.getContentTabInfo().getDescription()!=null && !descriptionTextarea.getAttribute("value").equals(contentTab.getContentTabInfo().getDescription()))
+		if(contentTab.getInfo().getDescription()!=null && !descriptionTextarea.getAttribute("value").equals(contentTab.getInfo().getDescription()))
 		{
-			descriptionTextarea.sendKeys(contentTab.getContentTabInfo().getDescription());
+			descriptionTextarea.sendKeys(contentTab.getInfo().getDescription());
 		}
 				
-		String pathTofile = newcontent.getContentTab().getContentTabInfo().getPathToFile();
+		String pathTofile = newcontent.getContentTab().getInfo().getPathToFile();
 		URL dirURL = ContentConvertor.class.getClassLoader().getResource(pathTofile);
 		File file = null;
 		try

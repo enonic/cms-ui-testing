@@ -10,6 +10,7 @@ import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentRepository;
+import com.enonic.autotests.model.ContentWithEditorInfo;
 import com.enonic.autotests.model.FileContentInfo;
 import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.model.site.SectionMenuItem;
@@ -19,6 +20,7 @@ import com.enonic.autotests.pages.adminconsole.content.AddFileContentWizard;
 import com.enonic.autotests.pages.adminconsole.content.AddImageContentWizard;
 import com.enonic.autotests.pages.adminconsole.content.ContentIndexes;
 import com.enonic.autotests.pages.adminconsole.content.ContentStatus;
+import com.enonic.autotests.pages.adminconsole.content.ContentWithTinyMCEWizard;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.adminconsole.content.IContentWizard;
 import com.enonic.autotests.pages.adminconsole.content.PersonImportWizardPage;
@@ -163,6 +165,8 @@ public class ContentService
 		
 	}
 	
+	
+	
 	public AbstractContentTableView addimageContent(TestSession testSession,  Content<ImageContentInfo> content)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
@@ -172,6 +176,19 @@ public class ContentService
 		return tableViewFrame;
 		
 	}
+	
+	public AbstractContentTableView addContentWithEditor(TestSession testSession,  Content<ContentWithEditorInfo> content)
+	{
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
+		tableViewFrame.doStartAddContent();
+		ContentWithTinyMCEWizard wizard = new  ContentWithTinyMCEWizard(testSession);
+		wizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		wizard.typeDataAndSave(content);
+		tableViewFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return tableViewFrame;
+		
+	}
+	
 	public AbstractContentTableView addFileContent(TestSession testSession,  Content<FileContentInfo> content)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
