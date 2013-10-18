@@ -27,7 +27,7 @@ import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.utils.TestUtils;
 
-public class ExpertContributorAclPropogateTest extends BaseTest
+public class ExpertContributorTest extends BaseTest
 {
 	private AccountService accountService = new AccountService();
 	private ContentTypeService contentTypeService = new ContentTypeService();
