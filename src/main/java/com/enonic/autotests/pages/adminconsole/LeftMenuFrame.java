@@ -61,6 +61,7 @@ public class LeftMenuFrame extends Page
 	public static String SITES_MENU_ITEM_XPATH = "//a/span[@id='menuitemText' and contains(.,'Sites')]";
 	public static String USERS_MENU_ITEM_XPATH = "//a[child::img[contains(@src,'icon_users.gif')] and text()='Users']";
 	public static String SYSTEM_MENU_ITEM_XPATH = "//a[child::img[@src='images/icon_system.gif'] and text()='System']";
+	public static String STATIC_RES_MENU_ITEM_XPATH = "//a[child::img[@src='images/icon_folder_resources.gif']]";
 	
 	
 	
@@ -72,6 +73,10 @@ public class LeftMenuFrame extends Page
 		super(session);
 	}
 	
+	public boolean isMenuItemPresent(String xpath)
+	{
+		return TestUtils.getInstance().waitAndFind(By.xpath(xpath), getDriver());
+	}
 	
 	/**
 	 * Clicks by 'Sites' link and open frame with table of sites.

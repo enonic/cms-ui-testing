@@ -27,6 +27,14 @@ public class PageNavigator
 
     private static Logger logger = Logger.getLogger();
 
+	public static boolean  isPresentMenuLink(TestSession session,String xpath)
+    {
+    	 PageNavigator.navgateToAdminConsole( session );
+    	 switchToFrame(session, AbstractAdminConsolePage.LEFT_FRAME_NAME );      
+         LeftMenuFrame menu = new LeftMenuFrame( session );
+    	 return menu.isMenuItemPresent(xpath);
+    }
+
     public static CreateContentRepositoryWizard openRepositoryProperties( TestSession session, String repositoryName )
     {
         PageNavigator.navgateToAdminConsole( session );
