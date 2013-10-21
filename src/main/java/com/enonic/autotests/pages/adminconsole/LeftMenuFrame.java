@@ -58,6 +58,8 @@ public class LeftMenuFrame extends Page
 	private String LAST_CHILD_CATEGORY_LINK = CATEGORY_MENU_ITEM + "//table[@class='menuItem' and descendant::img[contains(@src,'L.png')]]//a";
 
 	public static String CONTENT_TYPES_MENU_ITEM_XPATH = "//a[text()='Content types']";
+	public static String USERSTORES_MENU_ITEM_XPATH = "//a[text()='Userstores']";
+	
 	public static String SITES_MENU_ITEM_XPATH = "//a/span[@id='menuitemText' and contains(.,'Sites')]";
 	public static String USERS_MENU_ITEM_XPATH = "//a[child::img[contains(@src,'icon_users.gif')] and text()='Users']";
 	public static String SYSTEM_MENU_ITEM_XPATH = "//a[child::img[@src='images/icon_system.gif'] and text()='System']";

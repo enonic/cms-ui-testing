@@ -31,6 +31,24 @@ public class AccountService
 		usersFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return usersFrame;
 	}
+
+	/**
+	 * Verify is user present in the table.
+	 * 
+	 * @param testSession
+	 * @param user
+	 * @return true if user present, otherwise false
+	 */
+	public boolean isUserPresent(TestSession testSession, String userName)
+	{
+		PageNavigator.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		UsersTableFrame usersFrame = menu.openUsersTableFrame(testSession);
+		usersFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return usersFrame.isUserPresent(userName);
+
+	}
+
 	/**
 	 * Adds a new user in admin console
 	 * 
@@ -50,9 +68,11 @@ public class AccountService
 		TestUtils.getInstance().saveScreenshot(testSession);
 		return usersFrame;
 	}
+
 	/**
 	 * Opens content with type, that contains HTML-editor and check 'edit html' button.
 	 * <br> if user is expert contributor, this button should be enabled.
+	 * 
 	 * @param testSession
 	 * @param content
 	 * @return
@@ -65,7 +85,6 @@ public class AccountService
 		wizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		TestUtils.getInstance().saveScreenshot(testSession);
 		return wizard.isPresentEditHtmlButton();
-		
-		
+				
 	}
 }

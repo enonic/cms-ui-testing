@@ -27,6 +27,11 @@ public class UsersTableFrame extends AbstractAdminConsolePage
 		super(session);
 	}
 	
+	/**
+	 * Adds new user.s
+	 * 
+	 * @param user
+	 */
 	public void doAddUser(User user )
 	{
 		newButton.click();
@@ -35,6 +40,14 @@ public class UsersTableFrame extends AbstractAdminConsolePage
 		wizard.doTypeDataAndSave(user);
 		
 	}
+	
+	public boolean isUserPresent(String userName)
+	{
+		String usernameXpath = String.format(USERNAME_XPATH, userName);
+		boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(usernameXpath), getDriver());
+		return isPresent;
+	}
+
 	public void doEditUser(String userName, User user)
 	{
 		String usernameXpath = String.format(USERNAME_XPATH, user.getName());
@@ -48,7 +61,6 @@ public class UsersTableFrame extends AbstractAdminConsolePage
 		AddUserWizardPage wizard = new AddUserWizardPage(getSession());
 		// populate new data and clicks by 'Save' button. 
 		wizard.doEdit(user);
-		//wizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		
 	}
 
