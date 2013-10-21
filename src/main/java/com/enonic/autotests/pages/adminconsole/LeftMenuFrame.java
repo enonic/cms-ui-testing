@@ -73,6 +73,12 @@ public class LeftMenuFrame extends Page
 		super(session);
 	}
 	
+	/**
+	 * Verify: is present menu-link in the Left Frame
+	 * 
+	 * @param xpath
+	 * @return true if present, otherwise false.
+	 */
 	public boolean isMenuItemPresent(String xpath)
 	{
 		return TestUtils.getInstance().waitAndFind(By.xpath(xpath), getDriver());

@@ -20,6 +20,7 @@ import com.enonic.autotests.model.userstores.AclEntry.CategoryAvailableOperation
 import com.enonic.autotests.model.userstores.AclEntry.ContentAvailableOperations;
 import com.enonic.autotests.model.userstores.AclEntry.PrincipalType;
 import com.enonic.autotests.model.userstores.BuiltInGroups;
+import com.enonic.autotests.model.userstores.PermissionOperation;
 import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.adminconsole.contenttype.ContentTypesFrame;
@@ -104,29 +105,26 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		
 		
         //3. start to add category to the repository
-		ContentCategory category = new ContentCategory();
-		category.setContentTypeName(contentTypeName);
-		category.setName("cat");
 		String[] parentNames = { repository.getName() };
-		category.setParentNames(parentNames);
+		
 		// 4. set ACL(Read permission, but not browse) for Category:
 		List<AclEntry> catAclEntries = new ArrayList<>();
 		AclEntry categoryAclEntry = new AclEntry();
 		String principalName = ((User) getTestSession().get(CONTRIBUTOR_USER_KEY)).getName();
-		categoryAclEntry.setPrincipalName(principalName);
-		
+		categoryAclEntry.setPrincipalName(principalName);		
 		categoryAclEntry.setType(PrincipalType.USER);
-		List<String> categoryPerm = new ArrayList<>();
-		categoryPerm.add(CategoryAvailableOperations.READ.getUiValue());
+		
+		List<PermissionOperation> categoryPerm = new ArrayList<>();
+		categoryPerm.add(PermissionOperation.with().name(CategoryAvailableOperations.READ.getUiValue()).allow(true).build());
 		categoryAclEntry.setPermissions(categoryPerm);
-		categoryAclEntry.setAllow(true);
 		catAclEntries.add(categoryAclEntry);
-		category.setAclEntries(catAclEntries);
-		getTestSession().put(CONTRIBUTOR_CATEGORY_KEY, category);
+		ContentCategory category = ContentCategory.with().contentTypeName(contentTypeName).name("cat").parentNames(parentNames).aclEntries(catAclEntries).build();
+		
 		
 		//5. create category in the just added repository
 		repositoryService.addCategory(getTestSession(), category);
 		logger.info("category was added. category  name: " + category.getName());
+		getTestSession().put(CONTRIBUTOR_CATEGORY_KEY, category);
 		
        // 6. add  content to the category
 		String[] pathToContent = new String[] { repository.getName(), category.getName() };
@@ -144,12 +142,12 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		contentAclEntry.setPrincipalName(principalName);		
 		contentAclEntry.setType(PrincipalType.USER);
 		
-		List<String> contentPermissions = new ArrayList<>();
-		contentPermissions.add(ContentAvailableOperations.READ.getUiValue());
-		contentPermissions.add(ContentAvailableOperations.UPDATE.getUiValue());
+		
+		List<PermissionOperation> contentPermissions = new ArrayList<>();
+		contentPermissions.add(PermissionOperation.with().name(ContentAvailableOperations.READ.getUiValue()).allow(true).build());
+		contentPermissions.add(PermissionOperation.with().name(ContentAvailableOperations.UPDATE.getUiValue()).allow(true).build());
 		contentAclEntry.setPermissions(contentPermissions);
 		
-		contentAclEntry.setAllow(true);
 		contentAclEntries.add(contentAclEntry);
 		content.setAclEntries(contentAclEntries);
 		
@@ -188,10 +186,9 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		entry.setPrincipalName(principalName);
 		
 		entry.setType(PrincipalType.USER);
-		List<String> operations = new ArrayList<>();
-		operations.add(CategoryAvailableOperations.BROWSE.getUiValue());
-		entry.setPermissions(operations);
-		entry.setAllow(true);
+		List<PermissionOperation> categoryPerm = new ArrayList<>();
+		categoryPerm.add(PermissionOperation.with().name(CategoryAvailableOperations.BROWSE.getUiValue()).allow(true).build());
+		entry.setPermissions(categoryPerm);
 		categoryToEdit.getAclEntries().add(entry);
 		getTestSession().setUser(null);
 		repositoryService.editCategory(getTestSession(), categoryToEdit);	

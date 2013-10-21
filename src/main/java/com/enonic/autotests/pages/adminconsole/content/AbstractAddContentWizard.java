@@ -16,6 +16,7 @@ import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.userstores.AclEntry;
 import com.enonic.autotests.model.userstores.AclEntry.PrincipalType;
+import com.enonic.autotests.model.userstores.PermissionOperation;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.pages.adminconsole.userstores.ChooseUserOrGroupPopupWindow;
 import com.enonic.autotests.utils.TestUtils;
@@ -110,10 +111,10 @@ public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePa
 	private void doSetPermissions(AclEntry entry)
 	{
 		String checkboxXpath = "//tbody[@id='accessRightTable']//td[contains(.,'%s')]/..//input[contains(@name,'%s')]";
-		for(String op: entry.getPermissions())
+		for(PermissionOperation op: entry.getPermissions())
 		{
-			WebElement checkbox = getDriver().findElement(By.xpath(String.format(checkboxXpath, entry.getPrincipalName(),op)));
-			if(!checkbox.isSelected() && entry.isAllow() )
+			WebElement checkbox = getDriver().findElement(By.xpath(String.format(checkboxXpath, entry.getPrincipalName(),op.getName())));
+			if(!checkbox.isSelected() && op.isAllow() )
 			{
 				checkbox.click();
 				TestUtils.getInstance().saveScreenshot(getSession());

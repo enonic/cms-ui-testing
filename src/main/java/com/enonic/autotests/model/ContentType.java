@@ -60,5 +60,63 @@ public class ContentType
 	public void setConfiguration(String configuration) {
 		this.configuration = configuration;
 	}
+	public static Builder with()
+	{
+		return new Builder();
+	}
+	public static class Builder
+	{
+		private String bName;
+		
+		/** Content handler's name, 'Custom handler', by default */
+		private ContentHandler bContentHandler;
+
+		/** description of the Content type */
+		private String bDescription;
+
+		private String bPathToCSS;
+		
+		private String bConfiguration;
+		
+	   public Builder()
+	   {
+		   
+	   }
+	   public Builder name(String name)
+	   {
+		   this.bName = name;
+		   return this;
+	   }
+	   public Builder contentHandler(ContentHandler contentHandler)
+	   {
+		   this.bContentHandler = contentHandler;
+		   return this;
+	   }
+	   public Builder pathToCSS(String path)
+	   {
+		   this.bPathToCSS = path;
+		   return this;
+	   }
+	   public Builder description(String description)
+	   {
+		   this.bDescription = description;
+		   return this;
+	   }
+	   public Builder configuration(String conf)
+	   {
+		   this.bConfiguration = conf;
+		   return this;
+	   }
+	   public ContentType build()
+	   {
+		   ContentType ctype = new ContentType();
+		   ctype.configuration = this.bConfiguration;
+		   ctype.description = this.bDescription;
+		   ctype.name = this.bName;
+		   ctype.pathToCSS = this.bPathToCSS;
+		   ctype.contentHandler = this.bContentHandler;
+		   return ctype;
+	   }
+	}
 
 }

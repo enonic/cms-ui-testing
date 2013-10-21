@@ -20,6 +20,7 @@ import com.enonic.autotests.model.userstores.AclEntry.CategoryAvailableOperation
 import com.enonic.autotests.model.userstores.AclEntry.ContentAvailableOperations;
 import com.enonic.autotests.model.userstores.AclEntry.PrincipalType;
 import com.enonic.autotests.model.userstores.BuiltInGroups;
+import com.enonic.autotests.model.userstores.PermissionOperation;
 import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.services.AccountService;
 import com.enonic.autotests.services.ContentService;
@@ -112,11 +113,14 @@ public class ExpertContributorTest extends BaseTest
 		categoryAclEntry.setPrincipalName(principalName);
 		
 		categoryAclEntry.setType(PrincipalType.USER);
-		List<String> categoryPerm = new ArrayList<>();
-		categoryPerm.add(CategoryAvailableOperations.READ.getUiValue());
-		categoryPerm.add(CategoryAvailableOperations.BROWSE.getUiValue());
+		
+	
+		List<PermissionOperation> categoryPerm = new ArrayList<>();
+		categoryPerm.add(PermissionOperation.with().name(CategoryAvailableOperations.BROWSE.getUiValue()).allow(true).build());
+		categoryPerm.add(PermissionOperation.with().name(CategoryAvailableOperations.READ.getUiValue()).allow(true).build());
+		
+		
 		categoryAclEntry.setPermissions(categoryPerm);
-		categoryAclEntry.setAllow(true);
 		catAclEntries.add(categoryAclEntry);
 		category.setAclEntries(catAclEntries);
 		//getTestSession().put(EXP_CONTRIBUTOR_CATEGORY_KEY, category);
@@ -141,12 +145,12 @@ public class ExpertContributorTest extends BaseTest
 		contentAclEntry.setPrincipalName(principalName);		
 		contentAclEntry.setType(PrincipalType.USER);
 		
-		List<String> contentPermissions = new ArrayList<>();
-		contentPermissions.add(ContentAvailableOperations.READ.getUiValue());
-		contentPermissions.add(ContentAvailableOperations.UPDATE.getUiValue());
+		List<PermissionOperation> contentPermissions = new ArrayList<>();
+	
+		contentPermissions.add(PermissionOperation.with().name(ContentAvailableOperations.READ.getUiValue()).allow(true).build());
+		contentPermissions.add(PermissionOperation.with().name(ContentAvailableOperations.UPDATE.getUiValue()).allow(true).build());
 		contentAclEntry.setPermissions(contentPermissions);
 		
-		contentAclEntry.setAllow(true);
 		contentAclEntries.add(contentAclEntry);
 		content.setAclEntries(contentAclEntries);
 		

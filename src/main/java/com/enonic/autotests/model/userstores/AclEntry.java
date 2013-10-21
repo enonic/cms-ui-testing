@@ -9,7 +9,7 @@ public class AclEntry
 		
 		USER, GROUP
 	}
-
+	
 	public enum CategoryAvailableOperations
 	{
 		
@@ -47,28 +47,19 @@ public class AclEntry
 
 	private PrincipalType type;
 
-	private boolean allow;
 
-	private List<String> permissions;
+	private List<PermissionOperation> permissions;
 
 	// ------------------------------------------------------
 
-	public boolean isAllow()
-	{
-		return allow;
-	}
 
-	public void setAllow(boolean allow)
-	{
-		this.allow = allow;
-	}
 
-	public List<String> getPermissions()
+	public List<PermissionOperation> getPermissions()
 	{
 		return permissions;
 	}
 
-	public void setPermissions(List<String> permissions)
+	public void setPermissions(List<PermissionOperation> permissions)
 	{
 		this.permissions = permissions;
 	}

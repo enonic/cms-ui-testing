@@ -17,6 +17,7 @@ import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.ContentWithEditorInfo;
 import com.enonic.autotests.model.userstores.AclEntry;
 import com.enonic.autotests.model.userstores.BuiltInGroups;
+import com.enonic.autotests.model.userstores.PermissionOperation;
 import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.model.userstores.AclEntry.CategoryAvailableOperations;
 import com.enonic.autotests.model.userstores.AclEntry.ContentAvailableOperations;
@@ -45,7 +46,7 @@ public class DeveloperAclTest extends BaseTest
 	private ContentService contentService = new ContentService();
 	private final String PASSWORD = "1q2w3e";
 	private final String DEV_USER_KEY = "dev_contributor_key";
-	private final String EXP_CONTRIBUTOR_CONTENT_KEY = "dev_content_key";
+	private final String DEV_CONTRIBUTOR_CONTENT_KEY = "dev_content_key";
 	private final String CONTENT_NAME = "devcontent";
 	private final String TINY_MCE_CFG = "test-data/contenttype/tiny-editor.xml";
 	private final String DEVELOPER_CATEGORY_KEY = "dev_cat_key";
@@ -119,11 +120,11 @@ public class DeveloperAclTest extends BaseTest
 		categoryAclEntry.setPrincipalName(principalName);
 		
 		categoryAclEntry.setType(PrincipalType.USER);
-		List<String> categoryPerm = new ArrayList<>();
-		categoryPerm.add(CategoryAvailableOperations.READ.getUiValue());
-		categoryPerm.add(CategoryAvailableOperations.BROWSE.getUiValue());
+		List<PermissionOperation> categoryPerm = new ArrayList<>();
+		categoryPerm.add(PermissionOperation.with().name(CategoryAvailableOperations.BROWSE.getUiValue()).allow(true).build());
+		categoryPerm.add(PermissionOperation.with().name(CategoryAvailableOperations.READ.getUiValue()).allow(true).build());
 		categoryAclEntry.setPermissions(categoryPerm);
-		categoryAclEntry.setAllow(true);
+		
 		catAclEntries.add(categoryAclEntry);
 		category.setAclEntries(catAclEntries);
 		
@@ -149,17 +150,16 @@ public class DeveloperAclTest extends BaseTest
 		contentAclEntry.setPrincipalName(principalName);		
 		contentAclEntry.setType(PrincipalType.USER);
 		
-		List<String> contentPermissions = new ArrayList<>();
-		contentPermissions.add(ContentAvailableOperations.READ.getUiValue());
-		contentPermissions.add(ContentAvailableOperations.UPDATE.getUiValue());
-		contentAclEntry.setPermissions(contentPermissions);
+		List<PermissionOperation> contentPermissions = new ArrayList<>();
+		contentPermissions.add(PermissionOperation.with().name(ContentAvailableOperations.READ.getUiValue()).allow(true).build());
+		contentPermissions.add(PermissionOperation.with().name(ContentAvailableOperations.UPDATE.getUiValue()).allow(true).build());
 		
-		contentAclEntry.setAllow(true);
+		contentAclEntry.setPermissions(contentPermissions);
 		contentAclEntries.add(contentAclEntry);
 		content.setAclEntries(contentAclEntries);
 		
 		contentService.addContentWithEditor(getTestSession(), content);
-		getTestSession().put(EXP_CONTRIBUTOR_CONTENT_KEY, content);
+		getTestSession().put(DEV_CONTRIBUTOR_CONTENT_KEY, content);
 		logger.info("content was added to the categry with name: " + content.getDisplayName());
 		
 		logger.info("finished $$$:  Setup category with content. Give user read-update access ");
