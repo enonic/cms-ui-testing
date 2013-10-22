@@ -107,7 +107,7 @@ public class ExpertContributorTest extends BaseTest
 		category.setName("cat");
 		String[] parentNames = { repository.getName() };
 		category.setParentNames(parentNames);
-		// 4. set ACL(Read permission, but not browse) for Category:
+		// 4. set ACL('Read' and 'browse') for Category:
 		List<AclEntry> catAclEntries = new ArrayList<>();
 		AclEntry categoryAclEntry = new AclEntry();
 		String principalName = ((User) getTestSession().get(EXP_CONTRIBUTOR_USER_KEY)).getName();

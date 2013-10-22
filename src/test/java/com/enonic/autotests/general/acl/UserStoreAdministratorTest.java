@@ -118,7 +118,7 @@ public class UserStoreAdministratorTest extends BaseTest
 		category.setName("cat");
 		String[] parentNames = { repository.getName() };
 		category.setParentNames(parentNames);
-		// 4. set ACL('Read' permission and 'Browse' for Developer) to Category:
+		// 4. set ACL('Read' permission and 'Browse' for 'User Store Admin') to Category:
 		List<AclEntry> catAclEntries = new ArrayList<>();
 		AclEntry categoryAclEntry = new AclEntry();
 		String principalName = ((User) getTestSession().get(STORE_ADMIN_USER_KEY)).getName();

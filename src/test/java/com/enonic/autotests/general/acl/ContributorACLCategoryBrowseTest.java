@@ -115,6 +115,8 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		categoryAclEntry.setType(PrincipalType.USER);
 		
 		List<PermissionOperation> categoryPerm = new ArrayList<>();
+		
+		//READ ACCESS FOR USER , but not browse on category
 		categoryPerm.add(PermissionOperation.with().name(CategoryAvailableOperations.READ.getUiValue()).allow(true).build());
 		categoryAclEntry.setPermissions(categoryPerm);
 		catAclEntries.add(categoryAclEntry);
@@ -161,7 +163,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 
 	
 	@Test(description = "Verify that user with no admin-browse is not able to browse category", dependsOnMethods = "addContentAndGrantAccessTest")
-	public void verifyBrowseCategory1()
+	public void verifyIsPresentCategoryNoBrowseAccess()
 	{
 		logger.info("STARTED ###: Verify that user with no admin-browse is not able to browse category");
 		User contrubutor = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
@@ -170,12 +172,12 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		ContentCategory category = (ContentCategory) getTestSession().get(CONTRIBUTOR_CATEGORY_KEY);
 		boolean result = repositoryService.isCategoryPresent(getTestSession(), category.getName(), category.getParentNames());
 
-		Assert.assertFalse(result, "user able to browse category!");
+		Assert.assertFalse(result, "Error: user able to browse category ");
 		logger.info("FINISHED $$$: Verify that user with no admin-browse is not able to browse category");
 
 	}
 	
-	@Test(description = "change the category by adding admin-browse for user", dependsOnMethods = "verifyBrowseCategory1")
+	@Test(description = "change the category by adding 'admin-browse' for user", dependsOnMethods = "verifyIsPresentCategoryNoBrowseAccess")
 	public void editCaregoryAddAdminBrowsePermissionTest()
 	{
 		logger.info("STARTED ### edit category and add 'Browse' permission for user");
@@ -198,7 +200,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 	}
 
 	@Test(description = "Verify that user is allowed to browse category", dependsOnMethods = "editCaregoryAddAdminBrowsePermissionTest")
-	public void verifyBrowseCategory2()
+	public void verifyIsPresentCategoryBrowseAllowedForUser()
 	{
 		logger.info("Verify that user is allowed to browse category, when permission 'browse' added to category");
 		User contrubutor = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
@@ -230,7 +232,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 
 	}
 	
-	@Test(description="Contributors should not be able to edit the HTML-code.", dependsOnMethods ="verifyBrowseCategory2")
+	@Test(description="Contributors should not be able to edit the HTML-code.", dependsOnMethods ="verifyIsPresentCategoryBrowseAllowedForUser")
 	public void verifyContributorTest()
 	{
 		logger.info("STARTED#### verify that 'Contributors' should be able to edit HTML fields");
