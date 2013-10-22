@@ -213,6 +213,23 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		logger.info("Finished $$$$ user is allowed to browse category, when permission 'browse' added to category");
 
 	}
+	
+	@Test(description = "Verify that content is searchable, Verify that user is able to search for content in category", dependsOnMethods = "editCaregoryAddAdminBrowsePermissionTest")
+	public void verifyContentIsSearchable()
+	{
+		logger.info("Verify that content is searchable, Verify that user is able to search for content in category ");
+		User user = (User) getTestSession().get(CONTRIBUTOR_USER_KEY);
+		getTestSession().setUser(user);
+		Content<ContentWithEditorInfo>  content = (Content<ContentWithEditorInfo>)getTestSession().get(CONTRIBUTOR_CONTENT_KEY);
+		List<String> names = contentService.doSearchContentByName(getTestSession(),content.getDisplayName() );
+		boolean result = names.isEmpty();
+
+		
+		Assert.assertFalse(result, String.format("content with name %s was not found!",content.getDisplayName()));
+		logger.info("Finished $$$$ Verify: content is searchable, permission added: admin-browse ");
+
+	}
+	
 	@Test(description="Contributors should not be able to edit the HTML-code.", dependsOnMethods ="verifyBrowseCategory2")
 	public void verifyContributorTest()
 	{

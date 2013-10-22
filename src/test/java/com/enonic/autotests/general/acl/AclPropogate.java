@@ -174,7 +174,7 @@ public class AclPropogate extends BaseTest
 
 	}
 	
-	@Test(description = "Verify that category is searchable", dependsOnMethods = "addContentAndGrantAccessTest")
+	@Test(description = "Verify that content is searchable", dependsOnMethods = "addContentAndGrantAccessTest")
 	public void verifyContentIsSearchable()
 	{
 		logger.info("Verify that content is searchable ");
@@ -186,7 +186,7 @@ public class AclPropogate extends BaseTest
 
 		
 		Assert.assertFalse(result, String.format("content with name %s was not found!",content.getDisplayName()));
-		logger.info("Finished $$$$ Verify that content is searchable ");
+		logger.info("Finished $$$$ Verify: content is searchable ");
 
 	}
 }

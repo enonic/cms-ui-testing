@@ -22,6 +22,7 @@ import com.enonic.autotests.model.userstores.AclEntry.PrincipalType;
 import com.enonic.autotests.model.userstores.BuiltInGroups;
 import com.enonic.autotests.model.userstores.PermissionOperation;
 import com.enonic.autotests.model.userstores.User;
+import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.services.AccountService;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
@@ -38,7 +39,7 @@ public class ExpertContributorTest extends BaseTest
 	private ContentService contentService = new ContentService();
 	private final String PASSWORD = "1q2w3e";
 	private final String EXP_CONTRIBUTOR_USER_KEY = "exp_contributor_key";
-	//private final String EXP_CONTRIBUTOR_CATEGORY_KEY = "exp_contributor_cat_key";
+	private final String EXP_CONTRIBUTOR_CATEGORY_KEY = "exp_contributor_cat_key";
 	private final String EXP_CONTRIBUTOR_CONTENT_KEY = "exp_contributor_content_key";
 	private final String CONTENT_NAME = "expertcontent";
 	
@@ -67,12 +68,12 @@ public class ExpertContributorTest extends BaseTest
 		exp.setGroups(groups);
 
 		accountService.editUser(getTestSession(), exp.getName(), exp);
-		logger.info("FINISHED ###:   user with name:"+exp.getName() +" was added  to the Expert Contributors group");
+		logger.info("FINISHED ###:   user with name:"+exp.getName() +" was added  to the 'Expert Contributors' group");
 	}
 	
 
 
-	@Test(description = "add catrgory and content, admin browse  allowed", dependsOnMethods = "addUserToExpertContributorsTest")
+	@Test(description = "add category and content, 'admin browse' and 'read' are allowed", dependsOnMethods = "addUserToExpertContributorsTest")
 	public void addContentAndGrantAccessTest()
 	{
 		logger.info("STARTED###:  Setup category with content. Give user read update access ");
@@ -123,10 +124,11 @@ public class ExpertContributorTest extends BaseTest
 		categoryAclEntry.setPermissions(categoryPerm);
 		catAclEntries.add(categoryAclEntry);
 		category.setAclEntries(catAclEntries);
-		//getTestSession().put(EXP_CONTRIBUTOR_CATEGORY_KEY, category);
 		
 		//5. create category in the just added repository
 		repositoryService.addCategory(getTestSession(), category);
+		getTestSession().put(EXP_CONTRIBUTOR_CATEGORY_KEY, category);
+		
 		logger.info("category was added. category  name: " + category.getName());
 		
        // 6. add  content to the category
@@ -158,7 +160,27 @@ public class ExpertContributorTest extends BaseTest
 		getTestSession().put(EXP_CONTRIBUTOR_CONTENT_KEY, content);
 		logger.info("content was added to the categry with name: " + content.getDisplayName());
 		
-		logger.info("finished $$$: Setup category with content. Give user read access  but not admin-browse on category");
+		logger.info("finished $$$: Setup category with content. Give user 'read' and 'admin-browse' access  but not on category");
+
+	} 
+	
+	@Test(description = "Verify that category is visible and content present in this category", dependsOnMethods = "addContentAndGrantAccessTest")
+	public void verifyCategoryAndContentPresent()
+	{
+		logger.info("Verify that category is visible and content present in this category");
+		User user = (User) getTestSession().get(EXP_CONTRIBUTOR_USER_KEY );
+		getTestSession().setUser(user);
+		ContentCategory category = (ContentCategory) getTestSession().get(EXP_CONTRIBUTOR_CATEGORY_KEY);
+		boolean result = repositoryService.isCategoryPresent(getTestSession(), category.getName(), category.getParentNames());
+
+		
+		Assert.assertTrue(result, String.format("category with name %s was not found!",category.getName()));
+		
+		ContentsTableFrame frame = repositoryService.findCategoryInContentAndOpen(getTestSession(), category);
+		result = frame.isContentPresentInTable(CONTENT_NAME);
+		TestUtils.getInstance().saveScreenshot(getTestSession());
+		Assert.assertTrue(result, "content was not found!");
+		logger.info("Finished $$$$ Verify that category is visible and content present in this category");
 
 	} 
 
@@ -171,7 +193,7 @@ public class ExpertContributorTest extends BaseTest
 		getTestSession().setUser(expert);
 		Content<ContentWithEditorInfo>  content = (Content<ContentWithEditorInfo>)getTestSession().get(EXP_CONTRIBUTOR_CONTENT_KEY);
 		boolean result = accountService.isPresentEditHtmlButton(getTestSession(), content);
-		Assert.assertTrue(result,"'edit html' button should be present on the edit content page!");
+		Assert.assertTrue(result,"'edit html' button should be present on the 'edit content wizard' page!");
 		logger.info("Finished $$$$ verified that 'Expert Contributors' should be able to edit HTML fields");
 	}
 
