@@ -1,0 +1,53 @@
+<contenttype>
+    <config name="Person" version="1.0">
+        <form>
+            <title name="lastname" />
+            <block name="Personalia">
+                <input name="person-no" required="true" type="text">
+                    <display>Person number</display>
+                    <xpath>contentdata/person-no</xpath>
+                </input>
+                <input name="firstname" required="true" type="text">
+                    <display>Firstname</display>
+                    <xpath>contentdata/firstname</xpath>
+                </input>
+                <input name="lastname" required="true" type="text">
+                    <display>Surname</display>
+                    <xpath>contentdata/surname</xpath>
+                </input>
+                <input name="gender" required="true" type="dropdown">
+                    <display>Gender</display>
+                    <xpath>contentdata/gender</xpath>
+                    <options>
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </options>
+                </input>
+                <input name="birthdate" type="date">
+                    <display>Birth date</display>
+                    <xpath>contentdata/birthdate</xpath>
+                </input>
+                <input name="nationality" type="text">
+                    <display>Nationality</display>
+                    <xpath>contentdata/nationality</xpath>
+                </input>
+            </block>
+        </form>
+        <imports>
+            <import base="/persons/person" mode="xml" name="person-import-xml" status="2">
+                <mapping dest="person-no" src="@id" />
+                <mapping dest="firstname" src="firstname" />
+                <mapping dest="lastname" src="lastname" />
+                <mapping dest="birthdate" src="birthdate" />
+                <mapping dest="nationality" src="nationality" />
+                <mapping dest="gender" src="gender" />
+            </import>
+        </imports>
+        <indexparameters>
+            <index name="lastname" xpath="contentdata/lastname" />
+            <index name="gender" xpath="contentdata/gender" />
+            <index name="birthdate" xpath="contentdata/birthdate" />
+            <index name="nationality" xpath="contentdata/nationality" />
+        </indexparameters>
+    </config>
+</contenttype>
