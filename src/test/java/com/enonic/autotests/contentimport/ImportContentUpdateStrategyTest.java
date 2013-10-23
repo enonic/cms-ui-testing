@@ -92,9 +92,9 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
 		// 1. import XML formatted resource: sync='person-no', two persons should be imported.
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory);
 		//2. import and update content- change both persons.
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory);
 		//3. verify that APPROVED status for both persons.
 		List<String> namesActual = table.getContentNames();
 		for(String name: namesActual)
@@ -119,7 +119,7 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), archiveStrategyCFG);
 		logger.info("Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-AND-ARCHIVE-CONTENT");
 		//2. import and update content- change both persons, therefore status should be changed to ARCHIVED:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory);
 		
 	
 		//3. verify that APPROVED status for both persons.
@@ -146,7 +146,7 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), archiveStrategyCFG);
 		logger.info("Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-CONTENT-DRAFT");
 		//2. import and update content- change both persons, therefore status should be changed to ARCHIVED:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory);
 		
 	
 		//3. verify that APPROVED status for both persons.
@@ -173,7 +173,7 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), keepStatusCFG);
 		logger.info("Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-CONTENT-KEEP-STATUS");
 		//2. import and update content- change both persons, therefore status should be changed to ARCHIVED:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory);
 		
 	
 		//3. verify that DRAFT status for both persons, because KEEP STATUS that was received in previous test

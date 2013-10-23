@@ -1,0 +1,23 @@
+<datasources>
+    <datasource name="getContentByCategory">
+        <parameter name="categoryKeys"></parameter>
+        <parameter name="levels">2</parameter>
+        <parameter name="query"/>
+        <parameter name="orderBy"/>
+        <parameter name="count">10</parameter>
+        <parameter name="includeData">true</parameter>
+        <parameter name="childrenLevel">1</parameter>
+        <parameter name="parentLevel">0</parameter>
+        <parameter name="facets">
+            <facets>
+                <ranges name="hours-per-entry">
+                    <index>data.balance</index>
+                    <value-index>data.balance</value-index>
+                    <range to="700"/>
+                    <range from="500" to="1300"/>
+                    <range from="1000" to="1900"/>
+                </ranges>
+            </facets>
+        </parameter>
+    </datasource>
+</datasources>

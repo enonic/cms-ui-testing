@@ -146,7 +146,7 @@ public class ContentImportTest extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. import from an XML formatted resource
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML, 4l,pathToCategory);
 		logger.info("file: " + IMPORT_PERSONS_XML + "has imported");
 
 		List<String> namesActual = table.getContentNames();
@@ -169,7 +169,7 @@ public class ContentImportTest extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. import from an CSV formatted resource
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-csv", IMPORT_PERSONS_CSV_FILE, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-csv", IMPORT_PERSONS_CSV_FILE,4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		// 2. read CSV file and gets expected person names:
 		List<String> expected = ImportUtils.getPersonNamesFromCSV(IMPORT_PERSONS_CSV_FILE);
@@ -195,7 +195,7 @@ public class ContentImportTest extends BaseTest
 		String approvedStatusCFG = TestUtils.getInstance().readConfiguration(in);
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), approvedStatusCFG);
 
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_APPROVED_STATUS_FILE, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_APPROVED_STATUS_FILE, 4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		for (String name : namesActual)
 		{
@@ -234,7 +234,7 @@ public class ContentImportTest extends BaseTest
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), base64CFG);
 
 		// 2. import from an XML formatted resource with specified base64 file.
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BASE64_FILE, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BASE64_FILE, 4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		for (String name : namesActual)
 		{
@@ -271,7 +271,7 @@ public class ContentImportTest extends BaseTest
 		String relatedContentCFG = TestUtils.getInstance().readConfiguration(in);
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), relatedContentCFG);
 		// 1. import XML formatted source with related persons
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_RELATED_CONTENT_XML_FILE, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_RELATED_CONTENT_XML_FILE, 4l, pathToCategory);
 
 		// 2. gets all person names from web-page:
 		List<String> namesActual = table.getContentNames();

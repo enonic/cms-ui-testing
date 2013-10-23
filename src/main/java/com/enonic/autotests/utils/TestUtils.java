@@ -340,7 +340,13 @@ public class TestUtils
 	public boolean waitAndFind(final By by, final WebDriver driver)
 	{
 
-		driver.manage().timeouts().implicitlyWait(AppConstants.IMPLICITLY_WAIT, TimeUnit.SECONDS);
+		return waitAndFind(by, driver, AppConstants.PAGELOAD_TIMEOUT);
+	}
+	
+	public boolean waitAndFind(final By by, final WebDriver driver, long timeout )
+	{
+
+		driver.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
 		List<WebElement> elements = driver.findElements(by);
 		return ((elements.size() > 0) && (elements.get(0).isDisplayed()));
 	}

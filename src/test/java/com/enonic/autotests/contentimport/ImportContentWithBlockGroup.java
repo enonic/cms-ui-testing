@@ -114,7 +114,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
 		// 1. import XML formatted resource:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_XML_FILE, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_XML_FILE, 4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		XmlReader xmlReader = new XmlReader();
 		// 2. gets expected persons with events from the XML
@@ -149,7 +149,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_BLOCK_GROUPS_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. update content: new event was added for first person and new person added:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_UPDATE_XML_FILE, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_UPDATE_XML_FILE,4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		XmlReader xmlReader = new XmlReader();
 		// 2. gets EXPECTED persons with events from the XML
@@ -199,7 +199,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		Assert.assertTrue(eventsBefore.contains(eventsBeforeUpdate), "before Importing: event with name:" + EVENT_NAME_PURGE_TEST + "should be present on the page");
 
 		// 3. import and update content: "North pole almost reached" event should be removed for 'Fridtjof Nansen' person
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_PURGE_UPDATE_XML_FILE, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_PURGE_UPDATE_XML_FILE, 4l,pathToCategory);
 		logger.info("import of XML formatted source finished. Content was updated: filename " + IMPORT_PERSONS_BLOCK_GROUP_PURGE_UPDATE_XML_FILE);
 		// verify that
 		List<UserEvent> eventsAfterImport = ImportUtils.getEventsFromUI(getSessionDriver(), table, PERSON_EVENT_PURGE_TEST);
@@ -228,7 +228,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		
 
 		// 3. import and update content: person with name  "Eva Helene Sars" should be archived in category:
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE,4l, pathToCategory);
 		logger.info("import of XML formatted source finished. Content was updated: filename " + IMPORT_PERSONS_CONTENT_PURGE_XML_FILE);
 		ContentStatus statusAfterImport = table.getContentStatus(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertTrue(statusAfterImport.equals(ContentStatus.ARCHIVED),"expected status and actual are not equals!");
@@ -256,7 +256,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		Assert.assertTrue(isPresentPersonBeforeImport,"the person with name: "+ CONTENT_PURGE_PERSON_NAME + "is present in the table!");	
 
 		// 3. import and update content: person with name  "Eva Helene Sars" should be deleted from a category:
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE, 4l, pathToCategory);
 		boolean isPresentPersonAfterImport = table.isContentPresentInTable(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertFalse(isPresentPersonAfterImport,"the person with name: "+ CONTENT_PURGE_PERSON_NAME + "should be deleted from the table!");		
 		logger.info("$$$$ FINISHED: Purge Content. Sets purge to 'delete' ");

@@ -3,6 +3,9 @@ package com.enonic.autotests.pages.adminconsole.content;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -34,6 +37,11 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 	@FindBy(name = "importbtn")
 	private WebElement importButton;
 
+	@FindBy(name = "date_pubdata_publishfrom")
+	private WebElement dateInput;
+	
+	
+
 	private String SELECT_IMPORT_NAME = "//select[@name='importname']";
 
 	/**
@@ -56,7 +64,7 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 	 * @param importName
 	 * @param fileName
 	 */
-	public void doImportFromFile(String importName, String fileName)
+	public void doImportFromFile(String importName, String fileName, long timeout)
 	{
 		//1. select the name of import.
 		if (importName != null)
@@ -89,11 +97,16 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 
 			fileInputType.sendKeys(localFile.getAbsolutePath());
 		}
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+		Date time = Calendar.getInstance().getTime();
+		
+		String currentDate = dateFormat.format(time);
+		dateInput.sendKeys(currentDate);
         // 3. click by the "Import" button
 		importButton.click();
 		
 		//4. wait until button "Back" appears and press this button
-		boolean isBackButtonPresent = TestUtils.getInstance().waitAndFind(By.xpath("//button[text()='Back']"), getDriver());
+		boolean isBackButtonPresent = TestUtils.getInstance().waitAndFind(By.xpath("//button[text()='Back']"), getDriver(), timeout);
 		if (!isBackButtonPresent)
 		{
 			throw new ImportContentException("Error during content importing, 'Back' button was not found! ");

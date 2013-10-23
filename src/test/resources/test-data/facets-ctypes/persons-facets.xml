@@ -12,8 +12,8 @@
                     <xpath>contentdata/firstname</xpath>
                 </input>
                 <input name="lastname" required="true" type="text">
-                    <display>Surname</display>
-                    <xpath>contentdata/surname</xpath>
+                    <display>Lastname</display>
+                    <xpath>contentdata/lastname</xpath>
                 </input>
                 <input name="gender" required="true" type="dropdown">
                     <display>Gender</display>
@@ -31,6 +31,12 @@
                     <display>Nationality</display>
                     <xpath>contentdata/nationality</xpath>
                 </input>
+                <input name="balance" required="true" type="text">
+                    <display>Balance</display>
+                    <xpath>contentdata/balance</xpath>
+                    <size value="5" />
+                    <maxlength value="5" />
+                </input>
             </block>
         </form>
         <imports>
@@ -41,13 +47,15 @@
                 <mapping dest="birthdate" src="birthdate" />
                 <mapping dest="nationality" src="nationality" />
                 <mapping dest="gender" src="gender" />
+                <mapping dest="balance" src="balance" />
             </import>
         </imports>
-        <indexparameters>
-            <index name="lastname" xpath="contentdata/lastname" />
-            <index name="gender" xpath="contentdata/gender" />
-            <index name="birthdate" xpath="contentdata/birthdate" />
-            <index name="nationality" xpath="contentdata/nationality" />
-        </indexparameters>
     </config>
+    <indexparameters>
+        <index name="lastname" xpath="contentdata/lastname" />
+        <index name="gender" xpath="contentdata/gender" />
+        <index name="birthdate" xpath="contentdata/birthdate" />
+        <index name="nationality" xpath="contentdata/nationality" />
+        <index name="balance" xpath="contentdata/balance" />
+    </indexparameters>
 </contenttype>

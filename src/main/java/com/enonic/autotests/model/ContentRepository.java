@@ -2,7 +2,6 @@ package com.enonic.autotests.model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Locale.Category;
 
 /**
  * 
@@ -22,10 +21,6 @@ public class ContentRepository
 	private Map<String, Object> properties;
 	private List<ContentCategory> categories;
 
-	// private List<Content<T>> content;
-
-	// TODO add permissions:
-	// private principals
 
 	public List<ContentCategory> getCategories()
 	{
@@ -144,11 +139,5 @@ public class ContentRepository
 			this.description = description;
 		}
 	}
-	// public List<Content<T>> getContent() {
-	// return content;
-	// }
-	//
-	// public void setContent(List<Content<T>> content) {
-	// this.content = content;
-	// }
+
 }
