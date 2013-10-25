@@ -168,6 +168,20 @@ public class SiteService
 		return sitePortletsPage;
 	}
 	
+	public SitePortletsTablePage editPortlet(TestSession testSession, Portlet portlet)
+	{
+		PageNavigator.navgateToAdminConsole( testSession );
+		//1. expand 'Sites'folder, expand site and click by 'Menu' link 
+		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
+	     // SiteMenuItemsTablePage contains all Menu Items for this site.
+		SitePortletsTablePage sitePortletsPage = leftmenu.openSitePortletsTable(portlet.getSiteName());
+		//2. click by 'New' button and select 'Section', open add section wizard:
+		sitePortletsPage.doCreatePortlet(portlet);
+		
+		sitePortletsPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return sitePortletsPage;
+	}
+	
 	/**
 	 * opens for edit a 'menu item' and changes a data.
 	 * 
@@ -290,6 +304,18 @@ public class SiteService
 		sitesFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sitesFrame;
 	}
+	
+	public SitePortletsTablePage editDatasourceInPortlet(TestSession testSession, Portlet portlet)
+	{
+		PageNavigator.navgateToAdminConsole( testSession );
+		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
+		SitePortletsTablePage sitePortletsPage = leftmenu.openSitePortletsTable(portlet.getSiteName());
+		AddPortletWizardPage wizard = sitePortletsPage.openPortletForEdit(portlet.getName());
+		wizard.doSetDatasource(portlet.getDatasource());
+		sitePortletsPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
+		return sitePortletsPage;
+	}
+	
 	
 	/**
 	 * Clicks by site's name and opens 'edit portlet' wizard page, go to 'Datasource' tab and click by 'preview datasource' button.

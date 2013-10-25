@@ -50,7 +50,6 @@ public class LeftMenuFrame extends Page
 	/** locator for section menu item */
 	private String SITE_MENU_ITEM_XPATH =  SITENAME_LINK_XPATH + "/../../following-sibling::tr//span[contains(@id,'menuitemText') and contains(.,'%s')]";
 	
-
 	// 1) select <tr> which contains all categories 2) select the child, which contains the Category Name 3) select first element <td> - this is a '+/-'  link with icon
 	private String CATEGORY_MENU_ITEM = "//tr[@id='id-categories']/child::td[2]//table[@class='menuItem' and descendant::tr[1]//span[text()='%s']]";
 	private String CATEGORY_EXPANDER_IMG_XPATH = CATEGORY_MENU_ITEM + "//td[1]/a/img";
@@ -64,9 +63,7 @@ public class LeftMenuFrame extends Page
 	public static String USERS_MENU_ITEM_XPATH = "//a[child::img[contains(@src,'icon_users.gif')] and text()='Users']";
 	public static String SYSTEM_MENU_ITEM_XPATH = "//a[child::img[@src='images/icon_system.gif'] and text()='System']";
 	public static String STATIC_RES_MENU_ITEM_XPATH = "//a[child::img[@src='images/icon_folder_resources.gif']]";
-	
-	
-	
+		
 	/**
 	 * @param session
 	 */
@@ -88,6 +85,7 @@ public class LeftMenuFrame extends Page
 	
 	/**
 	 * Clicks by 'Sites' link and open frame with table of sites.
+	 * 
 	 * @param testSession
 	 * @return
 	 */
@@ -99,6 +97,7 @@ public class LeftMenuFrame extends Page
 		return sitesframe;
 
 	}
+
 	public UsersTableFrame openUsersTableFrame(TestSession testSession)
 	{
 		UsersTableFrame usersframe = new UsersTableFrame(getSession());
@@ -115,6 +114,7 @@ public class LeftMenuFrame extends Page
 	
 	/**
 	 * Clicks by 'Sites' link and open frame with table of sites.
+	 * 
 	 * @param testSession
 	 * @return
 	 */
@@ -126,8 +126,7 @@ public class LeftMenuFrame extends Page
 		return systemFrame;
 
 	}
-	
-	
+		
 	/**
 	 * @param testSession
 	 * @return
@@ -143,6 +142,7 @@ public class LeftMenuFrame extends Page
 
 	/**
 	 * Clicks by "Content" link in the LeftFrame and opens a table with all repositories.
+	 * 
 	 * @return
 	 */
 	public RepositoriesListFrame openRepositoriesTableFrame()
@@ -198,6 +198,7 @@ public class LeftMenuFrame extends Page
 		}
 
 	}
+
 	/**
 	 * Finds a Category, that has icon: "images/L.png", empty all content and deletes this Category.
 	 * 
@@ -253,6 +254,7 @@ public class LeftMenuFrame extends Page
 		return view;
 
 	}
+
 	public int getCategoryKey(String catName, String ... parents )
 	{
 		PageNavigator.switchToFrame( getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME );
@@ -272,6 +274,7 @@ public class LeftMenuFrame extends Page
 		return Integer.valueOf(keyString);
 		
 	}
+
 	/**
 	 * Gets Key value for repository.
 	 * 
@@ -288,6 +291,7 @@ public class LeftMenuFrame extends Page
 		String keyString = title.substring(title.indexOf(":")+1,title.indexOf(")"));
 		return Integer.valueOf(keyString);
 	}
+
 	/**
 	 * Expands 'Sites' folder in Admin Console and click by site-name and opens Info page.
 	 * 
@@ -313,6 +317,7 @@ public class LeftMenuFrame extends Page
 		info.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return info;
 	}
+
 	/**
 	 * @param siteName
 	 * @return
@@ -339,6 +344,11 @@ public class LeftMenuFrame extends Page
 		SiteMenuItemsTablePage siteMenuItems = new SiteMenuItemsTablePage(getSession());
 		return siteMenuItems;
 	}
+
+	/**
+	 * @param siteName
+	 * @return
+	 */
 	public SitePortletsTablePage openSitePortletsTable(String siteName)
 	{
 		PageNavigator.switchToFrame( getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME );
@@ -489,13 +499,12 @@ public class LeftMenuFrame extends Page
 		if (!isCategoryPresent)
 		{
 			return null;
-		}else{
+		} else
+		{
 			return findElement(By.xpath(categoryXpath));
 		}
 		
-
 	}
-
 
 	/**
 	 * Clicks by 'expand' icon and expands the 'Content' folder in the 'Left Menu' frame

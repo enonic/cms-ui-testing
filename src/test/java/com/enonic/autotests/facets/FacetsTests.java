@@ -9,10 +9,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.enonic.autotests.BaseTest;
+import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
+import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.model.site.Portlet;
 import com.enonic.autotests.model.site.STKResource;
 import com.enonic.autotests.model.site.SectionMenuItem;
@@ -73,6 +75,55 @@ public class FacetsTests extends BaseTest
 		addPortlet();
 
 	}
+	
+	//@Test(description ="Create a term facet in a datasouce, check output. term name: 'top-3-lastname' ", dependsOnMethods = "setup")
+	public void termsLastNameFacetTest()
+	{
+		  /*
+        	<terms name="top-3-lastname">
+            	<indexes>data.lastname</indexes>
+            	<count>3</count>
+            	<orderby>hits</orderby>
+            </terms>  */
+			logger.info("STARTED: #### Create a term facet in a datasouce(term name: 'top-3-lastname' ), check output ");
+			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
+			//1.  press the button "preview data source".
+			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
+			//3. verify expected and actual output
+			List<Term> terms = FacetTestUtils.getTerms(pageSource);
+			boolean result = true;
+			for(Term term: terms)
+			{
+				
+				List<Person> persons = FacetTestUtils.getPersonsWithLasttname(IMPORT_PERSONS_XML, term.getValue());
+				result &= persons.size() == term.getHits();
+				if(persons.size() != term.getHits())
+				{
+					logger.info("actual and expected values are not equal. person with lastname:" + term.getValue() +"  hits from preview datasource is:: "+ term.getHits());
+				}
+				
+			}
+			Assert.assertTrue(result, "wrong value present in output ");
+			logger.info(" FINISED $$$$$ Create a term facet in a datasouce, check output");
+	}
+	
+	@Test(description ="Create a range facet in a datasouce, check output ", dependsOnMethods = "setup")
+	public void rangesFacetTest()
+	{
+			logger.info(" getContentByCategory#### get datasource content and verify: content-name present in the source");
+			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
+			//1. edit portlet
+			//portlet.setDatasource(datasource);
+			siteService.editDatasourceInPortlet(getTestSession(), portlet);
+			//2. press the button "preview data source".
+			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
+			
+			List<Range> rangesActual = FacetTestUtils.getRanges(pageSource);
+			
+			//3. verify expected and actual output
+			logger.info(" FINISED $$$$$ TEST PREVIEW  DATASOURCE::: getContentByCategory");
+	}
+	
 	
 	private void importPersonContent()
 	{
