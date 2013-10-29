@@ -305,13 +305,14 @@ public class SiteService
 		return sitesFrame;
 	}
 	
-	public SitePortletsTablePage editDatasourceInPortlet(TestSession testSession, Portlet portlet)
+	public SitePortletsTablePage editDatasourceTabInPortlet(TestSession testSession, Portlet portlet)
 	{
 		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame leftmenu = new LeftMenuFrame(testSession);
 		SitePortletsTablePage sitePortletsPage = leftmenu.openSitePortletsTable(portlet.getSiteName());
 		AddPortletWizardPage wizard = sitePortletsPage.openPortletForEdit(portlet.getName());
 		wizard.doSetDatasource(portlet.getDatasource());
+		wizard.doSave();
 		sitePortletsPage.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return sitePortletsPage;
 	}

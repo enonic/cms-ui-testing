@@ -10,13 +10,10 @@
         <parameter name="parentLevel">0</parameter>
         <parameter name="facets">
             <facets>
-                <ranges name="balance-per-entry">
-                    <index>data.balance</index>
-                    <value-index>data.balance</value-index>
-                    <range to="700"/>
-                    <range from="500" to="1300"/>
-                    <range from="1000" to="1900"/>
-                </ranges>
+                <date-histogram name="birthday-facet">
+                    <index>data.birthdate</index>
+                    <interval>${select(param.interval,'year')}</interval>
+                </date-histogram>
             </facets>
         </parameter>
     </datasource>

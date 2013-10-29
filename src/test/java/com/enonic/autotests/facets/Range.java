@@ -9,9 +9,9 @@ public class Range
 
 	private int hits;
 
-	private int from;
+	private float from;
 
-	private int to;
+	private float to;
 
 	public int getHits()
 	{
@@ -23,22 +23,22 @@ public class Range
 		this.hits = hits;
 	}
 
-	public int getFrom()
+	public float getFrom()
 	{
 		return from;
 	}
 
-	public void setFrom(int from)
+	public void setFrom(float from)
 	{
 		this.from = from;
 	}
 
-	public int getTo()
+	public float getTo()
 	{
 		return to;
 	}
 
-	public void setTo(int to)
+	public void setTo(float to)
 	{
 		this.to = to;
 	}

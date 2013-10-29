@@ -1,6 +1,7 @@
 package com.enonic.autotests.facets;
 
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -9,12 +10,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.enonic.autotests.BaseTest;
-import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.model.site.Portlet;
 import com.enonic.autotests.model.site.STKResource;
 import com.enonic.autotests.model.site.SectionMenuItem;
@@ -30,11 +29,13 @@ import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.services.SiteService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
-import com.enonic.autotests.utils.XmlReader;
 
 public class FacetsTests extends BaseTest
 {
-	private static final String DS_GETCONTENT_BY_CATEGORY_TERMS = "test-data/facets-ctypes/terms-lastname-ds.xml";
+	private static final String DS_FACET_TERMS = "test-data/facets-ctypes/terms-lastname-ds.xml";
+	private static final String DS_FACET_RANGES = "test-data/facets-ctypes/ranges-balance-ds.xml";
+	private static final String DS_FACET_HISTOGRAM = "test-data/facets-ctypes/histogram-balance-ds.xml";
+	private static final String DS_FACET_DATEHISTOGRAM = "test-data/facets-ctypes/datehistogram-birthday-ds.xml";
 	private static final String PORTLET_FACET_KEY = "portlet_facet_key";
 	private static final String IMPORT_CATEGORY_KEY = "import_cat_key";
 	private String CNAME = "facets-persons";
@@ -44,6 +45,7 @@ public class FacetsTests extends BaseTest
 	private String PERSONS_CATEGORYKEY = "pers_cat_key";
 	
 	private final String PERSON_CFG = "test-data/facets-ctypes/persons-facets.xml";
+	
 	private final String POTLET_NAME = "personportlet";
 	
 	/** this XML file contains a list of persons for importing */
@@ -52,7 +54,6 @@ public class FacetsTests extends BaseTest
 	
 	
 	private final String PERSONS_CATEGORY_NAME ="cat";
-	private final String PERSONS_REPO_NAME ="persons";
 	
 	private SiteService siteService = new SiteService();
 	private ContentTypeService contentTypeService = new ContentTypeService();
@@ -76,7 +77,7 @@ public class FacetsTests extends BaseTest
 
 	}
 	
-	//@Test(description ="Create a term facet in a datasouce, check output. term name: 'top-3-lastname' ", dependsOnMethods = "setup")
+	@Test(description ="Create a term facet in a datasouce, check output. term name: 'top-3-lastname' ", dependsOnMethods = "setup")
 	public void termsLastNameFacetTest()
 	{
 		  /*
@@ -90,14 +91,15 @@ public class FacetsTests extends BaseTest
 			//1.  press the button "preview data source".
 			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
 			//3. verify expected and actual output
-			List<Term> terms = FacetTestUtils.getTerms(pageSource);
+			//get terms from xml-datasource from web-page:
+			List<Term> actualTerms = FacetTestUtils.getTermsFromPreview(pageSource);
 			boolean result = true;
-			for(Term term: terms)
+			for(Term term: actualTerms)
 			{
 				
-				List<Person> persons = FacetTestUtils.getPersonsWithLasttname(IMPORT_PERSONS_XML, term.getValue());
-				result &= persons.size() == term.getHits();
-				if(persons.size() != term.getHits())
+				List<Person> personsFromFile = FacetTestUtils.getPersonsWithLasttname(IMPORT_PERSONS_XML, term.getValue());
+				result &= personsFromFile.size() == term.getHits();
+				if(personsFromFile.size() != term.getHits())
 				{
 					logger.info("actual and expected values are not equal. person with lastname:" + term.getValue() +"  hits from preview datasource is:: "+ term.getHits());
 				}
@@ -107,21 +109,82 @@ public class FacetsTests extends BaseTest
 			logger.info(" FINISED $$$$$ Create a term facet in a datasouce, check output");
 	}
 	
-	@Test(description ="Create a range facet in a datasouce, check output ", dependsOnMethods = "setup")
+	@Test(description ="Create a range facet in a datasouce, check output ", dependsOnMethods = "termsLastNameFacetTest")
 	public void rangesFacetTest()
 	{
-			logger.info(" getContentByCategory#### get datasource content and verify: content-name present in the source");
+			logger.info("STARTED ###  Create a range facet in a datasouce, check output");
 			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
 			//1. edit portlet
-			//portlet.setDatasource(datasource);
-			siteService.editDatasourceInPortlet(getTestSession(), portlet);
+			int categoryKey = (Integer) getTestSession().get(PERSONS_CATEGORYKEY);
+			String datasource = FacetTestUtils.buildDataSourceString(categoryKey, DS_FACET_RANGES);
+			portlet.setDatasource(datasource);
+			siteService.editDatasourceTabInPortlet(getTestSession(), portlet);
 			//2. press the button "preview data source".
 			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
 			
-			List<Range> rangesActual = FacetTestUtils.getRanges(pageSource);
-			
+			//get ranges from xml-datasource from web-page:
+			List<Range> rangesActual = FacetTestUtils.getRangesFromPreview(pageSource);
+			boolean result = true;
+			for(Range range: rangesActual)
+			{
+				List<Person> personsFromFile = FacetTestUtils.getPersonsByRange(IMPORT_PERSONS_XML, range);
+				result &= personsFromFile.size() == range.getHits();
+			}
 			//3. verify expected and actual output
-			logger.info(" FINISED $$$$$ TEST PREVIEW  DATASOURCE::: getContentByCategory");
+			Assert.assertTrue(result, "wrong value present in output of 'data source preview'");
+			logger.info(" FINISED $$$$$ Create a range facet in a datasouce, check output");
+	}
+	
+	@Test(description ="Create a 'Histogram Facet '  in a datasouce, check output ", dependsOnMethods = "rangesFacetTest")
+	public void histogramFacetTest()
+	{
+			logger.info(" STARTED #### Create a 'Histogram Facet '  in a datasouce, check output ");
+			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
+			//1. edit portlet: set histogram facet
+			int categoryKey = (Integer) getTestSession().get(PERSONS_CATEGORYKEY);
+			String datasource = FacetTestUtils.buildDataSourceString(categoryKey, DS_FACET_HISTOGRAM);
+			portlet.setDatasource(datasource);
+			siteService.editDatasourceTabInPortlet(getTestSession(), portlet);
+			//2. press the button "preview data source".
+			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
+			
+			//3. get histograms from xml-datasource from web-page:
+			List<Histogram> histogramActual = FacetTestUtils.getHistogramFromPreview(pageSource);
+			boolean result = true;
+			for(Histogram histogram: histogramActual)
+			{
+				List<Person> personsFromFile = FacetTestUtils.getPersonsByBalance(IMPORT_PERSONS_XML, histogram.getValue());
+				result &= personsFromFile.size() == histogram.getHits();
+			}
+			//3. verify expected and actual output
+			Assert.assertTrue(result, "wrong value present in output of 'data source preview'");
+			logger.info(" FINISED $$$$$ TEST PREVIEW  DATASOURCE::: histogram Facet");
+	}
+
+	@Test(description ="Create a 'DateHistogram Facet '  in a datasouce, check output ", dependsOnMethods = "histogramFacetTest")
+	public void dateHistogramFacetTest() throws ParseException
+	{
+			logger.info(" STARTED #### Create a 'Histogram Facet '  in a datasouce, check output ");
+			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
+			//1. edit portlet: set histogram facet
+			int categoryKey = (Integer) getTestSession().get(PERSONS_CATEGORYKEY);
+			String datasource = FacetTestUtils.buildDataSourceString(categoryKey, DS_FACET_DATEHISTOGRAM);
+			portlet.setDatasource(datasource);
+			siteService.editDatasourceTabInPortlet(getTestSession(), portlet);
+			//2. press the button "preview data source".
+			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
+			
+			//3. get histograms from xml-datasource from web-page:
+			List<DateHistogram> histogramActual = FacetTestUtils.getDateHistogramFromPreview(pageSource);
+			boolean result = true;
+			for(DateHistogram histogram: histogramActual)
+			{
+				List<Person> personsFromFile = FacetTestUtils.getPersonsByBirthYear(IMPORT_PERSONS_XML, histogram.getDate());
+				result &= personsFromFile.size() == histogram.getHits();
+			}
+			//3. verify expected and actual output
+			Assert.assertTrue(result, "wrong value present in output of 'data source preview'");
+			logger.info(" FINISED $$$$$ TEST PREVIEW  DATASOURCE::: datehistogram Facet");
 	}
 	
 	
@@ -255,7 +318,7 @@ public class FacetsTests extends BaseTest
 		stylesheet.setPath("modules", "module-sample-site");
 		portlet.setStylesheet(stylesheet);
 		portlet.setSiteName(site.getDispalyName());
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(DS_GETCONTENT_BY_CATEGORY_TERMS);
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(DS_FACET_TERMS);
 		String datasource = TestUtils.getInstance().readConfiguration(in);
 		int index = datasource.indexOf("categoryKeys\">");
 		StringBuffer sb = new StringBuffer(datasource);

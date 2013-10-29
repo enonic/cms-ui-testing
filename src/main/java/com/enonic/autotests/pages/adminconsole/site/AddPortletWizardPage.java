@@ -81,6 +81,13 @@ public class AddPortletWizardPage extends AbstractAdminConsoleWizardPage
 		
 	}
 	
+	public void doSave()
+	{
+		saveButton.click();
+		checkAlerts();
+
+	}
+	
 	public String getPreviewDatasourceContent()
 	{
 		getDriver().findElement(By.xpath(DATASOURCE_TAB_LINK)).click();

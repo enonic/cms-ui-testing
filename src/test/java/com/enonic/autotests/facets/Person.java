@@ -1,8 +1,6 @@
 package com.enonic.autotests.facets;
 
-import javax.xml.bind.annotation.XmlType;
 
-@XmlType( name = "person")
 public class Person
 {
 
@@ -11,7 +9,7 @@ public class Person
 	private String lastname;
 	private String birthdate;
 	private String nationality;
-	private int balance;
+	private float balance;
 	private String gender;
 	public String getFirstname()
 	{
@@ -45,11 +43,11 @@ public class Person
 	{
 		this.nationality = nationality;
 	}
-	public int getBalance()
+	public float getBalance()
 	{
 		return balance;
 	}
-	public void setBalance(int balance)
+	public void setBalance(float balance)
 	{
 		this.balance = balance;
 	}
