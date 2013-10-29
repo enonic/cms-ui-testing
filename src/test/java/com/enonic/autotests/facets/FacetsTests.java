@@ -124,6 +124,10 @@ public class FacetsTests extends BaseTest
 			
 			//get ranges from xml-datasource from web-page:
 			List<Range> rangesActual = FacetTestUtils.getRangesFromPreview(pageSource);
+			if(rangesActual.isEmpty())
+			{
+				Assert.fail("there are no ranges in preview datasource");
+			}
 			boolean result = true;
 			for(Range range: rangesActual)
 			{
@@ -150,6 +154,10 @@ public class FacetsTests extends BaseTest
 			
 			//3. get histograms from xml-datasource from web-page:
 			List<Histogram> histogramActual = FacetTestUtils.getHistogramFromPreview(pageSource);
+			if(histogramActual.isEmpty())
+			{
+				Assert.fail("there are no histograms in preview datasource");
+			}
 			boolean result = true;
 			for(Histogram histogram: histogramActual)
 			{
@@ -177,6 +185,10 @@ public class FacetsTests extends BaseTest
 			//3. get histograms from xml-datasource from web-page:
 			List<DateHistogram> histogramActual = FacetTestUtils.getDateHistogramFromPreview(pageSource);
 			boolean result = true;
+			if(histogramActual.isEmpty())
+			{
+				Assert.fail("there are no datehistograms in preview datasource");
+			}
 			for(DateHistogram histogram: histogramActual)
 			{
 				List<Person> personsFromFile = FacetTestUtils.getPersonsByBirthYear(IMPORT_PERSONS_XML, histogram.getDate());
