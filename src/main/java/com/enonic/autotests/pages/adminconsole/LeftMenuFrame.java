@@ -185,7 +185,6 @@ public class LeftMenuFrame extends Page
 				// switch to right frame:
 				doDeleteLastCategoryWithContent(repoName);
 				plusIconXpath = findElements(By.xpath(repoXpath));
-				
 			} while (plusIconXpath.size() > 0);
 			
 			PageNavigator.switchToFrame( getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME );
@@ -219,7 +218,10 @@ public class LeftMenuFrame extends Page
 		ContentsTableFrame tableView = new ContentsTableFrame(getSession());
 		tableView.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		//delete all.
+		do{
 		tableView.doDeleteAllContent();
+		
+		}while(!tableView.isEmpty());
 		tableView.doDeleteEmptyCategory();
 		PageNavigator.switchToFrame( getSession(), AbstractAdminConsolePage.LEFT_FRAME_NAME );
 	}

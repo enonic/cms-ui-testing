@@ -27,6 +27,8 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	// drop down menu, Category Item
 	public static final String CREATE_CATEGORY_BUTTON_XPATH = "//a[@class='cms-menu-item-icon-folder']";
 	
+	public static final String SELECT_TOP_XPATH = "//table[@class='operation-top']//select[@name='batchSelector']";
+	
 	@FindBy(xpath = CREATE_CONTENT_MENU_BUTTON_XPATH)
 	private WebElement menuItemAddContent;
 
@@ -69,6 +71,11 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 			throw new AddContentException("'Edit Content' link was not found");
 		}
 		findElement(By.xpath(nameXpath)).click();
+	}
+	
+	public boolean isEmpty()
+	{
+		return TestUtils.getInstance().waitUntilInvisibleNoException(getSession(), By.xpath("//tr[contains(@class,'tablerowpainter')]"), AppConstants.PAGELOAD_TIMEOUT);		
 	}
 	
 	/**

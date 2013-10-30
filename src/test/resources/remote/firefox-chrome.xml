@@ -52,6 +52,8 @@
   			
   			<class name="com.enonic.autotests.textextractors.TextExtractorTest" />  
   			<class name="com.enonic.autotests.ContentApiTest"/>
+  			<class name="com.enonic.autotests.facets.TermStatsFacetTest"/>
+  			<class name="com.enonic.autotests.facets.FacetsTests"/>
 
 		</classes>
 	</test>

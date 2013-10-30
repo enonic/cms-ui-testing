@@ -61,8 +61,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 	@FindBy(how = How.XPATH, using = "//button[text()='Choose']")
 	protected WebElement chooseButton;
 
-	private final String SELECT_TOP_XPATH = "//table[@class='operation-top']//select[@name='batchSelector']";
-
+	
 	/**
 	 * Constructor
 	 * 
