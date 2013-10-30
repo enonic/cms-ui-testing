@@ -32,55 +32,17 @@ public class PortletDatasourceTab extends AbstractAdminConsolePage
 
 	public String getPreviewDatasourceContent()
 	{
-		boolean result = true;
 		((JavascriptExecutor) getSession().getDriver()).executeScript("window.formAdminDataSource.target = \"_top\"");
+		//press the 'Preview Datasource' button
 		getDriver().findElement(By.xpath(PRVIEW_BUTTON_XPATH)).click();
 		try
 		{
 			Thread.sleep(1000);
 		} catch (InterruptedException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			getLogger().info(e.getMessage());
 		}
 		return getDriver().getPageSource();
-		//String source = getDriver().getPageSource();
-//		for(String name:expectedNames)
-//		{
-//			result &=source.contains(name);
-//		}
-//		Set<String> allWindows = getDriver().getWindowHandles();
-//		if (!allWindows.isEmpty())
-//		{
-//			for (String windowId : allWindows)
-//			{
-//				
-//				try
-//				{
-//					String src;
-//					String[] a = new String[2];
-//					//try to find and switch to POPUP-WINDOW:
-//					getDriver().switchTo().window(allWindows.toArray(a )[1]);
-//					
-//						String source = getDriver().getPageSource();//getDriver().getCurrentUrl() 
-//						for(String name: expectedNames)//getDriver().getPageSource()
-//						{                              ///getDriver().getTitle()
-//							                            
-//							if(!source.contains(name))
-//							{
-//								result &=false;
-//							}
-//						}
-//						
-//						
-//					
-//				} catch (NoSuchWindowException e)
-//				{
-//					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
-//				}
-//			}
-//		}
-		//return result;
 		
 	}
 

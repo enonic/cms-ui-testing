@@ -2,6 +2,8 @@ package com.enonic.autotests.model.userstores;
 
 import java.util.List;
 
+import com.enonic.autotests.model.userstores.PermissionOperation.Builder;
+
 public class User
 {
 
@@ -10,9 +12,6 @@ public class User
 	private String email;
 
 	private List<String> groups;
-
-	// preferences
-	// events??
 
 	public List<String> getGroups()
 	{
@@ -52,5 +51,52 @@ public class User
 	public void setEmail(String email)
 	{
 		this.email = email;
+	}
+
+	public static Builder with()
+	{
+		return new Builder();
+	}
+
+	public static class Builder
+	{
+		private String bName;
+
+		private String bPassword;
+
+		private String bMail;
+
+		public Builder()
+		{
+
+		}
+
+		public Builder name(String name)
+		{
+			this.bName = name;
+			return this;
+		}
+
+		public Builder password(String password)
+		{
+			this.bPassword = password;
+			return this;
+		}
+
+		public Builder mail(String mail)
+		{
+			this.bMail = mail;
+			return this;
+		}
+
+		public User build()
+		{
+			User user = new User();
+			user.setEmail(this.bMail);
+			user.setName(this.bName);
+			user.setPassword(this.bPassword);
+			return user;
+		}
+
 	}
 }

@@ -20,10 +20,13 @@ import com.enonic.autotests.model.site.STKResource;
 import com.enonic.autotests.model.site.SectionMenuItem;
 import com.enonic.autotests.model.site.Site;
 import com.enonic.autotests.model.site.Site.AllowedPageTypes;
+import com.enonic.autotests.model.userstores.BuiltInGroups;
+import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.adminconsole.site.SiteMenuItemsTablePage;
 import com.enonic.autotests.pages.adminconsole.site.SitePortletsTablePage;
 import com.enonic.autotests.pages.adminconsole.site.SitesTableFrame;
+import com.enonic.autotests.services.AccountService;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.services.RepositoryService;
@@ -31,36 +34,40 @@ import com.enonic.autotests.services.SiteService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
 
-public class FacetsTests extends BaseTest
+public class TermStatsFacetTest extends BaseTest
 {
-	private static final String DS_FACET_TERMS = "test-data/facets-ctypes/terms-lastname-ds.xml";
-	private static final String DS_FACET_RANGES = "test-data/facets-ctypes/ranges-balance-ds.xml";
-	private static final String DS_FACET_HISTOGRAM = "test-data/facets-ctypes/histogram-balance-ds.xml";
-	private static final String DS_FACET_DATEHISTOGRAM = "test-data/facets-ctypes/datehistogram-birthday-ds.xml";
 	
-	private static final String PORTLET_FACET_KEY = "portlet_facet_key";
-	private static final String IMPORT_CATEGORY_KEY = "import_cat_key";
+private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-stats-balance-ds.xml";
 	
+	private static final String PORTLET_TSFACET_KEY = "portlet_tsfacet_key";
+	private static final String IMPORT_CATEGORY_KEY = "import_category_key";
+	
+	private static final String ADMIN1_USER_KEY  = "admin1_user_key";
+	private static final String ADMIN2_USER_KEY  = "admin2_user_key";
 	
 	private String CNAME = "facets-persons";
-	private String SITE_FACET_KEY = "facets_site_key"; 
-	private String PERSONS_REPO_KEY = "p_repo_key"; 
+	private String SITE_TERMSTAT_FACET_KEY = "tsfacet_site_key"; 
+	private String PERS_REPO_KEY = "pers_repo_key"; 
 	
-	private String PERSONS_CATEGORYKEY = "pers_cat_key";
+	private String PERSONS_CAT_KEY = "per_cat_key";
+	private final String PASSWORD = "1q2w3e";
+	private final String PERSONS_CATEGORY_NAME ="cat";
 	
 	private final String PERSON_CFG = "test-data/facets-ctypes/persons-facets.xml";
 	
 	private final String POTLET_NAME = "personportlet";
 	
 	/** this XML file contains a list of persons for importing */
-	private String ADMIN_IMPORT_PERSONS_XML = "test-data/facets-ctypes/persons-to-import.xml";
-	
-	private final String PERSONS_CATEGORY_NAME ="cat";
+	private String ADMIN_IMPORT_PERSONS_XML = "test-data/facets-ctypes/admin-import.xml";
+	private String 	USER1_IMPORT = "test-data/facets-ctypes/user1-import.xml";
+	private String 	USER2_IMPORT = "test-data/facets-ctypes/user2-import.xml";
 	
 	private SiteService siteService = new SiteService();
 	private ContentTypeService contentTypeService = new ContentTypeService();
 	private RepositoryService repositoryService = new RepositoryService();
 	private ContentService contentService = new ContentService();
+	private AccountService accountService = new AccountService();
+
 	
 	@Test(description = "setup: create preconditions. Create a site with section and portlet. Create a repository and category with image ctype, and publish content to the section")
 	public void setup()
@@ -79,126 +86,94 @@ public class FacetsTests extends BaseTest
 
 	}
 	
-	@Test(description ="Create a term facet in a datasouce, check output. term name: 'top-3-lastname' ", dependsOnMethods = "setup")
-	public void termsLastNameFacetTest()
+	@Test(dependsOnMethods ="setup")
+	public void addPersonForTermStats()
 	{
-		  /*
-        	<terms name="top-3-lastname">
-            	<indexes>data.lastname</indexes>
-            	<count>3</count>
-            	<orderby>hits</orderby>
-            </terms>  */
-			logger.info("STARTED: #### Create a term facet in a datasouce(term name: 'top-3-lastname' ), check output ");
-			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
-			//1.  press the button "preview data source".
-			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
-			//3. verify expected and actual output
-			//get terms from xml-datasource from web-page:
-			List<Term> actualTerms = FacetTestUtils.getTermsFromPreview(pageSource);
-			boolean result = true;
-			for(Term term: actualTerms)
-			{
-				
-				List<Person> personsFromFile = FacetTestUtils.getPersonsWithLasttname(ADMIN_IMPORT_PERSONS_XML, term.getValue());
-				result &= personsFromFile.size() == term.getHits();
-				if(personsFromFile.size() != term.getHits())
-				{
-					logger.info("actual and expected values are not equal. person with lastname:" + term.getValue() +"  hits from preview datasource is:: "+ term.getHits());
-				}
-				
-			}
-			Assert.assertTrue(result, "wrong value present in output ");
-			logger.info(" FINISED $$$$$ Create a term facet in a datasouce, check output");
+		String name = "user" + Math.abs(new Random().nextInt());
+		User user = User.with().name(name).password(PASSWORD).mail(name + "@mail.com").build();
+		
+		accountService.addUser(getTestSession(), user);
+		List<String> groups = new ArrayList<>();
+		groups.add(BuiltInGroups.ADMINISTRATORS.getValue());
+		user.setGroups(groups);
+		accountService.editUser(getTestSession(), user.getName(), user);
+		getTestSession().put(ADMIN1_USER_KEY, user);
+		
+		name = "user" + Math.abs(new Random().nextInt());
+	    user = User.with().name(name).password(PASSWORD).mail(name + "@mail.com").build();
+		accountService.addUser(getTestSession(), user);
+		user.setGroups(groups);
+		accountService.editUser(getTestSession(), user.getName(), user);
+		getTestSession().put(ADMIN2_USER_KEY, user);
 	}
 	
-	@Test(description ="Create a range facet in a datasouce, check output ", dependsOnMethods = "termsLastNameFacetTest")
-	public void rangesFacetTest()
+	@Test(description ="import additional persons",dependsOnMethods = "addPersonForTermStats")
+	public void loginAndImport1()
 	{
-			logger.info("STARTED ###  Create a range facet in a datasouce, check output");
-			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
-			//1. edit portlet
-			int categoryKey = (Integer) getTestSession().get(PERSONS_CATEGORYKEY);
-			String datasource = FacetTestUtils.buildDataSourceString(categoryKey, DS_FACET_RANGES);
-			portlet.setDatasource(datasource);
-			siteService.editDatasourceTabInPortlet(getTestSession(), portlet);
-			//2. press the button "preview data source".
-			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
-			
-			//get ranges from xml-datasource from web-page:
-			List<Range> rangesActual = FacetTestUtils.getRangesFromPreview(pageSource);
-			if(rangesActual.isEmpty())
-			{
-				Assert.fail("there are no ranges in preview datasource");
-			}
-			boolean result = true;
-			for(Range range: rangesActual)
-			{
-				List<Person> personsFromFile = FacetTestUtils.getPersonsByRange(ADMIN_IMPORT_PERSONS_XML, range);
-				result &= personsFromFile.size() == range.getHits();
-			}
-			//3. verify expected and actual output
-			Assert.assertTrue(result, "wrong value present in output of 'data source preview'");
-			logger.info(" FINISED $$$$$ Create a range facet in a datasouce, check output");
+		User user = (User)getTestSession().get(ADMIN1_USER_KEY);
+		getTestSession().setUser(user);
+		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
+		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
+		contentService.doImportContent(getTestSession(), "person-import-xml", USER1_IMPORT, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
+	}
+	@Test(description ="import additional persons",dependsOnMethods = "loginAndImport1")
+	public void loginAndImport2()
+	{
+		User user = (User)getTestSession().get(ADMIN2_USER_KEY);
+		getTestSession().setUser(user);
+		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
+		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
+		contentService.doImportContent(getTestSession(), "person-import-xml", USER2_IMPORT, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
 	}
 	
-	@Test(description ="Create a 'Histogram Facet '  in a datasouce, check output ", dependsOnMethods = "rangesFacetTest")
-	public void histogramFacetTest()
+	
+	@Test(description ="Create a facet 'terms-stats' in a datasouce, check output  ", dependsOnMethods = "loginAndImport2")
+	public void termstatsFacetTest() throws ParseException
 	{
-			logger.info(" STARTED #### Create a 'Histogram Facet '  in a datasouce, check output ");
-			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
-			//1. edit portlet: set histogram facet
-			int categoryKey = (Integer) getTestSession().get(PERSONS_CATEGORYKEY);
-			String datasource = FacetTestUtils.buildDataSourceString(categoryKey, DS_FACET_HISTOGRAM);
-			portlet.setDatasource(datasource);
-			siteService.editDatasourceTabInPortlet(getTestSession(), portlet);
-			//2. press the button "preview data source".
+			logger.info(" STARTED #### Create a facet 'terms-stats' in a datasouce, check output");
+			Portlet portlet = (Portlet) getTestSession().get(PORTLET_TSFACET_KEY);
+			
+			//1. press the button "preview data source".
 			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
 			
-			//3. get histograms from xml-datasource from web-page:
-			List<Histogram> histogramActual = FacetTestUtils.getHistogramFromPreview(pageSource);
-			if(histogramActual.isEmpty())
-			{
-				Assert.fail("there are no histograms in preview datasource");
-			}
+			//2. get terms from xml-datasource from web-page:
+			List<Term> termstatsActual = FacetTestUtils.getTermsFromPreview(pageSource);
 			boolean result = true;
-			for(Histogram histogram: histogramActual)
+			if(termstatsActual.size() !=3)
 			{
-				List<Person> personsFromFile = FacetTestUtils.getPersonsByBalance(ADMIN_IMPORT_PERSONS_XML, histogram.getValue());
-				result &= personsFromFile.size() == histogram.getHits();
+				Assert.fail("wrong number of terms in the preview! size= "+termstatsActual.size());
 			}
+			User user1 = (User)getTestSession().get(ADMIN1_USER_KEY);
+			User user2 = (User)getTestSession().get(ADMIN2_USER_KEY);
+			result &= verifyTermStat(getTermForUser(termstatsActual, "admin"), ADMIN_IMPORT_PERSONS_XML, "admin");
+			result &= verifyTermStat(getTermForUser(termstatsActual, user1.getName()), USER1_IMPORT, user1.getName());
+			result &= verifyTermStat(getTermForUser(termstatsActual, user2.getName()), USER2_IMPORT, user2.getName());
 			//3. verify expected and actual output
 			Assert.assertTrue(result, "wrong value present in output of 'data source preview'");
-			logger.info(" FINISED $$$$$ TEST PREVIEW  DATASOURCE::: histogram Facet");
+			logger.info(" FINISED $$$$$ Create a facet 'terms-stats' in a datasouce, check output");
 	}
-
-	@Test(description ="Create a 'DateHistogram Facet '  in a datasouce, check output ", dependsOnMethods = "histogramFacetTest")
-	public void dateHistogramFacetTest() throws ParseException
+	private Term getTermForUser(List<Term> termstatsActual, String userName)
 	{
-			logger.info(" STARTED #### Create a 'Histogram Facet '  in a datasouce, check output ");
-			Portlet portlet = (Portlet) getTestSession().get(PORTLET_FACET_KEY);
-			//1. edit portlet: set histogram facet
-			int categoryKey = (Integer) getTestSession().get(PERSONS_CATEGORYKEY);
-			String datasource = FacetTestUtils.buildDataSourceString(categoryKey, DS_FACET_DATEHISTOGRAM);
-			portlet.setDatasource(datasource);
-			siteService.editDatasourceTabInPortlet(getTestSession(), portlet);
-			//2. press the button "preview data source".
-			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
-			
-			//3. get histograms from xml-datasource from web-page:
-			List<DateHistogram> histogramActual = FacetTestUtils.getDateHistogramFromPreview(pageSource);
-			boolean result = true;
-			if(histogramActual.isEmpty())
+		for(Term term: termstatsActual)
+		{
+			if(term.getValue().contains(userName))
 			{
-				Assert.fail("there are no datehistograms in preview datasource");
+				return term;
 			}
-			for(DateHistogram histogram: histogramActual)
-			{
-				List<Person> personsFromFile = FacetTestUtils.getPersonsByBirthYear(ADMIN_IMPORT_PERSONS_XML, histogram.getDate());
-				result &= personsFromFile.size() == histogram.getHits();
-			}
-			//3. verify expected and actual output
-			Assert.assertTrue(result, "wrong value present in output of 'data source preview'");
-			logger.info(" FINISED $$$$$ TEST PREVIEW  DATASOURCE::: datehistogram Facet");
+		}
+		return null;
+	}
+	private boolean verifyTermStat(Term term, String resFile, String userName)
+	{
+		boolean result = true;
+		float total = FacetTestUtils.getTotalBalance(resFile);
+		logger.info("total balance is " +total + " filename" + resFile + "username "+ userName);
+		result &=FacetTestUtils.getPersons(resFile).size() == term.getHits();
+		logger.info("hits is " +term.getHits());
+		logger.info("result is " +result);
+		result &= total == term.getSum();
+		result &= term.getValue().contains(userName);
+		return result;
 	}
 	
 	private void importPersonContent()
@@ -220,13 +195,13 @@ public class FacetsTests extends BaseTest
 	{
 		logger.info("create new site and verify.");
 		Site site = new Site();
-		String siteName = "facetds" + Math.abs(new Random().nextInt());
+		String siteName = "termstats" + Math.abs(new Random().nextInt());
 		site.setDispalyName(siteName);
 		site.setLanguage("English");
 		SitesTableFrame table = siteService.createSite(getTestSession(), site);
 		boolean result = table.verifyIsPresent(site.getDispalyName());
 		Assert.assertTrue(result, "new site was not found in the table");
-		getTestSession().put(SITE_FACET_KEY, site);
+		getTestSession().put(SITE_TERMSTAT_FACET_KEY, site);
 		logger.info("site created: " + siteName);
 	}
 	/**
@@ -234,7 +209,7 @@ public class FacetsTests extends BaseTest
 	 */
 	private void allowSection()
 	{
-		Site site = (Site) getTestSession().get(SITE_FACET_KEY);
+		Site site = (Site) getTestSession().get(SITE_TERMSTAT_FACET_KEY);
 		logger.info("allow Section page type. site: " + site.getDispalyName());
 
 		AllowedPageTypes[] allowedPageTypes = { AllowedPageTypes.SECTION };
@@ -250,7 +225,7 @@ public class FacetsTests extends BaseTest
 	private void addSection()
 	{
 		logger.info("#### STARTED: add new ordered section menu item to the  Site ");
-		Site site = (Site) getTestSession().get(SITE_FACET_KEY);
+		Site site = (Site) getTestSession().get(SITE_TERMSTAT_FACET_KEY);
 		SectionMenuItem section = new SectionMenuItem();
 		section.setDisplayName("test");
 		section.setShowInMenu(true);
@@ -301,10 +276,10 @@ public class FacetsTests extends BaseTest
 	private void createRepositoryAndCategory()
 	{
 		ContentRepository repository = new ContentRepository();
-		repository.setName("testFacet" + Math.abs(new Random().nextInt()));
+		repository.setName("termStats" + Math.abs(new Random().nextInt()));
 		repositoryService.createContentRepository(getTestSession(), repository);
 		
-		getTestSession().put(PERSONS_REPO_KEY, repository);
+		getTestSession().put(PERS_REPO_KEY, repository);
 		String[] parents = { repository.getName() };
 		ContentCategory personsCategory = ContentCategory.with().name(PERSONS_CATEGORY_NAME).contentTypeName(CNAME).parentNames(parents).build();
 		
@@ -312,7 +287,7 @@ public class FacetsTests extends BaseTest
 		getTestSession().put(IMPORT_CATEGORY_KEY, personsCategory);
 
 		int catKey = repositoryService.getCategoryKey(getTestSession(), personsCategory.getName(), parents);
-		getTestSession().put(PERSONS_CATEGORYKEY, Integer.valueOf(catKey));
+		getTestSession().put(PERSONS_CAT_KEY, Integer.valueOf(catKey));
 		logger.info("category was created: cat-name" + personsCategory.getName());
 	}
 	
@@ -322,7 +297,7 @@ public class FacetsTests extends BaseTest
 	 */
 	private void addPortlet()
 	{
-		Site site = (Site) getTestSession().get(SITE_FACET_KEY);
+		Site site = (Site) getTestSession().get(SITE_TERMSTAT_FACET_KEY);
 		Portlet portlet = new Portlet();
 		portlet.setName(POTLET_NAME);
 		STKResource stylesheet = new STKResource();
@@ -330,20 +305,21 @@ public class FacetsTests extends BaseTest
 		stylesheet.setPath("modules", "module-sample-site");
 		portlet.setStylesheet(stylesheet);
 		portlet.setSiteName(site.getDispalyName());
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(DS_FACET_TERMS);
+		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(DS_FACET_TERMSTATS);
 		String datasource = TestUtils.getInstance().readConfiguration(in);
 		int index = datasource.indexOf("categoryKeys\">");
 		StringBuffer sb = new StringBuffer(datasource);
-		int key = (Integer) getTestSession().get(PERSONS_CATEGORYKEY);
+		int key = (Integer) getTestSession().get(PERSONS_CAT_KEY);
 		sb.insert(index + 14, key);
 
 		portlet.setDatasource(sb.toString());
 		SitePortletsTablePage table = siteService.addPortlet(getTestSession(), portlet);
 		boolean result = table.verifyIsPresent(portlet.getName());
 		Assert.assertTrue(result, "Portlet with name: " + portlet.getName() + " was not found in the table!");
-		getTestSession().put(PORTLET_FACET_KEY, portlet);
+		getTestSession().put(PORTLET_TSFACET_KEY, portlet);
 	}
 
 
 
+	
 }

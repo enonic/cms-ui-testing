@@ -16,13 +16,12 @@ import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.ContentWithEditorInfo;
 import com.enonic.autotests.model.userstores.AclEntry;
-import com.enonic.autotests.model.userstores.BuiltInGroups;
-import com.enonic.autotests.model.userstores.PermissionOperation;
-import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.model.userstores.AclEntry.CategoryAvailableOperations;
 import com.enonic.autotests.model.userstores.AclEntry.ContentAvailableOperations;
 import com.enonic.autotests.model.userstores.AclEntry.PrincipalType;
-import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
+import com.enonic.autotests.model.userstores.BuiltInGroups;
+import com.enonic.autotests.model.userstores.PermissionOperation;
+import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.services.AccountService;
 import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
@@ -48,11 +47,9 @@ public class AclPropogate extends BaseTest
 	@Test(description = "add user to  check 'Access rights' for 'Developer'")
 	public void createUserTest()
 	{
-		User user = new User();
-		user.setPassword(PASSWORD);
 		String name = "devpropogate" + Math.abs(new Random().nextInt());
-		user.setName(name);
-		user.setEmail(name + "@mail.com");
+		User user = User.with().name(name).password(PASSWORD).mail(name + "@mail.com").build();
+	
 		accountService.addUser(getTestSession(), user);
 		getTestSession().put(DEV_USER_KEY, user);
 	}
@@ -162,7 +159,7 @@ public class AclPropogate extends BaseTest
 	@Test(description = "Verify that category is visible", dependsOnMethods = "addContentAndGrantAccessTest")
 	public void verifyCategoryPresent()
 	{
-		logger.info("Verify that user is allowed to browse category, when permission 'browse' added to category");
+		logger.info("STARTED### Verify that user is allowed to browse category, when permission 'browse' added to category");
 		User user = (User) getTestSession().get(DEV_USER_KEY);
 		getTestSession().setUser(user);
 		ContentCategory category = (ContentCategory) getTestSession().get(DEVELOPER_CATEGORY_KEY);
@@ -177,7 +174,7 @@ public class AclPropogate extends BaseTest
 	@Test(description = "Verify that content is searchable", dependsOnMethods = "addContentAndGrantAccessTest")
 	public void verifyContentIsSearchable()
 	{
-		logger.info("Verify that content is searchable ");
+		logger.info("STARTED### Verify that content is searchable ");
 		User user = (User) getTestSession().get(DEV_USER_KEY);
 		getTestSession().setUser(user);
 		Content<ContentWithEditorInfo>  content = (Content<ContentWithEditorInfo>)getTestSession().get(DEV_CONTRIBUTOR_CONTENT_KEY);

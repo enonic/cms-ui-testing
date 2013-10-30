@@ -62,6 +62,11 @@ public class FacetTestUtils
 			{
 				term.setHits(element.getAttribute("hits").getIntValue());
 				term.setValue(element.getValue());
+				if(element.getAttribute("sum") != null)
+				{
+					term.setSum(element.getAttribute("sum").getFloatValue());
+				}
+				
 				terms.add(term);
 			} catch (DataConversionException e)
 			{
@@ -326,6 +331,18 @@ public class FacetTestUtils
 			}
 		}
 		return filtered;
+	}
+	
+	public static float getTotalBalance(String dataXmlFile)
+	{
+
+		List<Person> allpersons = getPersons(dataXmlFile);
+		float totalBalance = 0.0f;
+		for (Person p : allpersons)
+		{
+			totalBalance += p.getBalance();
+		}
+		return totalBalance;
 	}
 
 	/**
