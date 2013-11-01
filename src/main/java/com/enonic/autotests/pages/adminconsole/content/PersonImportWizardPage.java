@@ -97,11 +97,16 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 
 			fileInputType.sendKeys(localFile.getAbsolutePath());
 		}
+		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 		Date time = Calendar.getInstance().getTime();
 		
 		String currentDate = dateFormat.format(time);
+			boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath("//input[@name='date_pubdata_publishfrom']"), getDriver(), 1l);
+			if(isPresent)
+			{
 		dateInput.sendKeys(currentDate);
+			}
         // 3. click by the "Import" button
 		importButton.click();
 		

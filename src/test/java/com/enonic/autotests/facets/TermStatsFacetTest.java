@@ -224,7 +224,7 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 	 */
 	private void addSection()
 	{
-		logger.info("#### STARTED: add new ordered section menu item to the  Site ");
+		logger.info("#### STARTED: add new  section menu item to the  Site ");
 		Site site = (Site) getTestSession().get(SITE_TERMSTAT_FACET_KEY);
 		SectionMenuItem section = new SectionMenuItem();
 		section.setDisplayName("test");

@@ -48,7 +48,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 	
 	private final String TINY_MCE_CFG = "test-data/contenttype/tiny-editor.xml";
 
-	@Test(description = "add user to  check AÑL-contributor")
+	@Test(description = "add user")
 	public void createUserTest()
 	{
 		logger.info("STARTED###: try to  add user.");

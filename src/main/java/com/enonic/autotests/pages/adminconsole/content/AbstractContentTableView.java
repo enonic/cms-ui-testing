@@ -75,7 +75,7 @@ public abstract class AbstractContentTableView extends AbstractAdminConsolePage
 	
 	public boolean isEmpty()
 	{
-		return TestUtils.getInstance().waitUntilInvisibleNoException(getSession(), By.xpath("//tr[contains(@class,'tablerowpainter')]"), AppConstants.PAGELOAD_TIMEOUT);		
+		return TestUtils.getInstance().waitUntilInvisibleNoException(getSession(), By.xpath("//tr[contains(@class,'tablerowpainter')]"), 3l);		
 	}
 	
 	/**

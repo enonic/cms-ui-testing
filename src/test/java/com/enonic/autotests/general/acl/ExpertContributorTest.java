@@ -45,7 +45,7 @@ public class ExpertContributorTest extends BaseTest
 	
 	private final String TINY_MCE_CFG = "test-data/contenttype/tiny-editor.xml";
 
-	@Test(description = "add user to  check AÑL- expert contributor")
+	@Test(description = "add user to  check ACL- expert contributor")
 	public void createUserTest()
 	{
 		User user = new User();
