@@ -63,7 +63,7 @@ public class SiteInfoPage extends AbstractAdminConsolePage
 		}else{
 			throw new TestFrameworkException("Delete button was not found!");
 		}
-		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 2l);
 		if (isAlertPresent)
 		{
 			Alert alert = getSession().getDriver().switchTo().alert();

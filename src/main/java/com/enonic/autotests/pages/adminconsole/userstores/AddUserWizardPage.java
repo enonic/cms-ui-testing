@@ -101,7 +101,7 @@ public class AddUserWizardPage extends  AbstractAdminConsolePage
 	 */
 	public void checkAlerts()
 	{
-		if (!TestUtils.getInstance().alertIsPresent(getSession(), 1l))
+		if (!TestUtils.getInstance().alertIsPresent(getSession(), 2l))
 		{
 			getLogger().debug("alert was not present during creation");
 		} else

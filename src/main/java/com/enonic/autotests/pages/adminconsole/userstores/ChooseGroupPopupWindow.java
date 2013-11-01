@@ -20,27 +20,34 @@ public class ChooseGroupPopupWindow  extends Page
 
 	@FindBy(name = "batchButtonShim")
 	private WebElement addButton;
+	
 	// xpath for all rows in the table
 	private String GROUP_NAME_XPATH ="//td[contains(@class,'browsetablecell') and child::input[@value='%s']]";
+	
+	/**
+	 * The constructor
+	 */
 	public ChooseGroupPopupWindow( TestSession session )
 	{
 		super(session);
 	}
 	
+	/**
+	 * @param names
+	 */
 	public void doChoosePrincipals(List<String> names)
 	{
 		Set<String> allWindows = getDriver().getWindowHandles();
 		if (!allWindows.isEmpty())
 		{
 			String whandle = getDriver().getWindowHandle();
-			for (String windowId : allWindows)
-			{
+			String[] ar = new String[2];
+			String[] handles = allWindows.toArray(ar);
 
 				try
 				{
-					if (getDriver().switchTo().window(windowId).getTitle().contains("http://"))
-					{
-						TestUtils.getInstance().selectByText(getSession(), By.xpath("//select[@name='userstorekey']"), "View: All");
+					getDriver().switchTo().window(handles[1]).getTitle();
+					TestUtils.getInstance().selectByText(getSession(), By.xpath("//select[@name='userstorekey']"), "View: All");
 						
 						//1. select all groups to add:
 						for(String name: names)
@@ -60,14 +67,12 @@ public class ChooseGroupPopupWindow  extends Page
 						getDriver().switchTo().window(whandle);
 						PageNavigator.switchToFrame( getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME );
 
-						break;
-					}
 				} catch (NoSuchWindowException e)
 				{
 					throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
 				}
-			}
-		}
+
 	}
 
+}
 }

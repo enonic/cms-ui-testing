@@ -81,7 +81,7 @@ public class SitesTableFrame extends AbstractAdminConsolePage
 	private void deleteSite(WebElement siteElement)
 	{
 		siteElement.click();
-		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 2l);
 		if (isAlertPresent)
 		{
 			Alert alert = getDriver().switchTo().alert();

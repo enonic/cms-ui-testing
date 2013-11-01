@@ -44,7 +44,7 @@ public class SystemFrame extends AbstractAdminConsolePage
 			throw new TestFrameworkException("Remove button was not found on the System page!");
 		}
 		elems.get(0).click();
-		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 2l);
 		if (isAlertPresent)
 		{
 			Alert alert = getDriver().switchTo().alert();

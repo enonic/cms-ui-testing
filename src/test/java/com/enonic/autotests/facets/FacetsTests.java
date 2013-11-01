@@ -249,7 +249,7 @@ public class FacetsTests extends BaseTest
 	 */
 	private void addSection()
 	{
-		logger.info("#### STARTED: add new ordered section menu item to the  Site ");
+		logger.info("#### STARTED: add new section menu item to the  Site ");
 		Site site = (Site) getTestSession().get(SITE_FACET_KEY);
 		SectionMenuItem section = new SectionMenuItem();
 		section.setDisplayName("test");

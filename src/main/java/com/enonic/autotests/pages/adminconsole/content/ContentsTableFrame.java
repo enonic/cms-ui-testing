@@ -353,7 +353,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 		WebElement elem = getSession().getDriver().findElement(By.xpath(deleteContenIcon));
 		elem.click();
 		// 3.confirm the deletion
-		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 2l);
 		if (isAlertPresent)
 		{
 			Alert alert = getSession().getDriver().switchTo().alert();
@@ -380,7 +380,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 			return;
 		}
 		TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_TOP_XPATH), "Delete");
-		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 2l);
 		if (isAlertPresent)
 		{
 			Alert alert = getSession().getDriver().switchTo().alert();
@@ -405,7 +405,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 			throw new TestFrameworkException("Delete category button is not clickable! Wrong xpath or category is not empty!");
 		}
 		getSession().getDriver().findElement(By.xpath(DELETE_CATEGORY_BUTTON)).click();
-		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 2l);
 		if (isAlertPresent)
 		{
 			Alert alert = getSession().getDriver().switchTo().alert();

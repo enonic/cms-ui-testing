@@ -86,26 +86,24 @@ public class AddPageMenuItemWizardPage extends AbstractMenuItemWizardPage<PageMe
 					Set<String> allWindows = getDriver().getWindowHandles();
 					if (!allWindows.isEmpty())
 					{
+						
 						String whandle = getDriver().getWindowHandle();
-						for (String windowId : allWindows)
-						{
+						String[] ar = new String[2];
+						String[] handles = allWindows.toArray(ar);
 							try
 							{
 								//switch to POPUP-WINDOW
-								if (getDriver().switchTo().window(windowId).getTitle().contains("http://"))
-								{
+								getDriver().switchTo().window(handles[1]);
+								//{
 									String portletXpath = String.format(SitePortletsTablePage.PORTLET_TITLE_XPATH,p.getPortletName()); 
 									findElement(By.xpath(portletXpath)).click();								
 									// POPUP WINDOW CLOSED, need to switch to the main  window
 									getDriver().switchTo().window(whandle);
 									PageNavigator.switchToFrame( getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME );
-									break;
-								}
 							} catch (NoSuchWindowException e)
 							{
 								throw new TestFrameworkException("NoSuchWindowException- wrong ID" + e.getLocalizedMessage());
 							}
-						}
 					}
 
 
@@ -121,10 +119,9 @@ public class AddPageMenuItemWizardPage extends AbstractMenuItemWizardPage<PageMe
 				{
 					throw new TestFrameworkException("not implemented yet");
 				}
-			}
 		}
 		saveButton.click();
 
 	}
-
+	}
 }

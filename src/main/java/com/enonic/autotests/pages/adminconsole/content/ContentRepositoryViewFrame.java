@@ -51,7 +51,7 @@ public class ContentRepositoryViewFrame extends AbstractContentTableView
 	public RepositoriesListFrame doDeleteEmptyRepository()
 	{
 		buttonDelete.click();
-		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 1l);
+		boolean isAlertPresent = TestUtils.getInstance().alertIsPresent(getSession(), 2l);
 		if (isAlertPresent)
 		{
 			Alert alert = getDriver().switchTo().alert();
