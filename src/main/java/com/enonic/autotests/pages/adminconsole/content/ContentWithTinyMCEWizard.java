@@ -1155,6 +1155,11 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 
 	private void selectAll()
 	{
+		if(getSession().getIsRemote())
+		{
+			editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		} else
+		{
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.indexOf("mac") >= 0)
 		{
