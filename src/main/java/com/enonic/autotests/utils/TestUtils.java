@@ -59,10 +59,8 @@ public class TestUtils
 		{
 			synchronized (TestUtils.class)
 			{
-				if (instance == null)
-				{
-					instance = new TestUtils();
-				}
+				
+				instance = new TestUtils();
 			}
 		}
 		return instance;
@@ -123,15 +121,21 @@ public class TestUtils
 	 */
 	public void clearAndType(TestSession session, WebElement input, String text)
 	{
-		String os = System.getProperty("os.name").toLowerCase();
-		logger.info("clearAndType: OS System is " + os);
-		if (os.indexOf("mac") >= 0)
+		if(session.getIsRemote())
 		{
-			input.sendKeys(Keys.chord(Keys.COMMAND, "a"), text);
-		} else
-		{
-		input.sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
+			input.sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
+		} 
+		else{
+			
+			String os = System.getProperty("os.name").toLowerCase();
+			logger.info("clearAndType: OS System is " + os);
+			if (os.indexOf("mac") >= 0)
+			{
+				input.sendKeys(Keys.chord(Keys.COMMAND, "a"), text);
+			}
+			
 		}
+		
 
 	}
 
