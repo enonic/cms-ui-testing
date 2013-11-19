@@ -78,7 +78,7 @@ public class PortletPreviewDatasourceTest extends BaseTest
 		Content<ImageContentInfo> content = (Content<ImageContentInfo>)getTestSession().get(TEST_CONTENT_KEY);
 		Assert.assertTrue(pageSource.contains(content.getDisplayName()), "content name was not present in the Preview Datasource xml-content");
 		Assert.assertTrue(pageSource.contains(content.getContentTab().getInfo().getDescription()), "description of content was not present in the Preview Datasource xml-content");
-		logger.info(" FINISED $$$$$ TEST PREVIEW  DATASOURCE::: getContentByCategory");
+		logger.info(" FINISHED $$$$$ TEST PREVIEW  DATASOURCE::: getContentByCategory");
 	}
 
 	/**
