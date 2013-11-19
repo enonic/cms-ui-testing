@@ -105,7 +105,7 @@ public class CreateSiteWithSTKTemplateTest extends BaseTest
 		Site site = (Site) getTestSession().get(SITE_STK_KEY);
 
 		boolean result = siteService.doOpenInICEAndVerifyText(getTestSession(), site.getDispalyName(), TEXT_PAGE_ITEM);
-		Assert.assertTrue(result, "Open in ICE was failed!");
+		Assert.assertTrue(result, "Open in ICE failed!");
 		logger.info("$$$$ FINISHED : site sucessfully opened! Text was verified");
 	}
 
