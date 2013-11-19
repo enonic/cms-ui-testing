@@ -107,7 +107,6 @@ public class SiteService
 	 * Adds a new 'Page' menu item
 	 * 
 	 * @param testSession
-	 * @param siteName
 	 * @param menuItem
 	 * @return
 	 */
@@ -150,7 +149,6 @@ public class SiteService
 	 * Adds a portlet to a Site
 	 * 
 	 * @param testSession
-	 * @param siteName
 	 * @param portlet
 	 * @return
 	 */
