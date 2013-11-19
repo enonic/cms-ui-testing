@@ -8,6 +8,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -196,11 +197,14 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		doSetACL(content.getAclEntries());
 		saveButton.click();
 		closeButton.click();
-
+				
 	}
 	public void verifyUndoRedo()
 	{
+		selectAlignment(AlignmentText.LEFT);
+		undoButton.click();
 		String string1 = "string1";
+		
 		editorArea.sendKeys(string1);
 		editorArea.sendKeys("\n");
 		String string2 = "string2";
@@ -238,6 +242,8 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	public void verifyIncreaseDecreaseIndents()
 	{
 		
+		selectAlignment(AlignmentText.LEFT);
+		undoButton.click();
 		String text = "test text";
 		editorArea.sendKeys(text);
 		increaseIndentButton.click();
@@ -269,7 +275,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		editorArea.sendKeys("\n");
 		editorArea.sendKeys(text2);
 				
-		String[] expectedText = { "<ul><li>"+ text1+"</li>", text2 + "</li></ul>" };
+		String[] expectedText = { "<ul><li>"+ text1, text2 , "</li></ul>" };
 		boolean isPresent = verifyTextInEditor(expectedText);
 		if(!isPresent)
 		{
@@ -291,7 +297,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		editorArea.sendKeys("\n");
 		editorArea.sendKeys(text2);
 				
-		String[] expectedText = { "<ol><li>"+ text1+"</li>", text2 + "</li></ol>" };
+		String[] expectedText = { "<ol><li>", text1, text2,"</li></ol>" };
 		boolean isPresent = verifyTextInEditor(expectedText);
 		if(!isPresent)
 		{
@@ -304,6 +310,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyInsertSuperscript()
 	{
+		selectAlignment(AlignmentText.LEFT);
 		String text = "superscript test";
 		editorArea.sendKeys(text);
 		selectAll(); 
@@ -321,6 +328,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyInsertSubscript()
 	{
+		selectAlignment(AlignmentText.LEFT);
 		String text = "subscript test";
 		editorArea.sendKeys(text);
 		
@@ -339,6 +347,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyInsertSpecialCharacters(SpecialCharacters character)
 	{
+		selectAlignment(AlignmentText.LEFT);
 		insertSpecSymbolsButton.click();
 		doAddSpecialCharacter(character);
 
@@ -358,12 +367,14 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyInsertCitation()
 	{
+		selectAlignment(AlignmentText.LEFT);
+		undoButton.click();
 		String text = "deleteion test";
 		editorArea.sendKeys(text);
 		selectAll();
 		insertCitationButton.click();
 		doAddCitation();
-		String[] expectedText = { "<cite ", text + "</cite>" };
+		String[] expectedText = { "<cite", text , "</cite>" };
 
 		boolean isPresent = verifyTextInEditor(expectedText);
 		if(!isPresent)
@@ -409,12 +420,13 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyDeletion()
 	{
+		selectAlignment(AlignmentText.LEFT);
 		String text = "deleteion test";
 		editorArea.sendKeys(text);
 		selectAll();
 		insertDeletionButton.click();
 		doAddDeletion();
-		String[] expectedText = { "<del style", text + "</del>" };
+		String[] expectedText = { "<del", text + "</del>" };
 
 		boolean isPresent = verifyTextInEditor(expectedText);
 		if(!isPresent)
@@ -428,12 +440,13 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyInsertion()
 	{
+		selectAlignment(AlignmentText.LEFT);
 		String text = "isertion test";
 		editorArea.sendKeys(text);
 		selectAll();
 		insertInsertionButton.click();
 		doAddInsertion();
-		String[] expectedText = { "<p><ins", text + "</ins>" };
+		String[] expectedText = { "<ins", text + "</ins>" };
 		boolean isPresent = verifyTextInEditor(expectedText);
 		if(!isPresent)
 		{
@@ -446,11 +459,13 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyInsertBlockQuote()
 	{
+		selectAlignment(AlignmentText.LEFT);
+		undoButton.click();
 		String text = "text test";
 		editorArea.sendKeys(text);
 		selectAll();
 		insertBlockQouteButton.click();
-		String expectedText = "<blockquote><p>" + text;
+		String[] expectedText = {"<blockquote>" , text};
 		boolean isPresent = verifyTextInEditor(expectedText);
 		if(!isPresent)
 		{
@@ -463,12 +478,16 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyInsertAbbreviation()
 	{
+		
+		selectAlignment(AlignmentText.LEFT);
+		undoButton.click();
+		
 		String text = "text test";
 		editorArea.sendKeys(text);
 		selectAll();
 		insertAbbreviationButton.click();
 		doInsertAbbreviation();
-		String[] expectedText = { "<abbr", text + "</abbr>" };
+		String[] expectedText = { "<abbr", text, "</abbr>" };
 		boolean isPresent = verifyTextInEditor(expectedText);
 		if(!isPresent)
 		{
@@ -481,6 +500,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyInsertAcronym()
 	{
+		selectAlignment(AlignmentText.LEFT);
 		String text = "text test";
 		editorArea.sendKeys(text);
 		selectAll();
@@ -869,22 +889,22 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		// 1. click by Link button and create new link:
 		doAddLink(linkText);
 		// verify:
-		String expectedText = String.format("<a href=\"http://%s\"", linkText);
-		boolean isPresent = verifyTextInEditor(expectedText);
+		//String expectedText = String.format("<a href=\"http://%s\"", linkText);
+		boolean isPresent = verifyTextInEditor("href",linkText);
 		if(!isPresent)
 		{
-			Assert.fail("actual innerHtml does not contain expected strings "+ expectedText);
+			Assert.fail("actual innerHtml does not contain expected strings "+ linkText);
 		}
 		// 2. select all
 		selectAll();
 		// 3. click by unlink button
 		unlinkButton.click();
 		// 4. verify
-		expectedText = String.format("<p>google.com", linkText);
-		isPresent = verifyTextInEditor(expectedText);
-		if(!isPresent)
+		//expectedText = String.format("<p>google.com", linkText);
+		isPresent = verifyTextInEditor("<href",linkText);
+		if(isPresent)
 		{
-			Assert.fail("actual innerHtml does not contain expected string "+ expectedText);
+			Assert.fail("actual innerHtml does not contain expected string ");
 		}
 	}
 
@@ -1012,21 +1032,23 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 			}
 		}
 
-		String expectedText = String.format("<p><a class=\"mceItemAnchor\" name=\"%s\"></a></p>", anchorText);
-		boolean isPresent = verifyTextInEditor(expectedText);
+		//String expectedText = String.format("<p><a class=\"mceItemAnchor\" name=\"%s\"></a></p>", anchorText);
+		boolean isPresent = verifyTextInEditor("mceItemAnchor", anchorText);
 		if(!isPresent)
 		{
 			Assert.fail("actual innerHtml does not contain expected strings: ");
 		}
-		//editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+	
 
 	}
 
 	public void verifyChangeColorText()
 	{
+		selectAlignment(AlignmentText.LEFT);
 		String text = "test text";
 		editorArea.sendKeys(text);
-		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		//editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		selectAll();
 		List<WebElement> elems = findElements(By.xpath("//a[@title='Select Text Color' and descendant::span[@class='mceIconOnly']]"));
 		elems.get(0).click();
 		TestUtils.getInstance().waitAndFind(By.xpath("//a[@title='Red']"), getDriver());
@@ -1043,9 +1065,14 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 
 	public void verifyChangeBackgroundColorText()
 	{
+		//Actions builder = new Actions(getDriver());
+		//WebElement elem = getDriver().findElement(By.xpath("//td[contains(@class,'mceIframeContainer')]//iframe"));
+		//builder.moveToElement(elem).click().build().perform();
+		selectAlignment(AlignmentText.LEFT);
 		String text = "test text";
 		editorArea.sendKeys(text);
-		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		selectAll();
+		//elem.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		List<WebElement> elems = findElements(By.xpath("//a[@title='Select Background Color' and descendant::span[@class='mceIconOnly']]"));
 		elems.get(0).click();
 		TestUtils.getInstance().waitAndFind(By.xpath("//a[@title='Red']"), getDriver());
@@ -1065,11 +1092,14 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyTextAlignment(AlignmentText align)
 	{
+		selectAlignment(AlignmentText.LEFT);
+		undoButton.click();
 		String p1 = "test text";
 		String p2 = "alignment test";
 		String text = p1 + "\n" + p2;
 		editorArea.sendKeys(text);
-		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		selectAll();
+	//	editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		selectAlignment(align);
 		String expected = String.format("<p style=\"text-align: %s;\">", align.getValue()) + p1;
 		Object obj = ((JavascriptExecutor) getSession().getDriver()).executeScript(TINY_MCE_INNERHTML);
@@ -1124,9 +1154,12 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyItalicBoldAndRemoveFormatting()
 	{
+		selectAlignment(AlignmentText.LEFT);
+		undoButton.click();
 		String text = "test text";
 		editorArea.sendKeys(text);
-		editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		selectAll();
+		
 
 		boldButton.click();
 		String expectedText = "<strong>" + text + "</strong>";
@@ -1160,14 +1193,16 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 			editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		} else
 		{
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.indexOf("mac") >= 0)
-		{
-			editorArea.sendKeys(Keys.chord(Keys.COMMAND, "a"));
-		} else
-		{
-			editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+			String os = System.getProperty("os.name").toLowerCase();
+			if (os.indexOf("mac") >= 0)
+			{
+				editorArea.sendKeys(Keys.chord(Keys.COMMAND, "a"));
+			} else
+			{
+				editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+			}
 		}
+		
 
 	}
 
