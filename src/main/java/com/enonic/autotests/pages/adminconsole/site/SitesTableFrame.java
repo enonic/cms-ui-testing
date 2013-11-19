@@ -60,14 +60,13 @@ public class SitesTableFrame extends AbstractAdminConsolePage
 
 	/**
 	 * Opens 'Sites' folder and delete all sites.
-	 * @param session
 	 */
 	public void doDeleteAll()
 	{
 		List<WebElement> deleteIcons = findElements(By.xpath(DELTE_SITE_ICON));
 		if (deleteIcons.size() == 0)
 		{
-			getLogger().info("There are no any sites to delete!");
+			getLogger().info("There are not any sites to delete!");
 			return;
 		}
 		do
