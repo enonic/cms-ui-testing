@@ -42,7 +42,7 @@ public class ChooseUserOrGroupPopupWindow extends Page
 
 				try
 				{
-					if (getDriver().switchTo().window(windowId).getTitle().contains("http://"))
+					if (getDriver().switchTo().window(windowId).getTitle().contains("Add access right"))
 					{
 						TestUtils.getInstance().selectByText(getSession(), By.xpath("//select[@name='userstorekey']"), "View: All");
 						if(isGroup)

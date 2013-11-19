@@ -95,7 +95,7 @@ public class ContentTypesFrame extends AbstractAdminConsolePage
 		List<WebElement> elems = getSession().getDriver().findElements(By.xpath(nameXpath));
 		if (elems.size() == 0)
 		{
-			new ContentTypeException("Error during deleting the contentType:" + contentTypeName + " wrong xpath or content does not exist!");
+			throw new ContentTypeException("Error during deleting the contentType:" + contentTypeName + " wrong xpath or content does not exist!");
 		}
 		//2. click by delete button
 		elems.get(0).click();
