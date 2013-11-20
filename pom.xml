@@ -208,7 +208,7 @@
 								<configuration>
 
 									<suiteXmlFiles>
-										<suiteXmlFile>${basedir}/src/test/resources/local/${${local.template.name}}</suiteXmlFile>
+										<suiteXmlFile>${basedir}/src/test/resources/local/${local.template.name}</suiteXmlFile>
 									</suiteXmlFiles>
 
 									<skip>false</skip>
