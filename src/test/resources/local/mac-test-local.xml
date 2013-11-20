@@ -1,0 +1,48 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="test suite"  verbose="1">
+
+
+	<parameter name="browser" value="firefox" />
+	<parameter name="browserVersion" value="25.0.1" />
+	<parameter name="platform" value="mac" />
+	<parameter name="isRemote" value="false" />
+	<parameter name="base.url" value="http://localhost:8080/admin/login" />
+	
+	
+	<listeners>	
+		<listener class-name="com.enonic.autotests.TestListener"/>
+	</listeners>
+	
+	<test verbose="2" name="AccountTest" annotations="JDK">
+		<classes>
+			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests"/>
+
+<!--            <class name="com.enonic.autotests.general.ContentTypeTests" />
+            <class name="com.enonic.autotests.general.CreateSiteWithSTKTemplateTest" />
+            <class name="com.enonic.autotests.general.PortletPreviewDatasourceTest" />
+
+            <class name="com.enonic.autotests.ContentRepositoryTests" />
+
+            <class name="com.enonic.autotests.contentimport.ContentImportTest" />
+            <class name="com.enonic.autotests.contentimport.ImportContentUpdateStrategyTest" />
+            <class name="com.enonic.autotests.contentimport.ImportContentWithBlockGroup" />
+            <class name="com.enonic.autotests.contentimport.AddEntryImageFileContent" />
+
+            <class name="com.enonic.autotests.textextractors.TextExtractorTest" />
+            <class name="com.enonic.autotests.facets.TermStatsFacetTest"/>
+            <class name="com.enonic.autotests.facets.FacetsTests"/>
+
+            <class name="com.enonic.autotests.ContentApiTest"/>
+
+            <class name="com.enonic.autotests.editor.EditorTest"/>
+
+            <class name="com.enonic.autotests.general.acl.AclPropogate"/>
+            <class name="com.enonic.autotests.general.acl.ContributorACLCategoryBrowseTest"/>
+            <class name="com.enonic.autotests.general.acl.DeveloperAclTest"/>
+            <class name="com.enonic.autotests.general.acl.ExpertContributorTest"/>
+            <class name="com.enonic.autotests.general.acl.UserStoreAdministratorTest"/>
+-->
+        </classes>
+	</test>
+
+</suite>
