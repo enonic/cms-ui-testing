@@ -92,11 +92,11 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
         // 1. import XML formatted resource: sync='person-no', two persons should be imported.
-        ContentsTableFrame table =
-            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory );
+        contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory );
 
         // 2. import and update content- change both persons.
-        table = contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory );
+        ContentsTableFrame table =
+            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory );
 
         // 3. verify that APPROVED status for both persons.
         List<String> namesActual = table.getContentNames();
