@@ -99,10 +99,10 @@ public class ContentRepositoryTests extends BaseTest
 		cRepository.setName(contentRepoXML.getName() + Math.abs(new Random().nextInt()));
 
 		// 1. create a new Repository: click by "Content" link in the left frame, and press the 'New'. 'Add category Wizard' should appears
-		RepositoriesListFrame repositorIesListFrame = repositoryService.createContentRepository(getTestSession(), cRepository);
+		RepositoriesListFrame repositoriesListFrame = repositoryService.createContentRepository(getTestSession(), cRepository);
 
 		// 2. verify is present in the table, located on the LeftFrame:
-		boolean isCreated = repositorIesListFrame.verifyIsRepositoryPresentedInTable(cRepository.getName());
+		boolean isCreated = repositoriesListFrame.verifyIsRepositoryPresentedInTable(cRepository.getName());
 		Assert.assertTrue(isCreated, "new created repository was not found in the table!");
 		// 3. put to the session for using in the next test.
 		List<ContentRepository> repositoryList = (List) getTestSession().get(REPOSITORY_LIST);
@@ -112,10 +112,10 @@ public class ContentRepositoryTests extends BaseTest
 
 	}
 
-    @Test(description = "add category(Content Type == 'Files') to the repository, repsitory has no a TopCategory", dependsOnMethods = "createRepositoryTest")
+    @Test(description = "add category(Content Type == 'Files') to the repository, top category have no content type.", dependsOnMethods = "createRepositoryTest")
 	public void testAddCategoryToRepository()
 	{
-    	logger.info("#### STARTED: add category with 'Files' type  to the repository, repsitory has no a TopCategory  Repository name is  "+TEST_REPO_NAME);
+    	logger.info("#### STARTED: add category with 'Files' type  to the repository, top category have no content type.  Repository name is  "+TEST_REPO_NAME);
 		ContentRepository repository = findRepositoryByName(TEST_REPO_NAME);
 		
 		//1. build new category with content type === "File"
