@@ -91,19 +91,22 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(CATEGORY_STARTEGY_TEST_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
-		// 1. import XML formatted resource: sync='person-no', two persons should be imported.
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory);
-		//2. import and update content- change both persons.
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory);
-		//3. verify that APPROVED status for both persons.
-		List<String> namesActual = table.getContentNames();
-		for(String name: namesActual)
-		{
-			ContentStatus status = table.getContentStatus(name);
-			Assert.assertTrue(status.equals(ContentStatus.APPROVED), "the actual status and expected are not equals!");
-		}
-		logger.info("$$$$ FINISHED:  Update content, UPDATE-AND-APPROVE-CONTENT strategy used.");
-	}
+        // 1. import XML formatted resource: sync='person-no', two persons should be imported.
+        ContentsTableFrame table =
+            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory );
+
+        // 2. import and update content- change both persons.
+        table = contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory );
+
+        // 3. verify that APPROVED status for both persons.
+        List<String> namesActual = table.getContentNames();
+        for ( String name : namesActual )
+        {
+            ContentStatus status = table.getContentStatus( name );
+            Assert.assertTrue( status.equals( ContentStatus.APPROVED ), "the actual status and expected are not equals!" );
+        }
+        logger.info( "$$$$ FINISHED:  Update content, UPDATE-AND-APPROVE-CONTENT strategy used." );
+    }
 	
 	@Test(description = "UPDATE-AND-ARCHIVE-CONTENT strategy used",dependsOnMethods="updateAndApproveContentTest")
 	public void updateAndArchiveContentTest()
@@ -112,25 +115,27 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(CATEGORY_STARTEGY_TEST_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
-		//1. change a strategy in the 'Content Type' 
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(PERSON_UPDATE_ARCHIVE_CFG);
-		String archiveStrategyCFG = TestUtils.getInstance().readConfiguration(in);
-		// 1. change content type's configuration: add purge="true" for EVENTS
-		contentTypeService.editContentType(getTestSession(), getContentTypeName(), archiveStrategyCFG);
-		logger.info("Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-AND-ARCHIVE-CONTENT");
-		//2. import and update content- change both persons, therefore status should be changed to ARCHIVED:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory);
-		
-	
-		//3. verify that APPROVED status for both persons.
-		List<String> namesActual = table.getContentNames();
-		for(String name: namesActual)
-		{
-			ContentStatus status = table.getContentStatus(name);
-			Assert.assertTrue(status.equals(ContentStatus.ARCHIVED), "the actual status and expected are not equals!");
-		}
-		logger.info("$$$$ FINISHED:  Update content, UPDATE-AND-ARCHIVE-CONTENT strategy used.");
-	}
+        // 1. change a strategy in the 'Content Type'
+        InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream( PERSON_UPDATE_ARCHIVE_CFG );
+        String archiveStrategyCFG = TestUtils.getInstance().readConfiguration( in );
+
+        // 2. change content type's configuration: add purge="true" for EVENTS
+        contentTypeService.editContentType( getTestSession(), getContentTypeName(), archiveStrategyCFG );
+        logger.info( "Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-AND-ARCHIVE-CONTENT" );
+
+        // 3. import and update content- change both persons, therefore status should be changed to ARCHIVED:
+        ContentsTableFrame table =
+            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory );
+
+        // 4. verify that APPROVED status for both persons.
+        List<String> namesActual = table.getContentNames();
+        for ( String name : namesActual )
+        {
+            ContentStatus status = table.getContentStatus( name );
+            Assert.assertTrue( status.equals( ContentStatus.ARCHIVED ), "the actual status and expected are not equals!" );
+        }
+        logger.info( "$$$$ FINISHED:  Update content, UPDATE-AND-ARCHIVE-CONTENT strategy used." );
+    }
 	
 	@Test(description = "UPDATE-CONTENT-DRAFT strategy used",dependsOnMethods="updateAndArchiveContentTest")
 	public void updateAndDraftContentTest()
@@ -139,25 +144,27 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(CATEGORY_STARTEGY_TEST_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
-		//1. change a strategy in the 'Content Type' 
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(PERSON_UPDATE_DRAFT_CFG);
-		String archiveStrategyCFG = TestUtils.getInstance().readConfiguration(in);
-		// 1. change content type's configuration: add purge="true" for EVENTS
-		contentTypeService.editContentType(getTestSession(), getContentTypeName(), archiveStrategyCFG);
-		logger.info("Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-CONTENT-DRAFT");
-		//2. import and update content- change both persons, therefore status should be changed to ARCHIVED:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory);
-		
-	
-		//3. verify that APPROVED status for both persons.
-		List<String> namesActual = table.getContentNames();
-		for(String name: namesActual)
-		{
-			ContentStatus status = table.getContentStatus(name);
-			Assert.assertTrue(status.equals(ContentStatus.DRAFT), "the actual status and expected are not equals!");
-		}
-		logger.info("$$$$ FINISHED:  Update content, UPDATE-CONTENT-DRAFT strategy used.  ");
-	}
+        // 1. change a strategy in the 'Content Type'
+        InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream( PERSON_UPDATE_DRAFT_CFG );
+        String archiveStrategyCFG = TestUtils.getInstance().readConfiguration( in );
+
+        // 2. change content type's configuration: add purge="true" for EVENTS
+        contentTypeService.editContentType( getTestSession(), getContentTypeName(), archiveStrategyCFG );
+        logger.info( "Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-CONTENT-DRAFT" );
+
+        // 3. import and update content- change both persons, therefore status should be changed to ARCHIVED:
+        ContentsTableFrame table =
+            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory );
+
+        // 4. verify that APPROVED status for both persons.
+        List<String> namesActual = table.getContentNames();
+        for ( String name : namesActual )
+        {
+            ContentStatus status = table.getContentStatus( name );
+            Assert.assertTrue( status.equals( ContentStatus.DRAFT ), "the actual status and expected are not equals!" );
+        }
+        logger.info( "$$$$ FINISHED:  Update content, UPDATE-CONTENT-DRAFT strategy used.  " );
+    }
 	
 	@Test(description = "UPDATE-CONTENT-KEEP-STATUS strategy used",dependsOnMethods="updateAndDraftContentTest")
 	public void updateAndKeepStatusTest()
@@ -166,25 +173,27 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(CATEGORY_STARTEGY_TEST_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
-		//1. change a strategy in the 'Content Type' 
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream(PERSON_UPDATE_KEEP_STATUS_CFG);
-		String keepStatusCFG = TestUtils.getInstance().readConfiguration(in);
-		// 1. change content type's configuration: add purge="true" for EVENTS
-		contentTypeService.editContentType(getTestSession(), getContentTypeName(), keepStatusCFG);
-		logger.info("Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-CONTENT-KEEP-STATUS");
-		//2. import and update content- change both persons, therefore status should be changed to ARCHIVED:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory);
-		
-	
-		//3. verify that DRAFT status for both persons, because KEEP STATUS that was received in previous test
-		List<String> namesActual = table.getContentNames();
-		for(String name: namesActual)
-		{
-			ContentStatus status = table.getContentStatus(name);
-			Assert.assertTrue(status.equals(ContentStatus.DRAFT), "the actual status and expected are not equals!");
-		}
-		logger.info("$$$$ FINISHED: Update content,UPDATE-CONTENT-KEEP-STATUS strategy used.  ");
-	}
+        // 1. change a strategy in the 'Content Type'
+        InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream( PERSON_UPDATE_KEEP_STATUS_CFG );
+        String keepStatusCFG = TestUtils.getInstance().readConfiguration( in );
+
+        // 2. change content type's configuration: add purge="true" for EVENTS
+        contentTypeService.editContentType( getTestSession(), getContentTypeName(), keepStatusCFG );
+        logger.info( "Content type: " + getContentTypeName() + "Was edited. Strategy changed to UPDATE-CONTENT-KEEP-STATUS" );
+
+        // 3. import and update content- change both persons, therefore status should be changed to ARCHIVED:
+        ContentsTableFrame table =
+            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory );
+
+        // 4. verify that DRAFT status for both persons, because KEEP STATUS that was received in previous test
+        List<String> namesActual = table.getContentNames();
+        for ( String name : namesActual )
+        {
+            ContentStatus status = table.getContentStatus( name );
+            Assert.assertTrue( status.equals( ContentStatus.DRAFT ), "the actual status and expected are not equals!" );
+        }
+        logger.info( "$$$$ FINISHED: Update content,UPDATE-CONTENT-KEEP-STATUS strategy used.  " );
+    }
 	
 	private String getContentTypeName()
 	{
