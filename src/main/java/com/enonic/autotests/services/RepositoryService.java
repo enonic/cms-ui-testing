@@ -124,21 +124,21 @@ public class RepositoryService
 		LeftMenuFrame menu = new LeftMenuFrame(session);
 		PageNavigator.switchToFrame( session, AbstractAdminConsolePage.LEFT_FRAME_NAME );
 		WebElement result = menu.findCategoryInContentFolder(categoryName, parents);
-		if (result != null)
-		{
-			return true;
-		} else
-		{
-			return false;
-		}
+        if ( result != null )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-	}
-
-	/**
+    /**
 	 * Finds a repository under the 'Content' Menu-item (from the LeftFrame), expand this repository and delete all content and categories. 
 	 * <br>When repository is empty, 'Remove content repository' button appears, clicks by this button and delete empty Repository.
 	 * 
-	 * @param testSession
+	 * @param session
 	 * @param repositoryName
 	 */
 
@@ -149,7 +149,8 @@ public class RepositoryService
 		menu.doDeleteRepository(repositoryName);
 	}
 	/**
-	 * gets names of all repositories. 
+	 * Return names of all repositories.
+     *
 	 * @param session
 	 * @return
 	 */
