@@ -100,10 +100,12 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 
         // 3. verify that APPROVED status for both persons.
         List<String> namesActual = table.getContentNames();
+		//TODO 
+		//Assert.assertTrue(namesActual.size()== )
         for ( String name : namesActual )
         {
-            ContentStatus status = table.getContentStatus( name );
-            Assert.assertTrue( status.equals( ContentStatus.APPROVED ), "the actual status and expected are not equals!" );
+			List<ContentStatus> status = table.getContentStatus(name);
+			Assert.assertTrue(status.contains(ContentStatus.APPROVED), "the actual status and expected are not equals!");
         }
         logger.info( "$$$$ FINISHED:  Update content, UPDATE-AND-APPROVE-CONTENT strategy used." );
     }
@@ -129,10 +131,11 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 
         // 4. verify that APPROVED status for both persons.
         List<String> namesActual = table.getContentNames();
+		//TODO verify that is not empty:
         for ( String name : namesActual )
         {
-            ContentStatus status = table.getContentStatus( name );
-            Assert.assertTrue( status.equals( ContentStatus.ARCHIVED ), "the actual status and expected are not equals!" );
+			List<ContentStatus> status = table.getContentStatus(name);
+			Assert.assertTrue(status.contains(ContentStatus.ARCHIVED), "the actual status and expected are not equals!");
         }
         logger.info( "$$$$ FINISHED:  Update content, UPDATE-AND-ARCHIVE-CONTENT strategy used." );
     }
@@ -158,10 +161,11 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 
         // 4. verify that APPROVED status for both persons.
         List<String> namesActual = table.getContentNames();
+		//TODO verify that is not empty:
         for ( String name : namesActual )
         {
-            ContentStatus status = table.getContentStatus( name );
-            Assert.assertTrue( status.equals( ContentStatus.DRAFT ), "the actual status and expected are not equals!" );
+			List<ContentStatus> status = table.getContentStatus(name);
+			Assert.assertTrue(status.contains(ContentStatus.DRAFT), "the actual status and expected are not equals!");
         }
         logger.info( "$$$$ FINISHED:  Update content, UPDATE-CONTENT-DRAFT strategy used.  " );
     }
@@ -187,10 +191,11 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 
         // 4. verify that DRAFT status for both persons, because KEEP STATUS that was received in previous test
         List<String> namesActual = table.getContentNames();
+		//TODO verify that is not empty:
         for ( String name : namesActual )
         {
-            ContentStatus status = table.getContentStatus( name );
-            Assert.assertTrue( status.equals( ContentStatus.DRAFT ), "the actual status and expected are not equals!" );
+			List<ContentStatus> status = table.getContentStatus(name);
+			Assert.assertTrue(status.contains(ContentStatus.DRAFT), "the actual status and expected are not equals!");
         }
         logger.info( "$$$$ FINISHED: Update content,UPDATE-CONTENT-KEEP-STATUS strategy used.  " );
     }

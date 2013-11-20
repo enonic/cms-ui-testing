@@ -1,5 +1,7 @@
 package com.enonic.autotests.services;
 
+import java.util.List;
+
 import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.model.Content;
@@ -87,4 +89,35 @@ public class AccountService
 		return wizard.isPresentEditHtmlButton();
 				
 	}
+	
+	/**
+	 * Deletes user from a table of users.
+	 * 
+	 * @param testSession
+	 * @param userName
+	 */
+	public void deleteUser(TestSession testSession, String userName)
+	{
+		PageNavigator.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		UsersTableFrame usersFrame = menu.openUsersTableFrame(testSession);
+		usersFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);		
+		usersFrame.doDeleteUser(userName);
+	}
+	
+	/**
+	 * @param testSession
+	 * @return list of user names. 
+	 */
+	public List<String> getUserNames(TestSession testSession)
+	{
+		
+		PageNavigator.navgateToAdminConsole(testSession);
+		LeftMenuFrame menu = new LeftMenuFrame(testSession);
+		UsersTableFrame usersFrame = menu.openUsersTableFrame(testSession);
+		usersFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);	
+		return usersFrame.getUserNames();
+		
+	}
+	
 }

@@ -49,7 +49,7 @@ public class ContentService
 	 * @param parents
 	 * @return
 	 */
-	public ContentStatus getContentStatus(TestSession testSession, String contentName, String[] parents)
+	public List<ContentStatus> getContentStatus(TestSession testSession, String contentName, String[] parents)
 	{
 		PageNavigator.navgateToAdminConsole( testSession );
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);

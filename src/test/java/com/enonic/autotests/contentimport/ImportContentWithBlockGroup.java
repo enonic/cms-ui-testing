@@ -222,16 +222,16 @@ public class ImportContentWithBlockGroup extends BaseTest
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		ContentsTableFrame table = (ContentsTableFrame) PageNavigator.openContentsTableView( getTestSession(), pathToCategory );
 		// 2. get status before import 
-		ContentStatus statusBeforeImport = table.getContentStatus(CONTENT_PURGE_PERSON_NAME);
-		Assert.assertTrue(statusBeforeImport.equals(ContentStatus.DRAFT),"expected status and actual are not equals!");
+		List<ContentStatus> beforeImport = table.getContentStatus(CONTENT_PURGE_PERSON_NAME);
+		Assert.assertTrue(beforeImport.contains(ContentStatus.DRAFT),"expected status and actual are not equals!");
 
 		
 
 		// 3. import and update content: person with name  "Eva Helene Sars" should be archived in category:
 		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE,4l, pathToCategory);
 		logger.info("import of XML formatted source finished. Content was updated: filename " + IMPORT_PERSONS_CONTENT_PURGE_XML_FILE);
-		ContentStatus statusAfterImport = table.getContentStatus(CONTENT_PURGE_PERSON_NAME);
-		Assert.assertTrue(statusAfterImport.equals(ContentStatus.ARCHIVED),"expected status and actual are not equals!");
+		List<ContentStatus> afterImport = table.getContentStatus(CONTENT_PURGE_PERSON_NAME);
+		Assert.assertTrue(afterImport.contains(ContentStatus.ARCHIVED),"expected status and actual are not equals!");
 			
 		logger.info("$$$$  FINISHED: Purge Content. Sets purge to 'archive' ");
 

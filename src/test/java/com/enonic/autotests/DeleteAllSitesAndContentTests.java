@@ -5,6 +5,7 @@ import java.util.List;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.enonic.autotests.services.AccountService;
 import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.services.SiteService;
@@ -21,6 +22,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 	private RepositoryService repositoryService = new RepositoryService();
 	private SystemService systemService = new SystemService();
 	private ContentTypeService contentTypeService = new ContentTypeService();
+	private final AccountService accountService  = new AccountService();
 
 	@Test(description = "Delete all items from 'Sites' folder")
 	public void deleteSites()
@@ -43,6 +45,19 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 			repositoryService.deleteRepository(getTestSession(), repoName);
 		}
 		logger.info("$$$$$$ all content were deleted");
+
+	}
+
+	@Test(description = "Delete all users ", dependsOnMethods = "deleteSites")
+	public void deleteAllUsers()
+	{
+		logger.info("### TEST: deleteAllUsers");
+		List<String> allNames = accountService.getUserNames(getTestSession());
+		for (String userName : allNames)
+		{
+			accountService.deleteUser(getTestSession(), userName);
+		}
+		logger.info("$$$$$$ all users were deleted");
 
 	}
 

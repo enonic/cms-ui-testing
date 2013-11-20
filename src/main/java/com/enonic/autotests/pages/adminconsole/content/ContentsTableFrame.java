@@ -81,35 +81,46 @@ public class ContentsTableFrame extends AbstractContentTableView
 		
 		
 	}
-	public ContentStatus getContentStatus(String contentName)
+	public List<ContentStatus> getContentStatus(String contentName)
 	{
-       String statusImageXpath  = String.format("//tr[contains(@class,'tablerowpainter')]//td[3][contains(@class,'browsetablecell')]/div[contains(@style,'font-weight: bold') and text()='%s']/../../td[6]/img",contentName);
+	   List<ContentStatus> statuses = new ArrayList<>();
+       String statusImageXpath  = String.format("//tr[contains(@class,'tablerowpainter')]//td[3][contains(@class,'browsetablecell')]/div[contains(@style,'font-weight: bold') and text()='%s']/../../td[6]//img",contentName);
        List<WebElement> elems = findElements(By.xpath(statusImageXpath));
-       if(elems.size() == 0)
+       for(WebElement el: elems)
        {
-    	   throw new TestFrameworkException("Status icon was not found!, probably wrong xpath");
+    	   statuses.add(getStatus(el));
        }
-       if(elems.get(0).getAttribute("src").contains("approved.gif"))
+      return statuses;
+	}
+
+	private ContentStatus getStatus(WebElement element)
+	{
+		String srcAttribute = element.getAttribute("src");
+		if (srcAttribute.contains("unapprove.gif"))
+		{
+			return ContentStatus.UNAPPROVED;
+		}
+		if (srcAttribute.contains("approved.gif"))
        {
     	   return ContentStatus.APPROVED;
        }
-       if(elems.get(0).getAttribute("src").contains("draft.gif"))
+		if (srcAttribute.contains("draft.gif"))
        {
     	   return ContentStatus.DRAFT;
        }
-       if(elems.get(0).getAttribute("src").contains("archived.gif"))
+		if (srcAttribute.contains("archived.gif"))
        {
     	   return ContentStatus.ARCHIVED;
        }
-       if(elems.get(0).getAttribute("src").contains("published.gif"))
+		if (srcAttribute.contains("published.gif"))
        {
     	   return ContentStatus.PUBLISHED;
        }
-       if(elems.get(0).getAttribute("src").contains("pending.gif"))
+		if (srcAttribute.contains("pending.gif"))
        {
     	   return ContentStatus.PENDING;
        }
-       getLogger().info("STATUS IS :"+elems.get(0).getAttribute("src"));
+		getLogger().error("STATUS IS :" + srcAttribute, getSession());
        
        throw new TestFrameworkException("unknown status");
 	}

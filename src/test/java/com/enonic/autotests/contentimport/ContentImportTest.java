@@ -38,6 +38,8 @@ public class ContentImportTest extends BaseTest
 	/** mode=xml; relatedcontenttype='person-related' " */
 	private final String PERSON_RELATED_CFG = "test-data/contenttype/person-related-content.xml";
 	private final String PERSON_BASE64_CFG = "test-data/contenttype/person-base64.xml";
+	
+	// status="2"
 	private final String PERSON_APPROVED_STATUS_CFG = "test-data/contenttype/person-ct-status-approved.xml";
 
 	/** this XML file contains a list of persons for importing */
@@ -129,14 +131,14 @@ public class ContentImportTest extends BaseTest
 			Assert.fail("category was not created!");
 		}
 
-		ContentCategory ctegoryRelated = new ContentCategory();
-		ctegoryRelated.setContentTypeName("person-related");
-		ctegoryRelated.setName("importRelatedContent");
+		ContentCategory categoryRelated = new ContentCategory();
+		categoryRelated.setContentTypeName("person-related");
+		categoryRelated.setName("importRelatedContent");
 		String[] parentNames2 = { repository.getName() };
-		ctegoryRelated.setParentNames(parentNames2);
-		getTestSession().put(IMPORT_CATEGORY_RELATED_KEY, ctegoryRelated);
-		repositoryService.addCategory(getTestSession(), ctegoryRelated);
-		isCreated = repositoryService.isCategoryPresent(getTestSession(), ctegoryRelated.getName(), ctegoryRelated.getParentNames());
+		categoryRelated.setParentNames(parentNames2);
+		getTestSession().put(IMPORT_CATEGORY_RELATED_KEY, categoryRelated);
+		repositoryService.addCategory(getTestSession(), categoryRelated);
+		isCreated = repositoryService.isCategoryPresent(getTestSession(), categoryRelated.getName(), categoryRelated.getParentNames());
 		if (!isCreated)
 		{
 			Assert.fail("category was not created!");
@@ -217,19 +219,12 @@ public class ContentImportTest extends BaseTest
 		Assert.assertTrue(namesActual.containsAll(expectedPersonNames), "some persons were not imported!");
 
 		// verify status:
-		ContentStatus status = table.getContentStatus(namesActual.get(0));
-		Assert.assertTrue(status.equals(ContentStatus.APPROVED) || status.equals(ContentStatus.PUBLISHED), "expected status and actual are not equals!");
+		List<ContentStatus> statuses = table.getContentStatus(namesActual.get(0));
+		Assert.assertTrue(statuses.contains(ContentStatus.APPROVED), "expected status and actual are not equals!");
 		logger.info("$$$$$$$$$ FINISHED:  importAndSetApproveStatusTest ");
 	}
 
-	// @Test(description = "Import source where entries in source points to other entries in source as related", dependsOnMethods="importingFromCSVTest")
-	public void relatedContentInternalDependencyTest()
-	{
-		logger.info("T#### STARTED:Import source where entries in source points to other entries in source as related,");
-		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
-		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		ContentsTableFrame table = (ContentsTableFrame) PageNavigator.openContentsTableView( getTestSession(), pathToCategory );
-	}
+	
 
 	@Test(dependsOnMethods = "importingFromCSVTest", description = "Add entry of type uploadfile, specify file-data (base64-encoded binary data) in import source (XML only) ")
 	public void uploadfileTest()
