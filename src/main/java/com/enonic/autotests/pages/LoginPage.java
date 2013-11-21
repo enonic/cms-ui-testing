@@ -20,8 +20,6 @@ import com.enonic.autotests.utils.TestUtils;
 public class LoginPage extends Page {
 
 	private static Logger logger = Logger.getLogger();
-	// TODO message should be localized:
-	private String errorMessage = "Wrong username or password";
 
 	private String title = "Enonic CMS - Login";
 
@@ -50,7 +48,7 @@ public class LoginPage extends Page {
 	public void doLogin(String username, String password)
     {
         TestUtils.getInstance().selectByText(getSession(), By.name("lang"), "English");
-        // TODO: Add wait statement and verify English prompts
+        TestUtils.getInstance().waitAndFind(By.xpath("//label[text()='Userstore']"), getDriver());
 		usernameInput.sendKeys(username);
 		passwordInput.sendKeys(password);
 		loginButton.submit();

@@ -69,7 +69,6 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 		//1. select the name of import.
 		if (importName != null)
 		{
-			// TODO verify is present in select!
 			TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_IMPORT_NAME), importName);
 		}
 		
@@ -130,7 +129,6 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 		//1. select the name of import.
 		if (importName != null)
 		{
-			// TODO verify is present in select!
 			TestUtils.getInstance().selectByText(getSession(), By.xpath(SELECT_IMPORT_NAME), importName);
 		}
 				

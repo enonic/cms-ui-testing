@@ -10,9 +10,7 @@ public class ContentSearchParams
 	private String searchText;
 	
 	private List<String> contentTypeNames;
-	//Metadata ...
 	
-    // Assignmen  ... TODO
 	
 	public static class Builder {
 

@@ -62,7 +62,6 @@ public abstract class AbstractAddContentWizard<T> extends AbstractAdminConsolePa
 	public AbstractAddContentWizard( TestSession session )
 	{
 		super(session);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

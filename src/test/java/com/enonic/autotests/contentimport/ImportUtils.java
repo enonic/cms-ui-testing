@@ -14,6 +14,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import com.enonic.autotests.AppConstants;
+import com.enonic.autotests.exceptions.TestFrameworkException;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.UserEvent;
@@ -141,8 +142,7 @@ public class ImportUtils
 			parsed = parse.parse(date);
 		} catch (ParseException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new TestFrameworkException("error during date converting ");
 		}
 		return dfRequired.format(parsed); 
 	}

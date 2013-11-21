@@ -282,7 +282,6 @@ public class TestUtils
 			FileUtils.copyFile(screenshot, new File(fullFileName));
 		} catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 
 		}
 		return fileName;
@@ -308,10 +307,8 @@ public class TestUtils
 	 */
 	public void clickByLocator(final By locator, final WebDriver driver)
 	{
-		final long startTime = System.currentTimeMillis();
 		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 		Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(90000, TimeUnit.MILLISECONDS).pollingEvery(5500, TimeUnit.MILLISECONDS);
-		// .ignoring( StaleElementReferenceException.class );
 		wait.until(new ExpectedCondition<Boolean>()
 		{
 			@Override
@@ -323,17 +320,11 @@ public class TestUtils
 					return true;
 				} catch (StaleElementReferenceException e)
 				{
-					// staticlogger.info( e.getMessage() + "\n");
-					// staticlogger.info("Trying again...");
 					return false;
 				}
 			}
 		});
 		driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
-		// TODO add perfomance log
-		// logger.perfomance("clickByLocator:" + locator.toString(), startTime);
-		// staticlogger.info("Finished click after waiting for " + totalTime +
-		// " milliseconds.");
 	}
 
 	/**
@@ -388,17 +379,45 @@ public class TestUtils
 		}
 	}
 
+	/**
+	 * @param session
+	 * @param by
+	 * @param text
+	 */
 	public void selectByText(TestSession session, By by, String text)
 	{
-		List<WebElement> elems = session.getDriver().findElements(by);
-		if (elems.size() == 0)
+		List<WebElement> selectElements = session.getDriver().findElements(by);
+		if (selectElements.size() == 0)
 		{
 			throw new TestFrameworkException("wrong xpath for select: " + text);
 		}
-		Select select = new Select(elems.get(0));
+		Select select = new Select(selectElements.get(0));
+		boolean result = verifyTextInSelect(select, text);
+		if(!result)
+		{
+			throw new TestFrameworkException("option was not found in the select "+ text);
+		}
 		select.selectByVisibleText(text);
 	}
 	
+	/**
+	 * @param select
+	 * @param text
+	 * @return
+	 */
+	private boolean verifyTextInSelect(Select select,String text)
+	{
+		 List<WebElement> options = select.getOptions();
+		 for(WebElement opt: options)
+		 {
+			 if(opt.getText().contains(text))
+			 {
+				 return true;
+			 }
+			
+		 }
+		 return false;
+	}
 	public boolean expandFolder(TestSession session,String expanderXpath)
 	{
 		PageNavigator.switchToFrame( session, AbstractAdminConsolePage.LEFT_FRAME_NAME );
@@ -408,7 +427,6 @@ public class TestUtils
 		{
 			logger.info("expandFolder:this folder has no one item!"+ expanderXpath);
 			return false;
-			//throw new TestFrameworkException("xpath for Expander  is wrong or this folder has no one item!");
 			
 		}
 		// check if category has + expander:
