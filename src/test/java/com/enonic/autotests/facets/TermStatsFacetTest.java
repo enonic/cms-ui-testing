@@ -114,7 +114,7 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 		getTestSession().setUser(user);
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		contentService.doImportContent(getTestSession(), "person-import-xml", USER1_IMPORT, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
+		contentService.doImportContent(getTestSession(), "person-import-xml", USER1_IMPORT,false, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
 	}
 	@Test(description ="import additional persons",dependsOnMethods = "loginAndImport1")
 	public void loginAndImport2()
@@ -123,7 +123,7 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 		getTestSession().setUser(user);
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		contentService.doImportContent(getTestSession(), "person-import-xml", USER2_IMPORT, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
+		contentService.doImportContent(getTestSession(), "person-import-xml", USER2_IMPORT,false, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
 	}
 	
 	
@@ -181,7 +181,7 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. import from an XML formatted resource
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", ADMIN_IMPORT_PERSONS_XML, 30l, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", ADMIN_IMPORT_PERSONS_XML,false, 30l, pathToCategory);
 		table.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		logger.info("file: " + ADMIN_IMPORT_PERSONS_XML + "has imported");
 		

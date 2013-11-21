@@ -1,6 +1,8 @@
 package com.enonic.autotests.contentimport;
 
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Random;
 
@@ -114,7 +116,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
 		// 1. import XML formatted resource:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_XML_FILE, 4l, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_XML_FILE, false, 4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		XmlReader xmlReader = new XmlReader();
 		// 2. gets expected persons with events from the XML
@@ -124,16 +126,37 @@ public class ImportContentWithBlockGroup extends BaseTest
 
 		// 4. Open all persons and Verify that all events are present on the page. and Verify:the Order of imported block group entries- The imported
 		// block group entries will be ordered as they appear from top to bottom in the XML source.
+		List<UserEvent> uiEvents = null;
 		for (Person personFromXml : personsFromXML)
 		{
-			List<UserEvent> uiEvents = ImportUtils.getEventsFromUI(getSessionDriver(), table, personFromXml.getName());
+			uiEvents = ImportUtils.getEventsFromUI(getSessionDriver(), table, personFromXml.getName());
 			boolean result = personFromXml.getEvents().equals(uiEvents);
+			String date = getDateStringFromEvent(uiEvents);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+			try
+			{
+				dateFormat.parse(date);
+			} catch (ParseException e)
+			{
+				Assert.fail("error during parsing date-field with not default date format");
+			}
 			Assert.assertTrue(result, "Importing into block groups test failed, because expexted events and actual are not equals!");
 		}
 		logger.info("$$$$ FINISHED:'Importing into block groups' ");
 
 	}
 
+	private String getDateStringFromEvent(List<UserEvent> uiEvents)
+	{
+		for(UserEvent ev : uiEvents)
+		{
+			if(ev.getName().equals("Birth"))
+			{
+				return ev.getValue();
+			}
+		}
+		return null;
+	}
 	/**
 	 * Case-info: Updating block group entries. <br>
 	 * Updates content that was imported in the 'importingIntoBlockGroups'
@@ -149,7 +172,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_BLOCK_GROUPS_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. update content: new event was added for first person and new person added:
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_UPDATE_XML_FILE,4l, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_UPDATE_XML_FILE,false, 4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		XmlReader xmlReader = new XmlReader();
 		// 2. gets EXPECTED persons with events from the XML
@@ -199,7 +222,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		Assert.assertTrue(eventsBefore.contains(eventsBeforeUpdate), "before Importing: event with name:" + EVENT_NAME_PURGE_TEST + "should be present on the page");
 
 		// 3. import and update content: "North pole almost reached" event should be removed for 'Fridtjof Nansen' person
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_PURGE_UPDATE_XML_FILE, 4l,pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BLOCK_GROUP_PURGE_UPDATE_XML_FILE,false, 4l,pathToCategory);
 		logger.info("import of XML formatted source finished. Content was updated: filename " + IMPORT_PERSONS_BLOCK_GROUP_PURGE_UPDATE_XML_FILE);
 		// verify that
 		List<UserEvent> eventsAfterImport = ImportUtils.getEventsFromUI(getSessionDriver(), table, PERSON_EVENT_PURGE_TEST);
@@ -228,7 +251,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		
 
 		// 3. import and update content: person with name  "Eva Helene Sars" should be archived in category:
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE,4l, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE,false, 4l, pathToCategory);
 		logger.info("import of XML formatted source finished. Content was updated: filename " + IMPORT_PERSONS_CONTENT_PURGE_XML_FILE);
 		List<ContentStatus> afterImport = table.getContentStatus(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertTrue(afterImport.contains(ContentStatus.ARCHIVED),"expected status and actual are not equals!");
@@ -256,7 +279,7 @@ public class ImportContentWithBlockGroup extends BaseTest
 		Assert.assertTrue(isPresentPersonBeforeImport,"the person with name: "+ CONTENT_PURGE_PERSON_NAME + "is present in the table!");	
 
 		// 3. import and update content: person with name  "Eva Helene Sars" should be deleted from a category:
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE, 4l, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_CONTENT_PURGE_XML_FILE, false, 4l, pathToCategory);
 		boolean isPresentPersonAfterImport = table.isContentPresentInTable(CONTENT_PURGE_PERSON_NAME);
 		Assert.assertFalse(isPresentPersonAfterImport,"the person with name: "+ CONTENT_PURGE_PERSON_NAME + "should be deleted from the table!");		
 		logger.info("$$$$ FINISHED: Purge Content. Sets purge to 'delete' ");

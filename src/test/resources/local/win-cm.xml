@@ -1,22 +1,25 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="test suite"  verbose="1">
+<suite name="test suite" verbose="1" parallel="tests">  
 
-
-	<parameter name="browser" value="firefox" />
-	<parameter name="browserVersion" value="21.0" />
-	<parameter name="platform" value="windows" />
-	<parameter name="isRemote" value="false" />
-	<parameter name="base.url" value="http://localhost:8080/wem-webapp-5.0.0-SNAPSHOT/admin/home.html" />
-	
-	
-	<listeners>	
+	<listeners>
 		<listener class-name="com.enonic.autotests.TestListener"/>
 	</listeners>
-	
-	<test verbose="2" name="ContentManagerTest" annotations="JDK">
+
+	<parameter name="isRemote" value="false" />
+	<parameter name="hub.url" value="http://10.0.6.77:4444/wd/hub" />
+
+
+	<test verbose="2" name="FirefoxTests-grid1" preserve-order="true"  parallel="false">
+		<parameter name="base.url" value="http://localhost:8080/cms-webapp-4.7.4-SNAPSHOT/admin" />
+		<parameter name="platform" value="windows" />
+	<parameter name="browser" value="firefox" />
+		<parameter name="browserVersion" value="25.0.1" />
 		<classes>
-			 <class name="com.enonic.autotests.ContentManagerTests"/>
+		
+			
+			<class name="com.enonic.autotests.general.ContentTypeTests" /> 
 		</classes>
 	</test>
+
 
 </suite>

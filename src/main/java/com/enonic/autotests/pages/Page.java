@@ -45,7 +45,6 @@ public abstract class Page
 
 	public WebElement findElement(By by)
 	{
-		  //return session.getDriver().findElement(by);
 		   FluentWait<By> fluentWait = new FluentWait<By>(by);
 	        fluentWait.pollingEvery(500, TimeUnit.MILLISECONDS);
 	        fluentWait.withTimeout(AppConstants.IMPLICITLY_WAIT, TimeUnit.SECONDS);

@@ -66,7 +66,7 @@ public class ContentService
 	 * @param categoryPath
 	 * @return
 	 */
-	public ContentsTableFrame doImportContent(TestSession testSession,String importName,String fileName,long timeout, String... categoryPath)
+	public ContentsTableFrame doImportContent(TestSession testSession,String importName,String fileName,boolean publish,long timeout, String... categoryPath)
 	{		
 		ContentsTableFrame tableOfContent = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession, categoryPath );
 		//1. clicks by 'Import' button.
@@ -77,7 +77,7 @@ public class ContentService
 			PersonImportWizardPage page = new PersonImportWizardPage(testSession);
 			page.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		//2. choose	 a file and press "Import" button, press the "Back" button as well and waits until Table of content appears.
-			page.doImportFromFile(importName, fileName, timeout);
+			page.doImportFromFile(importName, fileName, timeout, publish);
 			
 			tableOfContent.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		}else{

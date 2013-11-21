@@ -22,7 +22,7 @@
       </block>
     </form>
     <imports>
-      <import base="/persons/person" mode="xml" name="person-import-xml" status="0">
+      <import base="/persons/person" mode="xml" name="person-import-xml" status="2">
         <mapping dest="person-no" src="@id" />
         <mapping dest="name" src="name" />
         <mapping dest="date-of-birth" src="birth" />

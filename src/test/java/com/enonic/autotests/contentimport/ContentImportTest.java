@@ -157,7 +157,7 @@ public class ContentImportTest extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. import from an XML formatted resource
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML, 4l,pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_XML, false, 4l,pathToCategory);
 		logger.info("file: " + IMPORT_PERSONS_XML + "has imported");
 
 		List<String> namesActual = table.getContentNames();
@@ -180,7 +180,7 @@ public class ContentImportTest extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. import from an CSV formatted resource
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-csv", IMPORT_PERSONS_CSV_FILE,4l, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-csv", IMPORT_PERSONS_CSV_FILE,false,4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		// 2. read CSV file and gets expected person names:
 		List<String> expected = ImportUtils.getPersonNamesFromCSV(IMPORT_PERSONS_CSV_FILE);
@@ -189,11 +189,11 @@ public class ContentImportTest extends BaseTest
 	}
 
 	/**
-	 * Set the <import .. status="2"> in import. <br>
-	 * Verify content gets the approved status
+	 * Set the <import .. status="2"> in import. And spec <br>
+	 * Verify content gets a 'published' status.
 	 */
 	@Test(description = "Content status test: set approve status in import block from configuration of a  Content Type", dependsOnMethods = "importingFromCSVTest")
-	public void importAndSetApproveStatusTest()
+	public void importAndPublishedStatusTest()
 	{
 		logger.info("#### STARTED: Set the <import .. status='2'> in import");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
@@ -206,7 +206,7 @@ public class ContentImportTest extends BaseTest
 		String approvedStatusCFG = TestUtils.getInstance().readConfiguration(in);
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), approvedStatusCFG);
 
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_APPROVED_STATUS_FILE, 4l, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_APPROVED_STATUS_FILE, true, 4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		for (String name : namesActual)
 		{
@@ -220,14 +220,14 @@ public class ContentImportTest extends BaseTest
 
 		// verify status:
 		List<ContentStatus> statuses = table.getContentStatus(namesActual.get(0));
-		Assert.assertTrue(statuses.contains(ContentStatus.APPROVED), "expected status and actual are not equals!");
+		Assert.assertTrue(statuses.contains(ContentStatus.PUBLISHED), "expected status and actual are not equals!");
 		logger.info("$$$$$$$$$ FINISHED:  importAndSetApproveStatusTest ");
 	}
 
 	
 
 	@Test(dependsOnMethods = "importingFromCSVTest", description = "Add entry of type uploadfile, specify file-data (base64-encoded binary data) in import source (XML only) ")
-	public void uploadfileTest()
+	public void uploadfileTestBase64AndApprovedStatus()
 	{
 		logger.info("#### STARTED:Add entry of type uploadfile, specify file-data (base64-encoded binary data) in import source (XML only) ");
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
@@ -238,7 +238,7 @@ public class ContentImportTest extends BaseTest
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), base64CFG);
 
 		// 2. import from an XML formatted resource with specified base64 file.
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BASE64_FILE, 4l, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_BASE64_FILE,false, 4l, pathToCategory);
 		List<String> namesActual = table.getContentNames();
 		for (String name : namesActual)
 		{
@@ -250,12 +250,13 @@ public class ContentImportTest extends BaseTest
 		List<String> expectedPersonNames = xmlReader.readNodeValue(IMPORT_PERSONS_BASE64_FILE, "person", "name");
 		boolean isContains = namesActual.containsAll(expectedPersonNames);
 		Assert.assertTrue(isContains, "new persons were not found in the table!");
+		List<ContentStatus> statuses = table.getContentStatus(expectedPersonNames.get(0));
+		Assert.assertTrue(statuses.contains(ContentStatus.APPROVED), "expected status and actual are not equals!");
 		// 4. open content and verify input with name 'filename_image' is present
 		Assert.assertTrue(ImportUtils.isImageLinkPresent(getSessionDriver(), table, "Paolo Veronese"),"image link not found on the person-info page, but should be present!");
 		logger.info("$$$$$$$$$$$$$$ FINISHED:'upload file Test (base64-encoded binary data)' ");
 	}
 
-	// TODO implement Keep content
 
 	/**
 	 * The key representing a content in an Enonic CMS installation is usually not known to an import source. 
@@ -275,7 +276,7 @@ public class ContentImportTest extends BaseTest
 		String relatedContentCFG = TestUtils.getInstance().readConfiguration(in);
 		contentTypeService.editContentType(getTestSession(), getContentTypeName(), relatedContentCFG);
 		// 1. import XML formatted source with related persons
-		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_RELATED_CONTENT_XML_FILE, 4l, pathToCategory);
+		table = contentService.doImportContent(getTestSession(), "person-import-xml", IMPORT_PERSONS_RELATED_CONTENT_XML_FILE, false, 4l, pathToCategory);
 
 		// 2. gets all person names from web-page:
 		List<String> namesActual = table.getContentNames();

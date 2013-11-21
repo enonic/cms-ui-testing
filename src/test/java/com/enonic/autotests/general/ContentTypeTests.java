@@ -23,7 +23,7 @@ public class ContentTypeTests extends BaseTest
 	
 	
 	
-	@Test(description = "positive tests: create new content type", dataProvider = "createContentTypePositive", dataProviderClass = ContentTypeTestsProvider.class)//,dependsOnMethods="preparation"
+	@Test(description = "positive tests: create new content type", dataProvider = "createContentTypePositive", dataProviderClass = ContentTypeTestsProvider.class)
 	public void testCreateContentTypePositive(ContentTypeXml ctypeXML)
 	{
 		logger.info("###### STARTED "+ctypeXML.getCaseInfo()   +"######");

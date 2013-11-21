@@ -19,7 +19,9 @@ import com.enonic.autotests.services.ContentService;
 import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
+import com.enonic.autotests.utils.Person;
 import com.enonic.autotests.utils.TestUtils;
+import com.enonic.autotests.utils.XmlReader;
 
 public class ImportContentUpdateStrategyTest extends BaseTest
 {
@@ -92,17 +94,18 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 
         // 1. import XML formatted resource: sync='person-no', two persons should be imported.
-        contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory );
-
+		ContentsTableFrame table = contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, false, 4l, pathToCategory );
+		List<String> namesFromGUI = table.getContentNames();
+		XmlReader xmlReader = new XmlReader();
+		List<Person> personsFromXML = xmlReader.getPersons(IMPORT_UPDATE_PERSONS_XML_FILE);
+		Assert.assertTrue(namesFromGUI.size()== personsFromXML.size(),"number of persons from the XML file and number of person from GUI not the same!");
         // 2. import and update content- change both persons.
-        ContentsTableFrame table =
-            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory );
+         table = contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, false, 4l, pathToCategory );
 
         // 3. verify that APPROVED status for both persons.
-        List<String> namesActual = table.getContentNames();
-		//TODO 
-		//Assert.assertTrue(namesActual.size()== )
-        for ( String name : namesActual )
+         namesFromGUI = table.getContentNames();
+         Assert.assertTrue(namesFromGUI.size()== personsFromXML.size(),"number of persons from the XML file and number of person from GUI not the same!");
+		for(String name: namesFromGUI)
         {
 			List<ContentStatus> status = table.getContentStatus(name);
 			Assert.assertTrue(status.contains(ContentStatus.APPROVED), "the actual status and expected are not equals!");
@@ -127,11 +130,13 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 
         // 3. import and update content- change both persons, therefore status should be changed to ARCHIVED:
         ContentsTableFrame table =
-            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory );
+            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, false, 4l, pathToCategory );
 
         // 4. verify that APPROVED status for both persons.
         List<String> namesActual = table.getContentNames();
-		//TODO verify that is not empty:
+		XmlReader xmlReader = new XmlReader();
+		List<Person> personsFromXML = xmlReader.getPersons(IMPORT_PERSONS_XML_FILE);
+		Assert.assertTrue(namesActual.size()== personsFromXML.size(),"number of persons from the XML file and number of person from GUI not the same!");
         for ( String name : namesActual )
         {
 			List<ContentStatus> status = table.getContentStatus(name);
@@ -157,11 +162,13 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 
         // 3. import and update content- change both persons, therefore status should be changed to ARCHIVED:
         ContentsTableFrame table =
-            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE, 4l, pathToCategory );
+            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_UPDATE_PERSONS_XML_FILE,false, 4l, pathToCategory );
 
         // 4. verify that APPROVED status for both persons.
         List<String> namesActual = table.getContentNames();
-		//TODO verify that is not empty:
+		XmlReader xmlReader = new XmlReader();
+		List<Person> personsFromXML = xmlReader.getPersons(IMPORT_PERSONS_XML_FILE);
+		Assert.assertTrue(namesActual.size()== personsFromXML.size(),"number of persons from the XML file and number of person from GUI not the same!");
         for ( String name : namesActual )
         {
 			List<ContentStatus> status = table.getContentStatus(name);
@@ -187,7 +194,7 @@ public class ImportContentUpdateStrategyTest extends BaseTest
 
         // 3. import and update content- change both persons, therefore status should be changed to ARCHIVED:
         ContentsTableFrame table =
-            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, 4l, pathToCategory );
+            contentService.doImportContent( getTestSession(), "person-import-xml", IMPORT_PERSONS_XML_FILE, false, 4l, pathToCategory );
 
         // 4. verify that DRAFT status for both persons, because KEEP STATUS that was received in previous test
         List<String> namesActual = table.getContentNames();

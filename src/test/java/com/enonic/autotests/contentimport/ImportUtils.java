@@ -71,6 +71,7 @@ public class ImportUtils
 		table.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return userEvents;
 	}
+
 	/**
 	 * Gets names of child persons
 	 * @param driver

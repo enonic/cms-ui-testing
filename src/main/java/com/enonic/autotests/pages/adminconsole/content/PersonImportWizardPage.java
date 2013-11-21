@@ -64,7 +64,7 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 	 * @param importName
 	 * @param fileName
 	 */
-	public void doImportFromFile(String importName, String fileName, long timeout)
+	public void doImportFromFile(String importName, String fileName, long timeout, boolean publish)
 	{
 		//1. select the name of import.
 		if (importName != null)
@@ -103,7 +103,7 @@ public class PersonImportWizardPage extends AbstractAdminConsolePage
 		
 		String currentDate = dateFormat.format(time);
 			boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath("//input[@name='date_pubdata_publishfrom']"), getDriver(), 1l);
-			if(isPresent)
+			if(isPresent && publish)
 			{
 		dateInput.sendKeys(currentDate);
 			}
