@@ -35,9 +35,7 @@ public class LeftMenuFrame extends Page
 	
 	/** '+' or '-' icon near the 'Content' folder */
 	private String CONTENTFOLDER_EXPANDER_XPATH = "//a[@id='openBranch-categories-']/img[contains(@src,'%s')]";
-	                                                
-	//private String ALL_REPOSITORIES_TABLE_ELEMENTS = "//table[@class='menuItem']/tbody/tr[@id='id-categories']/td[2]//table[@class='menuItem']";
-	
+	                                                	
 	private String SITEFOLDER_EXPANDER_XPATH = "//a[descendant::span[@id='menuitemText' and contains(.,'Sites')]]/../../td/a/img[contains(@src,'%s')]";
 	private String SITENAME_LINK_XPATH = "//a[descendant::span[contains(@id,'menuitemText') and contains(.,'%s')]]";
 	private String SITE_EXPANDER_IMG_XPATH =  SITENAME_LINK_XPATH + "/../../td/a/img";
