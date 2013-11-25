@@ -142,7 +142,7 @@ public class AddEntryImageFileContent extends BaseTest
 		content.setDisplayName("face");
 		content.setContentHandler(ContentHandler.IMAGES);
 		//1. add image to category, category has 'IMAGES' content handler:
-		AbstractContentTableView table = contentService.addimageContent(getTestSession(), content);
+		AbstractContentTableView table = contentService.addImageContent(getTestSession(), content);
 		//2. verify:Image is present in the table of content
 		Assert.assertTrue(table.isContentPresentInTable("face"), "image was not uploaded!");
 		//3. save in session a key of uploaded image 

@@ -118,7 +118,7 @@ public class EditorTest extends BaseTest
 		content.setContentHandler(ContentHandler.IMAGES);
 
 		repositoryService.addCategory(getTestSession(), imagecategory);
-		contentService.addimageContent(getTestSession(), content);
+		contentService.addImageContent(getTestSession(), content);
 		getTestSession().put(IMAGE_TO_INSERT_KEY, content);
 	}
 

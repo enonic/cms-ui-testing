@@ -36,7 +36,7 @@
 
             <class name="com.enonic.autotests.editor.EditorTest"/>
 
-            <class name="com.enonic.autotests.general.acl.AclPropogate"/>
+           
             <class name="com.enonic.autotests.general.acl.ContributorACLCategoryBrowseTest"/>
             <class name="com.enonic.autotests.general.acl.DeveloperAclTest"/>
             <class name="com.enonic.autotests.general.acl.ExpertContributorTest"/>
@@ -75,7 +75,6 @@
 
             <class name="com.enonic.autotests.editor.EditorTest"/>
 
-            <class name="com.enonic.autotests.general.acl.AclPropogate"/>
             <class name="com.enonic.autotests.general.acl.ContributorACLCategoryBrowseTest"/>
             <class name="com.enonic.autotests.general.acl.DeveloperAclTest"/>
             <class name="com.enonic.autotests.general.acl.ExpertContributorTest"/>

@@ -169,7 +169,7 @@ public class PortletPreviewDatasourceTest extends BaseTest
 		content.setDisplayName("image-test");
 		content.setContentHandler(ContentHandler.IMAGES);
 		// 1. add image to category, category has 'IMAGES' content handler:
-		AbstractContentTableView table = contentService.addimageContent(getTestSession(), content);
+		AbstractContentTableView table = contentService.addImageContent(getTestSession(), content);
 		Assert.assertTrue(table.isContentPresentInTable(content.getDisplayName()), "content was not found in the table!");
 		SectionMenuItem section = (SectionMenuItem) getTestSession().get(TEST_DS_SECTION);
 		contentService.doPublishContentToSection(getTestSession(), content, section);

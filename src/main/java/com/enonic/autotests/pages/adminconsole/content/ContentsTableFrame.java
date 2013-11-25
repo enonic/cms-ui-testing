@@ -289,6 +289,13 @@ public class ContentsTableFrame extends AbstractContentTableView
 		}
 		getSession().getDriver().findElement(By.xpath(moveLinkXpath)).click();
 		// wait
+		try
+		{
+			Thread.sleep(500);
+		} catch (InterruptedException e1)
+		{
+			
+		}
 		Set<String> allWindows = getSession().getDriver().getWindowHandles();
 
 		if (!allWindows.isEmpty())
@@ -329,6 +336,7 @@ public class ContentsTableFrame extends AbstractContentTableView
 
 		// 2. click by destination: Category Folder.
 		String destinationFolderXpath = String.format(POPUP_WINDOW_DESTINATION_CATEGORY_XPATH, destinationFolderName);
+		getLogger().info("content will be moved to category: " + destinationFolderName);
 		if (!TestUtils.getInstance().waitAndFind(By.xpath(destinationFolderXpath), getSession().getDriver()))
 		{
 			throw new TestFrameworkException("destination folder does not exists or wrong xpath");

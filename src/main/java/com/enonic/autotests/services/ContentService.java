@@ -167,7 +167,7 @@ public class ContentService
 	
 	
 	
-	public AbstractContentTableView addimageContent(TestSession testSession,  Content<ImageContentInfo> content)
+	public AbstractContentTableView addImageContent(TestSession testSession,  Content<ImageContentInfo> content)
 	{
 		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
 		AddImageContentWizard wizard = tableViewFrame.openAddImageContentWizardPage(content.getParentNames()[0]);
@@ -256,14 +256,15 @@ public class ContentService
 	 * @param destinationFolderName
 	 * @return
 	 */
-	public ContentsTableFrame moveContent(TestSession session, Content<?> content,String ...destinationNames)
+	public ContentsTableFrame moveContent(TestSession session, Content<?> content,String[] destination)
 	{
 		ContentsTableFrame contentTableFrame = (ContentsTableFrame) PageNavigator.openContentsTableView( session, content.getParentNames() );
-		contentTableFrame.doMoveContent(content.getDisplayName(), destinationNames[0],destinationNames[1]);
+		String repoName = destination[0];
+		String categoryName = destination[1];
+		contentTableFrame.doMoveContent(content.getDisplayName(), repoName, categoryName);
 		contentTableFrame.waituntilPageLoaded(2l);
 		return contentTableFrame;
 	}
-	
 	/**
 	 * @param session
 	 * @param destinationNames

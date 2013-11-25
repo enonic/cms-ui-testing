@@ -59,23 +59,31 @@ public class AddFileContentWizard extends AbstractAddContentWizard<FileContentIn
 			getLogger().error("Error during importing a content: Wrong file URL ", getSession());
 
 		}
-		LocalFileDetector detector = new LocalFileDetector();
 		WebElement fileInputType = findElement(By.id("newfile"));
-		File localFile = detector.getLocalFile(file.getAbsolutePath());
-		((RemoteWebElement) fileInputType).setFileDetector(detector);
+		if (!getSession().getIsRemote())
+		{
 
-		fileInputType.sendKeys(localFile.getAbsolutePath());
-//		if(!findElement(By.id("newfile")).getText().equals(pathTofile))
-//		{
-//			findElement(By.id("newfile")).sendKeys(pathTofile);
-//		}
+			fileInputType.sendKeys(file.getAbsolutePath());
+		}
+		else
+		{
+			LocalFileDetector detector = new LocalFileDetector();
+			
+			File localFile = detector.getLocalFile(file.getAbsolutePath());
+			((RemoteWebElement) fileInputType).setFileDetector(detector);
+
+			fileInputType.sendKeys(localFile.getAbsolutePath());
+		}
+		
+
 		//fill the display name:
+	
+		
 		if(!nameInput.getAttribute("value").equals( newcontent.getDisplayName()))
 		{
 			TestUtils.getInstance().clearAndType(getSession(), nameInput, newcontent.getDisplayName());
 			
 		}
-		
 				
 		saveButton.click();
 		waituntilPageLoaded(4l);

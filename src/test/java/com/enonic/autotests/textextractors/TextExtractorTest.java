@@ -117,10 +117,10 @@ public class TextExtractorTest extends BaseTest
 
 		String displayName = "nor.txt";
 		ContentRepository repository = (ContentRepository) getTestSession().get(REPOSITORY_TEST_KEY);
-		ContentCategory ctegory = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
+		ContentCategory category = (ContentCategory) getTestSession().get(FILES_CATEGORY_KEY);
 
 		Content<FileContentInfo> content = new Content<>();
-		String[] pathToContent = new String[] { repository.getName(), ctegory.getName() };
+		String[] pathToContent = new String[] { repository.getName(), category.getName() };
 		content.setParentNames(pathToContent);
 		FileContentInfo contentTab = new FileContentInfo();
 		contentTab.setPathToFile(TXT_NOR_EXTRACTOR_TESTDATA);

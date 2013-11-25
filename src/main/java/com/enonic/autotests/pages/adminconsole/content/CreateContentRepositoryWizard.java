@@ -60,8 +60,6 @@ public class CreateContentRepositoryWizard extends AbstractAdminConsoleWizardPag
 		getLogger().debug("new 'Content type' creation. The Content Repository's name: " + cRepository.getName());
 		nameInput.sendKeys(cRepository.getName());
 		
-		//addContentTypes(cRepository.getSelectedTypes());
-
 		String defLanguage = cRepository.getDefaultLanguage();
 		if (defLanguage == null || (defLanguage != null && defLanguage.isEmpty())) {
 			defLanguage = DEFAULT_LANGUAGE;

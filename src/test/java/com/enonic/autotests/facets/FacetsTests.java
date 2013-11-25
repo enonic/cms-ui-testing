@@ -206,7 +206,7 @@ public class FacetsTests extends BaseTest
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. import from an XML formatted resource
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", ADMIN_IMPORT_PERSONS_XML, false, 30l, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", ADMIN_IMPORT_PERSONS_XML, true, 30l, pathToCategory);
 		table.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		logger.info("file: " + ADMIN_IMPORT_PERSONS_XML + "has imported");
 		

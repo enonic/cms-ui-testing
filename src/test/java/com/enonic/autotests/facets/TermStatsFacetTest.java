@@ -114,7 +114,7 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 		getTestSession().setUser(user);
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		contentService.doImportContent(getTestSession(), "person-import-xml", USER1_IMPORT,false, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
+		contentService.doImportContent(getTestSession(), "person-import-xml", USER1_IMPORT,true, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
 	}
 	@Test(description ="import additional persons",dependsOnMethods = "loginAndImport1")
 	public void loginAndImport2()
@@ -123,7 +123,7 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 		getTestSession().setUser(user);
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
-		contentService.doImportContent(getTestSession(), "person-import-xml", USER2_IMPORT,false, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
+		contentService.doImportContent(getTestSession(), "person-import-xml", USER2_IMPORT,true, AppConstants.PAGELOAD_TIMEOUT,  pathToCategory);
 	}
 	
 	

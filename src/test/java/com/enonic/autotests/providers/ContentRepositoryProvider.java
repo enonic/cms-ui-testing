@@ -1,6 +1,5 @@
 package com.enonic.autotests.providers;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +27,9 @@ public class ContentRepositoryProvider
 
 	private static final String CONTENT_REPO_TEST_DATA = "crepo-test-data.xml";
 	private static final String CONTENT_REPO_DELETE_TEST_DATA = "crepo-delete.xml";
-	private static final String CONTENT_REPO_TEST_DATA_NEG = "crepo-test-data-negative.xml";
-	private static final String CONTENT_REPO_TEST_DATA_ALL_INPUTS = "cty-all-inputs-4-5-6.xml";
 	private static final String ADD_CONTENT = "file-image-contents.xml";
 
+	//used in the ContentRepositoryTests.createRepositoryTest()
 	@DataProvider(name = "createContentRepositoryPositive")
 	public static Object[][] createContentRepository() throws JAXBException
 	{
@@ -74,36 +72,7 @@ public class ContentRepositoryProvider
 		return casesParameters.toArray(new Object[casesParameters.size()][]);
 	}
 
-	@DataProvider(name = "createContentRepositoryNegative")
-	public static Object[][] createContentRepositoryNegative() throws JAXBException
-	{
-
-		List<Object[]> casesParameters = new ArrayList<Object[]>();
-		JAXBContext context = JAXBContext.newInstance(ContentRepositoryTestData.class);
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("test-data/contentrepository/" + CONTENT_REPO_TEST_DATA_NEG);
-		if (in == null)
-		{
-			throw new TestFrameworkException("test data was not found!");
-		}
-		ContentRepositoryTestData testdata = (ContentRepositoryTestData) unmarshaller.unmarshal(in);
-		List<ContentRepositoryXml> cases = testdata.getContentRepositories();
-		for (ContentRepositoryXml ctype : cases)
-		{
-			casesParameters.add(new Object[] { ctype });
-		}
-		try
-		{
-			in.close();
-		} catch (IOException e)
-		{
-			// nothing to do.
-		}
-		return casesParameters.toArray(new Object[casesParameters.size()][]);
-	}
-
-	// ///////////////////////////////////////////////////////////////////////////////////////////////
+	// used in the ContentRepositoryTests.addContentToCategoryTest()
 	@DataProvider(name = "addContent")
 	public static Object[][] addContentToRepository() throws JAXBException
 	{
@@ -125,20 +94,6 @@ public class ContentRepositoryProvider
 		}
 		return casesParameters.toArray(new Object[casesParameters.size()][]);
 
-	}
-
-	public static void main(String[] args) throws JAXBException
-	{
-		JAXBContext context = JAXBContext.newInstance(ContentTestData.class);
-		Unmarshaller unmarshaller = context.createUnmarshaller();
-		InputStream in = ContentConvertor.class.getClassLoader().getResourceAsStream("test-data/contentrepository/" + ADD_CONTENT);
-		if (in == null)
-		{
-			throw new TestFrameworkException("test data was not found!");
-		}
-
-		ContentTestData testdata = (ContentTestData) unmarshaller.unmarshal(in);
-		List<AbstractContentXml> list = testdata.getContentList();
 	}
 
 }

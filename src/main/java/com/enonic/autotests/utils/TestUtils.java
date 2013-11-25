@@ -132,6 +132,8 @@ public class TestUtils
 			if (os.indexOf("mac") >= 0)
 			{
 				input.sendKeys(Keys.chord(Keys.COMMAND, "a"), text);
+			}else{
+				input.sendKeys(Keys.chord(Keys.CONTROL, "a"), text);
 			}
 			
 		}

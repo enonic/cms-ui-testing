@@ -55,9 +55,10 @@ public class SectionContentsTablePage extends AbstractAdminConsolePage
 	
 	private final String SELECT_ACTION_XPATH ="//select[@name='batchSelector']";
 	
-	private String POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER = "//a[descendant::span[contains(@id,'menuitemText') and contains(.,'%s')]]";
+	private String POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER = "//td[child::span[contains(@id,'menuitemText') and contains(.,'%s')]]";
 	
-	private String POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER_EXPANDER = POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER + "/../../td/a/img";
+	private String POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER_EXPANDER = POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER + "/..//a/img[contains(@src,'plus')]";//"/../../td/a/img";
+	
 	
 	private String CONTENT_CHECKBOX_XPATH = "//tr[contains(@class,'tablerowpainter') and descendant::div[contains(@style,'font-weight: bold') and text()='%s']]/td/input[@name='batch_operation']";
 
@@ -126,6 +127,13 @@ public class SectionContentsTablePage extends AbstractAdminConsolePage
 	public void doAddContentToSection(String[] pathToContent,String contentDisplayName)
 	{
 		buttonAdd.click();
+		try
+		{
+			Thread.sleep(500);
+		} catch (InterruptedException e1)
+		{
+			
+		}
 		Set<String> allWindows = getDriver().getWindowHandles();
 
 		if (!allWindows.isEmpty())
@@ -138,14 +146,16 @@ public class SectionContentsTablePage extends AbstractAdminConsolePage
 				{
 					if (getDriver().switchTo().window(windowId).getTitle().equals(SELECT_CONTENT_POPUP_WINDOW_TITLE))
 					{
-						for(int i = 0; i< pathToContent.length - 1; i++)
-						{
-							//expands repository and parent categories:
-							String expanderFolderXpath = String.format(POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER_EXPANDER, pathToContent[i]);
-							TestUtils.getInstance().expandFolder(getSession(),expanderFolderXpath);
-						}
+						String repoName = pathToContent[0];
+						String categoryName = pathToContent[1];
+						
+						//expands repository and parent categories:
+						String expanderFolderXpath = String.format(POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER_EXPANDER, repoName);
+						TestUtils.getInstance().expandFolder(getSession(),expanderFolderXpath);
+						
 						// click by category and open 
-						String categoryXpath = String.format(POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER, pathToContent[pathToContent.length - 1]);
+
+						String categoryXpath = String.format(POPUP_WINDOW_ADD_CONTENT_TO_SECTION_FOLDER, repoName) +String.format("/../..//a[child::span[text()='filesCategory']]",categoryName);
 						boolean isPresent = TestUtils.getInstance().waitAndFind(By.xpath(categoryXpath), getDriver());
 						if(!isPresent)
 						{
@@ -232,14 +242,9 @@ public class SectionContentsTablePage extends AbstractAdminConsolePage
 	 */
 	public void switchToViewContent()
 	{
-		try
-		{
-			TestUtils.getInstance().selectByText(getSession(), By.xpath(VIEW_CONTENTS_SELECT_XPATH), "View:Contents");
-		} catch (NoSuchElementException ex)
-		{
-			getLogger().error(" The option with name 'View:Contents' is absent", getSession());
-			return;
-		}
+		
+		TestUtils.getInstance().selectByText(getSession(), By.xpath(VIEW_CONTENTS_SELECT_XPATH), "View: Contents");
+		
 		new WebDriverWait(getSession().getDriver(), 2l)
 				.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(TABLE_CONTENT_TYPE_COLUMN_XPATH)));
 

@@ -73,10 +73,7 @@ public class AddImageContentWizard extends AbstractAddContentWizard<ImageContent
 
 		//5. specify a path to the file: 		
 		String pathTofile = newcontent.getContentTab().getInfo().getPathToFile();
-		//if (!findElement(By.id("origimagefilename")).getText().equals(pathTofile))
-		//{
-		//	getDriver().findElement(By.id("origimagefilename")).sendKeys(pathTofile);
-		//}
+		
 		URL dirURL = ContentConvertor.class.getClassLoader().getResource(pathTofile);
 		File file = null;
 		try
@@ -87,12 +84,21 @@ public class AddImageContentWizard extends AbstractAddContentWizard<ImageContent
 			getLogger().error("Error during importing a content: Wrong file URL ", getSession());
 
 		}
-		LocalFileDetector detector = new LocalFileDetector();
 		WebElement fileInputType = findElement(By.id("origimagefilename"));
-		File localFile = detector.getLocalFile(file.getAbsolutePath());
-		((RemoteWebElement) fileInputType).setFileDetector(detector);
+		if (!getSession().getIsRemote())
+		{
 
-		fileInputType.sendKeys(localFile.getAbsolutePath());
+			fileInputType.sendKeys(file.getAbsolutePath());
+		}else{
+			// if remote webdriver used, therefore LocalFileDetector should be used!
+			LocalFileDetector detector = new LocalFileDetector();
+			
+			File localFile = detector.getLocalFile(file.getAbsolutePath());
+			((RemoteWebElement) fileInputType).setFileDetector(detector);
+
+			fileInputType.sendKeys(localFile.getAbsolutePath());
+		}
+		
 		
 		//6.  fill the display name:
 		if (newcontent.getDisplayName()!=null && !nameInput.getAttribute("value").equals(newcontent.getDisplayName()))
