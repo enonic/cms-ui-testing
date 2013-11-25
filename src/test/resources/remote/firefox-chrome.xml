@@ -21,7 +21,8 @@
 			<class name="com.enonic.autotests.general.CreateSiteWithSTKTemplateTest" /> 
 			<class name="com.enonic.autotests.general.PortletPreviewDatasourceTest" /> 
  			
- 			<class name="com.enonic.autotests.ContentRepositoryTests" /> 
+ 			<class name="com.enonic.autotests.contentindex.ContentIndexPart1" /> 
+ 			<class name="com.enonic.autotests.contentindex.ContentIndexPart2" /> 
  			
  			<class name="com.enonic.autotests.contentimport.ContentImportTest" />			
  			<class name="com.enonic.autotests.contentimport.ImportContentUpdateStrategyTest" />  
@@ -60,7 +61,8 @@
             <class name="com.enonic.autotests.general.CreateSiteWithSTKTemplateTest" />
             <class name="com.enonic.autotests.general.PortletPreviewDatasourceTest" />
 
-            <class name="com.enonic.autotests.ContentRepositoryTests" />
+ 			<class name="com.enonic.autotests.contentindex.ContentIndexPart1" /> 
+ 			<class name="com.enonic.autotests.contentindex.ContentIndexPart2" /> 
 
             <class name="com.enonic.autotests.contentimport.ContentImportTest" />
             <class name="com.enonic.autotests.contentimport.ImportContentUpdateStrategyTest" />
