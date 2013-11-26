@@ -35,7 +35,7 @@ public class FacetTestUtils
 	 * @param xmlString
 	 * @return
 	 */
-	public static List<Term> getTermsFromPreview(String xmlString)
+	public static List<Term> getTermsFromUI(String xmlString)
 	{
 		SAXBuilder builder = new SAXBuilder();
 		List<Term> terms = new ArrayList<>();

@@ -94,7 +94,12 @@ public class FacetsTests extends BaseTest
 			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
 			//3. verify expected and actual output
 			//get terms from xml-datasource from web-page:
-			List<Term> actualTerms = FacetTestUtils.getTermsFromPreview(pageSource);
+			List<Term> actualTerms = FacetTestUtils.getTermsFromUI(pageSource);
+			int termCount =3;
+			if(actualTerms.size() != termCount)
+			{
+				Assert.fail("Terms were not found in UI");
+			}
 			boolean result = true;
 			for(Term term: actualTerms)
 			{

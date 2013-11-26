@@ -137,9 +137,11 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 			String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
 			
 			//2. get terms from xml-datasource from web-page:
-			List<Term> termstatsActual = FacetTestUtils.getTermsFromPreview(pageSource);
+			List<Term> termstatsActual = FacetTestUtils.getTermsFromUI(pageSource);
 			boolean result = true;
-			if(termstatsActual.size() !=3)
+			// facet cfg:   <terms-stats name="top-3-persons-importer"> count ==3
+			int termCount = 3;
+			if(termstatsActual.size() !=termCount)
 			{
 				Assert.fail("wrong number of terms in the preview! size= "+termstatsActual.size());
 			}
@@ -181,7 +183,7 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 		ContentCategory categoryForImport = (ContentCategory) getTestSession().get(IMPORT_CATEGORY_KEY);
 		String[] pathToCategory = new String[] { categoryForImport.getParentNames()[0], categoryForImport.getName() };
 		// 1. import from an XML formatted resource
-		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", ADMIN_IMPORT_PERSONS_XML,false, 30l, pathToCategory);
+		ContentsTableFrame table = contentService.doImportContent(getTestSession(), "person-import-xml", ADMIN_IMPORT_PERSONS_XML,true, 30l, pathToCategory);
 		table.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		logger.info("file: " + ADMIN_IMPORT_PERSONS_XML + "has imported");
 		

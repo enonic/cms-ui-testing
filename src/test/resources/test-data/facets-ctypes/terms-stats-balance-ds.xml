@@ -10,7 +10,7 @@
         <parameter name="parentLevel">0</parameter>
         <parameter name="facets">
             <facets>
-                <terms-stats name="top-5-persons-importer">
+                <terms-stats name="top-3-persons-importer">
                     <index>owner.qualifiedname</index>
                     <value-index>data.balance</value-index>
                     <orderby>sum</orderby>
