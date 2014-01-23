@@ -2,11 +2,11 @@
   <person id="1001">
     <name>Fridtjof Nansen</name>
     <occupation>Explorer, diplomat, philanthropist</occupation>
-    <birth>10-10-1861</birth>
+    <birth>1861-10-10</birth>
   </person>
   <person id="1002">
     <name>Eva Helene Sars</name>
     <occupation>Singer</occupation>
-    <birth>12-07-1858</birth>
+    <birth>1858-12-07</birth>
   </person>
 </persons>
