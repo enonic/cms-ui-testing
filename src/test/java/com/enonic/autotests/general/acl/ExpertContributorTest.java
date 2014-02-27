@@ -24,19 +24,12 @@ import com.enonic.autotests.model.userstores.PermissionOperation;
 import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.services.AccountService;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.utils.TestUtils;
 
 public class ExpertContributorTest extends BaseTest
 {
 	private AccountService accountService = new AccountService();
-	private ContentTypeService contentTypeService = new ContentTypeService();
-
-	private RepositoryService repositoryService = new RepositoryService();
-
-	private ContentService contentService = new ContentService();
+	
 	private final String PASSWORD = "1q2w3e";
 	private final String EXP_CONTRIBUTOR_USER_KEY = "exp_contributor_key";
 	private final String EXP_CONTRIBUTOR_CATEGORY_KEY = "exp_contributor_cat_key";
@@ -182,7 +175,7 @@ public class ExpertContributorTest extends BaseTest
 		Assert.assertTrue(result, "content was not found!");
 		logger.info("Finished $$$$ Verify that category is visible and content present in this category");
 
-	} 
+	}
 
 	
 	@Test(description="Expert Contributors should be able to edit HTML fields, both in full screen mode, and in a popup window that gives direct access to the HTML-code..", dependsOnMethods ="addContentAndGrantAccessTest")

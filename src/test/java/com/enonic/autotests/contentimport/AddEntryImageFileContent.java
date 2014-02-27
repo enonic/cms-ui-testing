@@ -22,9 +22,6 @@ import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.pages.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.adminconsole.contenttype.ContentTypesFrame;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.Person;
 import com.enonic.autotests.utils.TestUtils;
@@ -32,13 +29,6 @@ import com.enonic.autotests.utils.XmlReader;
 
 public class AddEntryImageFileContent extends BaseTest
 {
-
-	private ContentTypeService contentTypeService = new ContentTypeService();
-	
-	private RepositoryService repositoryService = new RepositoryService();
-	
-	private ContentService contentService = new ContentService();
-
 	private final String IMAGE_CTYPE_KEY = "image_ctype";
 
 	private final String PERSON_IMAGE_CFG = "test-data/contenttype/person-image.xml";

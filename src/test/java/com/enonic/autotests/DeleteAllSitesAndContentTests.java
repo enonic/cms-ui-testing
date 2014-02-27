@@ -6,8 +6,6 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.enonic.autotests.services.AccountService;
-import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.services.SiteService;
 import com.enonic.autotests.services.SystemService;
 
@@ -19,9 +17,8 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 {
 	private SiteService siteService = new SiteService();
 
-	private RepositoryService repositoryService = new RepositoryService();
 	private SystemService systemService = new SystemService();
-	private ContentTypeService contentTypeService = new ContentTypeService();
+
 	private final AccountService accountService  = new AccountService();
 
 	@Test(description = "Delete all items from 'Sites' folder")
@@ -47,7 +44,7 @@ public class DeleteAllSitesAndContentTests extends BaseTest
 		logger.info("$$$$$$ all content were deleted");
 
 	}
-
+	
 	@Test(description = "Delete all users ", dependsOnMethods = "deleteSites")
 	public void deleteAllUsers()
 	{

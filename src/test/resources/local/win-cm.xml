@@ -13,7 +13,7 @@
 		<parameter name="base.url" value="http://localhost:8080/cms-webapp-4.7.4-SNAPSHOT/admin" />
 		<parameter name="platform" value="windows" />
 	<parameter name="browser" value="firefox" />
-		<parameter name="browserVersion" value="25.0.1" />
+		<parameter name="browserVersion" value="27.0.1" />
 		<classes>
 		
 			

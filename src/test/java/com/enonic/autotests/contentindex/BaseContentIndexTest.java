@@ -9,19 +9,10 @@ import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.FileContentInfo;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.services.SiteService;
 
 public class BaseContentIndexTest extends BaseTest
 {
-	 protected ContentTypeService contentTypeService = new ContentTypeService();
-
-	 protected RepositoryService repositoryService = new RepositoryService();
-
-	 protected ContentService contentService = new ContentService();
-	
 
 	 protected SiteService siteService = new SiteService();
 	 

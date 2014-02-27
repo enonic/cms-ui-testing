@@ -27,9 +27,6 @@ import com.enonic.autotests.pages.adminconsole.site.SiteMenuItemsTablePage;
 import com.enonic.autotests.pages.adminconsole.site.SitePortletsTablePage;
 import com.enonic.autotests.pages.adminconsole.site.SitesTableFrame;
 import com.enonic.autotests.services.AccountService;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.services.SiteService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
@@ -63,9 +60,7 @@ private static final String DS_FACET_TERMSTATS = "test-data/facets-ctypes/terms-
 	private String 	USER2_IMPORT = "test-data/facets-ctypes/user2-import.xml";
 	
 	private SiteService siteService = new SiteService();
-	private ContentTypeService contentTypeService = new ContentTypeService();
-	private RepositoryService repositoryService = new RepositoryService();
-	private ContentService contentService = new ContentService();
+	
 	private AccountService accountService = new AccountService();
 
 	

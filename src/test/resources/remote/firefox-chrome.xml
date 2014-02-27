@@ -13,7 +13,7 @@
 		<parameter name="base.url" value="http://10.0.6.79:8080/admin/" />
 		<parameter name="platform" value="windows" />
 		<parameter name="browser" value="firefox" />
-		<parameter name="browserVersion" value="26.0" />
+		<parameter name="browserVersion" value="27.0.1" />
 		<classes>
 			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
 

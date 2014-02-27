@@ -13,7 +13,6 @@ import com.enonic.autotests.model.Content;
 import com.enonic.autotests.model.ContentCategory;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
-import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.ImageContentInfo;
 import com.enonic.autotests.model.site.Portlet;
 import com.enonic.autotests.model.site.STKResource;
@@ -24,9 +23,6 @@ import com.enonic.autotests.pages.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.adminconsole.site.SiteMenuItemsTablePage;
 import com.enonic.autotests.pages.adminconsole.site.SitePortletsTablePage;
 import com.enonic.autotests.pages.adminconsole.site.SitesTableFrame;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.services.SiteService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
@@ -38,9 +34,7 @@ import com.enonic.autotests.utils.TestUtils;
 public class PortletPreviewDatasourceTest extends BaseTest
 {
 	private SiteService siteService = new SiteService();
-	private ContentTypeService contentTypeService = new ContentTypeService();
-	private RepositoryService repositoryService = new RepositoryService();
-	private ContentService contentService = new ContentService();
+	
 	
 	private final String SITE_DS_KEY = "site_ds_key";
 	private final String TEST_CONTENT_KEY ="test_content_key";
@@ -108,26 +102,6 @@ public class PortletPreviewDatasourceTest extends BaseTest
 		getTestSession().put(PORTLET_DS_KEY, portlet);
 	}
 
-	/**
-	 * creates 'Image' content type.
-	 */
-	private void createImageCType()
-	{
-		logger.info("checks for the existance  of Content type, creates new content type if it does not exist");
-		ContentType imagesType = new ContentType();
-		imagesType.setName("Image");
-		imagesType.setContentHandler(ContentHandler.IMAGES);
-		imagesType.setDescription("content repository test");
-		boolean isExist = contentTypeService.findContentType(getTestSession(), "Image");
-		if (!isExist)
-		{
-			contentTypeService.createContentType(getTestSession(), imagesType);
-			logger.info("New content type with 'Images' handler was created");
-		} else
-		{
-			logger.info("Image content already exists");
-		}
-	}
 
 	/**
 	 * create repository and  category with "Image" content type.

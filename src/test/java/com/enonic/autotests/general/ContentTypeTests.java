@@ -12,15 +12,12 @@ import com.enonic.autotests.exceptions.SaveOrUpdateException;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.adminconsole.contenttype.ContentTypesFrame;
 import com.enonic.autotests.providers.ContentTypeTestsProvider;
-import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.testdata.contenttype.ContentTypeXml;
 
 public class ContentTypeTests extends BaseTest
 {
-	private ContentTypeService contentTypeService = new ContentTypeService();
 	private final String CONTENTTYPE_CREATED_LIST = "ctypes_list";
-	
 	
 	
 	@Test(description = "positive tests: create new content type", dataProvider = "createContentTypePositive", dataProviderClass = ContentTypeTestsProvider.class)

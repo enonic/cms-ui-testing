@@ -15,10 +15,7 @@ import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.pages.adminconsole.content.ContentStatus;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.adminconsole.contenttype.ContentTypesFrame;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.services.PageNavigator;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
 import com.enonic.autotests.utils.XmlReader;
@@ -40,7 +37,7 @@ public class ContentImportTest extends BaseTest
 	private final String PERSON_BASE64_CFG = "test-data/contenttype/person-base64.xml";
 	
 	// status="2"
-	private final String PERSON_APPROVED_STATUS_CFG = "test-data/contenttype/person-ct-status-approved.xml";
+	private final String PERSON_APPROVED_STATUS_CFG = "test-data/contenttype/person-ct-status-approved.xml"; 
 
 	/** this XML file contains a list of persons for importing */
 	private String IMPORT_PERSONS_XML = "test-data/contentimport/persons.xml";
@@ -51,9 +48,6 @@ public class ContentImportTest extends BaseTest
 	private String IMPORT_PERSONS_APPROVED_STATUS_FILE = "test-data/contentimport/persons-approved.xml";
 	private String IMPORT_PERSONS_RELATED_CONTENT_XML_FILE = "test-data/contentimport/persons-related-content.xml";
 
-	private ContentTypeService contentTypeService = new ContentTypeService();
-	private RepositoryService repositoryService = new RepositoryService();
-	private ContentService contentService = new ContentService();
 
 	/** key for saving a Content Type in the Session */
 	private String PERSON_CTYPE_KEY = "person-events-ctype";
@@ -95,8 +89,8 @@ public class ContentImportTest extends BaseTest
 		boolean isExist = contentTypeService.findContentType(getTestSession(), contentTypeName2);
 		if (!isExist)
 		{
-		contentTypeService.createContentType(getTestSession(), personType2);
-		logger.info("New content type  was created name: " + contentTypeName2);
+			contentTypeService.createContentType(getTestSession(), personType2);
+			logger.info("New content type  was created name: " + contentTypeName2);
 			logger.info("New content type with 'cusom content' handler was created");
 		} else
 		{

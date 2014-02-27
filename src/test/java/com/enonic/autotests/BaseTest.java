@@ -11,6 +11,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 import com.enonic.autotests.logger.Logger;
+import com.enonic.autotests.model.ContentHandler;
+import com.enonic.autotests.model.ContentType;
+import com.enonic.autotests.services.ContentService;
+import com.enonic.autotests.services.ContentTypeService;
+import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.utils.BrowserUtils;
 
 public class BaseTest
@@ -18,6 +23,14 @@ public class BaseTest
 	protected Logger logger = Logger.getLogger();
 
 	private ThreadLocal<TestSession> sessionRef = new ThreadLocal<TestSession>();
+	
+	protected ContentTypeService contentTypeService = new ContentTypeService();
+	
+	protected RepositoryService repositoryService = new RepositoryService();
+	
+	protected ContentService contentService = new ContentService();
+	
+	public String IMAGE_CONTENTTYPE_NAME = "Image";
 
 	@BeforeClass(alwaysRun = true)
 	public void readDesiredCapabilities(ITestContext context)
@@ -121,4 +134,21 @@ public class BaseTest
 		return getTestSession().getDriver();
 	}
 
+	public void createImageCType()
+	{
+		logger.info("checks for the existance  of Content type, creates new content type if it does not exist");
+		ContentType imagesType = new ContentType();
+		imagesType.setName("Image");
+		imagesType.setContentHandler(ContentHandler.IMAGES);
+		imagesType.setDescription("content repository test");
+		boolean isExist = contentTypeService.findContentType(getTestSession(), IMAGE_CONTENTTYPE_NAME);
+		if (!isExist)
+		{
+			contentTypeService.createContentType(getTestSession(), imagesType);
+			logger.info("New content type with 'Images' handler was created");
+		} else
+		{
+			logger.info("Image content already exists");
+		}
+	}
 }

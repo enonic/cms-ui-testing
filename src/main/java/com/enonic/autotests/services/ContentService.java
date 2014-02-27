@@ -25,6 +25,7 @@ import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.pages.adminconsole.content.IContentWizard;
 import com.enonic.autotests.pages.adminconsole.content.PersonImportWizardPage;
 import com.enonic.autotests.pages.adminconsole.content.RepositoriesListFrame;
+import com.enonic.autotests.pages.adminconsole.content.ZipImportWizardPage;
 
 public class ContentService
 {
@@ -87,6 +88,18 @@ public class ContentService
 		
 		return tableOfContent;
 	}
+	
+	public ContentsTableFrame doImportZipFile(TestSession testSession, String zipName, boolean isPublish, String...categoryPath)
+	{
+		ContentsTableFrame tableOfContent = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession, categoryPath );
+		//1. clicks by 'Import' button.
+		tableOfContent.startImportContent();
+		ZipImportWizardPage wizard = new ZipImportWizardPage(testSession);
+		wizard.doImportZipFile(zipName, isPublish);
+		tableOfContent.waituntilPageLoaded(1);
+		return tableOfContent;
+	}
+
 	public ContentsTableFrame doImportTmpFileContent(TestSession testSession,String importName,File tmp,String... categoryPath)
 	{		
 		ContentsTableFrame tableOfContent = (ContentsTableFrame) PageNavigator.openContentsTableView( testSession, categoryPath );

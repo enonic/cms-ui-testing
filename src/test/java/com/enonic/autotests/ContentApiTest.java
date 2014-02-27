@@ -11,9 +11,6 @@ import org.testng.annotations.Test;
 import com.enonic.autotests.model.ContentHandler;
 import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
 import com.enonic.cms.api.client.ClientException;
@@ -36,11 +33,6 @@ import com.enonic.cms.api.client.model.content.UrlInput;
 
 public class ContentApiTest extends BaseTest
 {
-
-	private ContentTypeService contentTypeService = new ContentTypeService();
-	private RepositoryService repositoryService = new RepositoryService();
-	private ContentService contentService = new ContentService();
-
 	private final String ARTICLE_CFG = "test-data/contenttype/article.xml";
 	private String CONTENTTYPE_NAME = "article";
 	private String REMOTE_CLIENT_KEY = "client_remote";

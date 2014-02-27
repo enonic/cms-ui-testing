@@ -16,32 +16,25 @@ import com.enonic.autotests.model.ContentRepository;
 import com.enonic.autotests.model.ContentType;
 import com.enonic.autotests.model.ContentWithEditorInfo;
 import com.enonic.autotests.model.userstores.AclEntry;
-import com.enonic.autotests.model.userstores.BuiltInGroups;
-import com.enonic.autotests.model.userstores.PermissionOperation;
-import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.model.userstores.AclEntry.CategoryAvailableOperations;
 import com.enonic.autotests.model.userstores.AclEntry.ContentAvailableOperations;
 import com.enonic.autotests.model.userstores.AclEntry.PrincipalType;
+import com.enonic.autotests.model.userstores.BuiltInGroups;
+import com.enonic.autotests.model.userstores.PermissionOperation;
+import com.enonic.autotests.model.userstores.User;
 import com.enonic.autotests.pages.adminconsole.LeftMenuFrame;
 import com.enonic.autotests.pages.adminconsole.content.ContentsTableFrame;
 import com.enonic.autotests.services.AccountService;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
 import com.enonic.autotests.services.PageNavigator;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.utils.TestUtils;
 
 public class UserStoreAdministratorTest extends BaseTest
 {
 
 	private AccountService accountService = new AccountService();
-	private ContentTypeService contentTypeService = new ContentTypeService();
-
-	private RepositoryService repositoryService = new RepositoryService();
-
-	private ContentService contentService = new ContentService();
+	
 	private final String PASSWORD = "1q2w3e";
-	private final String STORE_ADMIN_USER_KEY = "sadmin_contributor_key";
+	private final String STORE_ADMIN_USER_KEY = "sadmin_contributor_key";	
 	private final String CONTENT_NAME = "storeadmcontent";
 	private final String TINY_MCE_CFG = "test-data/contenttype/tiny-editor.xml";
 	private final String STORE_ADMIN_CATEGORY_KEY = "sadmin_cat_key";

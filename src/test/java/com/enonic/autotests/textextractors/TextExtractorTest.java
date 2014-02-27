@@ -24,9 +24,6 @@ import com.enonic.autotests.pages.adminconsole.content.AbstractContentTableView;
 import com.enonic.autotests.pages.adminconsole.content.ContentIndexes;
 import com.enonic.autotests.pages.adminconsole.content.search.ContentSearchParams;
 import com.enonic.autotests.pages.adminconsole.content.search.SearchWhere;
-import com.enonic.autotests.services.ContentService;
-import com.enonic.autotests.services.ContentTypeService;
-import com.enonic.autotests.services.RepositoryService;
 import com.enonic.autotests.services.SearchService;
 import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.XmlReader;
@@ -35,9 +32,7 @@ public class TextExtractorTest extends BaseTest
 {
 	private final static String TEXT_FOR_EXTRACTING = "text extractor test";
 	private final String NOR_TEXT_FOR_EXTRACTING = "kjølig tåket dag";
-	private ContentTypeService contentTypeService = new ContentTypeService();
-	private RepositoryService repositoryService = new RepositoryService();
-	private ContentService contentService = new ContentService();
+	
 	private SearchService searchService = new SearchService();
 	private final String NOR_CONTENT_NAME =  "nor.txt";
 	private String CONTENT_LIST_KEY = "content_list";
