@@ -28,6 +28,7 @@
  			<class name="com.enonic.autotests.contentimport.ImportContentUpdateStrategyTest" />  
  			<class name="com.enonic.autotests.contentimport.ImportContentWithBlockGroup" />  
  			<class name="com.enonic.autotests.contentimport.AddEntryImageFileContent" />
+ 			<class name="com.enonic.autotests.contentimport.ImportZipImagesTest" />
 
   			<class name="com.enonic.autotests.textextractors.TextExtractorTest" />
   			<class name="com.enonic.autotests.facets.TermStatsFacetTest"/>
@@ -48,8 +49,7 @@
 			<!-- TEST 2 -->
 	<test verbose="1" name="ChromeTests-grid2" preserve-order="true"  parallel="false">
 		<parameter name="platform" value="windows" />
-		<!-- <parameter name="browser" value="firefox" /> -->
-		<!-- <parameter name="browserVersion" value="23.0.1" /> -->
+	
 		<parameter name="browserVersion" value="28.0" />
 		<parameter name="browser" value="chrome" />
 		<parameter name="base.url" value="http://10.0.6.80:8080/admin/" />
@@ -68,6 +68,7 @@
             <class name="com.enonic.autotests.contentimport.ImportContentUpdateStrategyTest" />
             <class name="com.enonic.autotests.contentimport.ImportContentWithBlockGroup" />
             <class name="com.enonic.autotests.contentimport.AddEntryImageFileContent" />
+            <class name="com.enonic.autotests.contentimport.ImportZipImagesTest" />
 
             <class name="com.enonic.autotests.textextractors.TextExtractorTest" />
             <class name="com.enonic.autotests.facets.TermStatsFacetTest"/>
