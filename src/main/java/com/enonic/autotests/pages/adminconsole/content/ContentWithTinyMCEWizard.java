@@ -1,5 +1,7 @@
 package com.enonic.autotests.pages.adminconsole.content;
 
+import static com.enonic.autotests.utils.SleepHelper.sleep;
+
 import java.util.List;
 import java.util.Set;
 
@@ -8,13 +10,11 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchWindowException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import com.enonic.autotests.AppConstants;
 import com.enonic.autotests.TestSession;
 import com.enonic.autotests.exceptions.AddContentException;
 import com.enonic.autotests.exceptions.TestFrameworkException;
@@ -25,6 +25,8 @@ import com.enonic.autotests.model.TinyMCETable;
 import com.enonic.autotests.pages.adminconsole.AbstractAdminConsolePage;
 import com.enonic.autotests.services.PageNavigator;
 import com.enonic.autotests.utils.TestUtils;
+
+
 
 /**
  * Content Wizard page, that contains TinyMCE HTML WYSIWYG editor.
@@ -69,6 +71,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	private final String SELECT_CONTENT_POPUP_WINDOW_TITLE = "Enonic CMS - Content repository";
 
 	private final String TINY_MCE_INNERHTML = "return document.getElementsByTagName('iframe')[0].contentDocument.body.innerHTML;";
+	private final String SET_TINY_MCE_INNERHTML = "document.getElementsByTagName('iframe')[0].contentDocument.body.innerHTML=arguments[0];";
 
 	private final String ADD_ANCHOR_POPUP_TITLE = "Insert/Edit Anchor";
 	private final String INSERT_LINK_POPUP_TITLE = "Insert/edit link";
@@ -241,14 +244,15 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	public void verifyIncreaseDecreaseIndents()
 	{
-		
-		selectAlignment(AlignmentText.LEFT);
-		undoButton.click();
 		String text = "test text";
+	    selectAlignment(AlignmentText.LEFT);
+		undoButton.click();
 		editorArea.sendKeys(text);
+		//setText(text);
 		increaseIndentButton.click();
+		sleep(200);
 		String expectedText = "<p style=\"padding-left: 30px;\">"+text;
-		boolean isPresent = verifyTextInEditor(expectedText);
+		boolean isPresent = verifyTextInEditor(expectedText); ((JavascriptExecutor) getSession().getDriver()).executeScript(TINY_MCE_INNERHTML);
 		if(!isPresent)
 		{
 			Assert.fail("actual innerHtml does not contain expected string: " + expectedText);
@@ -271,6 +275,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		insertBulListButton.click();
 		String text1 = "test1";
 		String text2 = "test2";
+		//setText(text1+"\n"+text2);
 		editorArea.sendKeys(text1);
 		editorArea.sendKeys("\n");
 		editorArea.sendKeys(text2);
@@ -293,6 +298,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		insertNumListButton.click();
 		String text1 = "test1";
 		String text2 = "test2";
+		//setText(text1+"\n"+text2);  
 		editorArea.sendKeys(text1);
 		editorArea.sendKeys("\n");
 		editorArea.sendKeys(text2);
@@ -313,6 +319,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		selectAlignment(AlignmentText.LEFT);
 		String text = "superscript test";
 		editorArea.sendKeys(text);
+		//setText(text);
 		selectAll(); 
 		insertSuperscriptButton.click();
 		String expectedText =  "<sup>"+ text ;
@@ -331,6 +338,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		selectAlignment(AlignmentText.LEFT);
 		String text = "subscript test";
 		editorArea.sendKeys(text);
+		//setText(text);
 		
 		selectAll();
 		insertSubscriptButton.click();
@@ -371,6 +379,8 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		undoButton.click();
 		String text = "deleteion test";
 		editorArea.sendKeys(text);
+		//setText(text);
+		sleep(200);
 		selectAll();
 		insertCitationButton.click();
 		doAddCitation();
@@ -423,6 +433,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		selectAlignment(AlignmentText.LEFT);
 		String text = "deleteion test";
 		editorArea.sendKeys(text);
+		//setText(text);
 		selectAll();
 		insertDeletionButton.click();
 		doAddDeletion();
@@ -443,8 +454,10 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		selectAlignment(AlignmentText.LEFT);
 		String text = "isertion test";
 		editorArea.sendKeys(text);
+		//setText(text);
 		selectAll();
 		insertInsertionButton.click();
+		sleep(200);
 		doAddInsertion();
 		String[] expectedText = { "<ins", text + "</ins>" };
 		boolean isPresent = verifyTextInEditor(expectedText);
@@ -463,7 +476,9 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		undoButton.click();
 		String text = "text test";
 		editorArea.sendKeys(text);
+		//setText(text);
 		selectAll();
+		sleep(200);
 		insertBlockQouteButton.click();
 		String[] expectedText = {"<blockquote>" , text};
 		boolean isPresent = verifyTextInEditor(expectedText);
@@ -484,7 +499,9 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		
 		String text = "text test";
 		editorArea.sendKeys(text);
+		//setText(text);
 		selectAll();
+		sleep(200);
 		insertAbbreviationButton.click();
 		doInsertAbbreviation();
 		String[] expectedText = { "<abbr", text, "</abbr>" };
@@ -503,6 +520,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		selectAlignment(AlignmentText.LEFT);
 		String text = "text test";
 		editorArea.sendKeys(text);
+		setText(text);
 		selectAll();
 		insertAcronymButton.click();
 		doInsertAcronum();
@@ -965,6 +983,7 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	 */
 	private boolean verifyTextInEditor(String... expected)
 	{
+		PageNavigator.switchToFrame(getSession(), AbstractAdminConsolePage.MAIN_FRAME_NAME);
 		boolean result = true;
 		Object obj = ((JavascriptExecutor) getSession().getDriver()).executeScript(TINY_MCE_INNERHTML);
 		String actualInnerHtml = obj.toString();
@@ -1046,8 +1065,8 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 	{
 		selectAlignment(AlignmentText.LEFT);
 		String text = "test text";
-		editorArea.sendKeys(text);
-		//editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		setText(text);
+		//editorArea.sendKeys(text);
 		selectAll();
 		List<WebElement> elems = findElements(By.xpath("//a[@title='Select Text Color' and descendant::span[@class='mceIconOnly']]"));
 		elems.get(0).click();
@@ -1065,14 +1084,12 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 
 	public void verifyChangeBackgroundColorText()
 	{
-		//Actions builder = new Actions(getDriver());
-		//WebElement elem = getDriver().findElement(By.xpath("//td[contains(@class,'mceIframeContainer')]//iframe"));
-		//builder.moveToElement(elem).click().build().perform();
 		selectAlignment(AlignmentText.LEFT);
 		String text = "test text";
-		editorArea.sendKeys(text);
+		//editorArea.sendKeys(text);
+		setText(text);
 		selectAll();
-		//elem.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+		
 		List<WebElement> elems = findElements(By.xpath("//a[@title='Select Background Color' and descendant::span[@class='mceIconOnly']]"));
 		elems.get(0).click();
 		TestUtils.getInstance().waitAndFind(By.xpath("//a[@title='Red']"), getDriver());
@@ -1086,6 +1103,11 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		}
 
 	}
+	
+	private void setText(String text)
+	{
+		((JavascriptExecutor) getSession().getDriver()).executeScript(SET_TINY_MCE_INNERHTML,text);
+	}
 
 	/**
 	 * Clicks by Alignment Center
@@ -1097,9 +1119,9 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		String p1 = "test text";
 		String p2 = "alignment test";
 		String text = p1 + "\n" + p2;
-		editorArea.sendKeys(text);
+		//editorArea.sendKeys(text);
+		setText(text);
 		selectAll();
-	//	editorArea.sendKeys(Keys.chord(Keys.CONTROL, "a"));
 		selectAlignment(align);
 		String expected = String.format("<p style=\"text-align: %s;\">", align.getValue()) + p1;
 		Object obj = ((JavascriptExecutor) getSession().getDriver()).executeScript(TINY_MCE_INNERHTML);
@@ -1157,7 +1179,8 @@ public class ContentWithTinyMCEWizard extends AbstractAddContentWizard<ContentWi
 		selectAlignment(AlignmentText.LEFT);
 		undoButton.click();
 		String text = "test text";
-		editorArea.sendKeys(text);
+		//editorArea.sendKeys(text);
+		setText(text);
 		selectAll();
 		
 

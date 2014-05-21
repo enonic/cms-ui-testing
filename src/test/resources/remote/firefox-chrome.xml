@@ -13,7 +13,7 @@
 		<parameter name="base.url" value="http://10.0.6.79:8080/admin/" />
 		<parameter name="platform" value="windows" />
 		<parameter name="browser" value="firefox" />
-		<parameter name="browserVersion" value="27.0.1" />
+		<parameter name="browserVersion" value="29.0.1" />
 		<classes>
 			<class name="com.enonic.autotests.DeleteAllSitesAndContentTests" />
 
@@ -33,9 +33,7 @@
   			<class name="com.enonic.autotests.textextractors.TextExtractorTest" />
   			<class name="com.enonic.autotests.facets.TermStatsFacetTest"/>
   			<class name="com.enonic.autotests.facets.FacetsTests"/>
-
             <class name="com.enonic.autotests.ContentApiTest"/>
-
             <class name="com.enonic.autotests.editor.EditorTest"/>
 
            
@@ -49,8 +47,7 @@
 			<!-- TEST 2 -->
 	<test verbose="1" name="ChromeTests-grid2" preserve-order="true"  parallel="false">
 		<parameter name="platform" value="windows" />
-	
-		<parameter name="browserVersion" value="28.0" />
+		<parameter name="browserVersion" value="34.0" />
 		<parameter name="browser" value="chrome" />
 		<parameter name="base.url" value="http://10.0.6.80:8080/admin/" />
 
@@ -84,7 +81,5 @@
             <class name="com.enonic.autotests.general.acl.UserStoreAdministratorTest"/>
         </classes>
 	</test>
-
-
 
 </suite>
