@@ -1,6 +1,7 @@
 package com.enonic.autotests.general.acl;
 
 import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -158,7 +159,7 @@ public class UserStoreAdministratorTest extends BaseTest
 		contentAclEntry.setPermissions(contentPermissions);
 		
 		contentAclEntries.add(contentAclEntry);
-		content.setAclEntries(contentAclEntries);
+		//content.setAclEntries(contentAclEntries);
 		
 		contentService.addContentWithEditor(getTestSession(), content);
 		logger.info("content was added to the categry with name: " + content.getDisplayName());

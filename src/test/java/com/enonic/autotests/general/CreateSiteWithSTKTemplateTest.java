@@ -99,7 +99,7 @@ public class CreateSiteWithSTKTemplateTest extends BaseTest
 	}
 
 	@Test(description = "open site and verify a text", dependsOnMethods = "createPageTemplateTest")
-	public void openSiteInACETest()
+	public void openSiteInICETest()
 	{
 		logger.info("#### open site and verify a text");
 		Site site = (Site) getTestSession().get(SITE_STK_KEY);
@@ -109,7 +109,7 @@ public class CreateSiteWithSTKTemplateTest extends BaseTest
 		logger.info("$$$$ FINISHED : site sucessfully opened! Text was verified");
 	}
 
-	@Test(description = "Create  a portlet", dependsOnMethods = "openSiteInACETest")
+	@Test(description = "Create  a portlet", dependsOnMethods = "openSiteInICETest")
 	public void addPortletTest()
 	{
 		logger.info("#### Create  a portlet");
@@ -147,7 +147,7 @@ public class CreateSiteWithSTKTemplateTest extends BaseTest
 	}
 
 	@Test(description = " open site and verify a TEXT from a portlet", dependsOnMethods = "editPageMenuItemTest")
-	public void openSiteInACE2Test()
+	public void openSiteInICE2Test()
 	{
 		logger.info("#### open site and verify a TEXT from a portlet");
 		Site site = (Site) getTestSession().get(SITE_STK_KEY);

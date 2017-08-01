@@ -24,15 +24,14 @@ import com.enonic.autotests.utils.TestUtils;
  */
 public class PageNavigator
 {
-
     private static Logger logger = Logger.getLogger();
 
-	public static boolean  isPresentMenuLink(TestSession session,String xpath)
+    public static boolean isPresentMenuLink( TestSession session, String xpath )
     {
-    	 PageNavigator.navgateToAdminConsole( session );
-    	 switchToFrame(session, AbstractAdminConsolePage.LEFT_FRAME_NAME );      
-         LeftMenuFrame menu = new LeftMenuFrame( session );
-    	 return menu.isMenuItemPresent(xpath);
+        PageNavigator.navgateToAdminConsole( session );
+        switchToFrame( session, AbstractAdminConsolePage.LEFT_FRAME_NAME );
+        LeftMenuFrame menu = new LeftMenuFrame( session );
+        return menu.isMenuItemPresent( xpath );
     }
 
     public static CreateContentRepositoryWizard openRepositoryProperties( TestSession session, String repositoryName )
@@ -62,7 +61,6 @@ public class PageNavigator
      * Navigates to the admin-console and opens repository or category view.
      *
      * @param session
-     * @param repositoryName
      * @return
      */
     public static AbstractContentTableView openContentsTableView( TestSession session, String... names )
@@ -79,7 +77,6 @@ public class PageNavigator
         {
             return leftMenu.openCategoryViewFrame( names );
         }
-
     }
 
     /**
@@ -90,7 +87,7 @@ public class PageNavigator
     public static void navgateToAdminConsole( TestSession testSession )
     {
         User user = testSession.getCurrentUser();
-        // if Admin-console page already loaded, return, otherwise navigate to  the console
+        // if Admin-console page already loaded, return, otherwise navigate to the console
         if ( testSession.getDriver().getTitle().contains( AbstractAdminConsolePage.TITLE ) )
         {
             return;
@@ -134,12 +131,11 @@ public class PageNavigator
         session.getDriver().switchTo().window( whandle );
         frames = session.getDriver().findElements( By.name( AbstractAdminConsolePage.MAIN_FRAME_NAME ) );
         session.getDriver().switchTo().frame( frames.get( 0 ) );
-
     }
 
     /**
      * @param testSession {@link TestSession} instance.
-     * @param iframeXpath frame's xpath.
+     *
      */
     public static void switchToFrame( TestSession testSession, String frameName )
     {
@@ -153,5 +149,4 @@ public class PageNavigator
 
         testSession.getDriver().switchTo().frame( frames.get( 0 ) );
     }
-
 }

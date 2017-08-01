@@ -91,8 +91,7 @@ public class CreateCategoryWizard extends AbstractAdminConsoleWizardPage
 	 * @param aclentries
 	 */
 	public void doSetACL(List<AclEntry> aclentries)
-	{
-		
+	{		
 		if(aclentries!=null)
 		{
 			getLogger().info("CATEGORY: goto security tab");
@@ -101,12 +100,19 @@ public class CreateCategoryWizard extends AbstractAdminConsoleWizardPage
 			{
 				if(entry.getType().equals(PrincipalType.USER))
 				{
-					doAddUserPrincipal(entry.getPrincipalName());
+					if(!isPrincipalPresent(entry.getPrincipalName())){
+						doAddUserPrincipal(entry.getPrincipalName());
+					}					
 					doSetPermissions(entry);
 				}
-			}
-			
+			}			
 		}
+		
+	}
+	
+	private boolean isPrincipalPresent(String name){
+		String xpath = String.format("//tbody[@id='accessRightTable']//td[contains(.,'%s')]", name);
+		return getDriver().findElements(By.xpath(xpath)).size()>0;
 		
 	}
 	private void doSetPermissions(AclEntry entry)

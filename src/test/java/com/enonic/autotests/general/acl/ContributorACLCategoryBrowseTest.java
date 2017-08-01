@@ -106,7 +106,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		String principalName = ((User) getTestSession().get(CONTRIBUTOR_USER_KEY)).getName();
 		categoryAclEntry.setPrincipalName(principalName);		
 		categoryAclEntry.setType(PrincipalType.USER);
-		
+		logger.info("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz ");
 		List<PermissionOperation> categoryPerm = new ArrayList<>();
 		
 		//READ ACCESS FOR USER , but not browse on category
@@ -144,7 +144,7 @@ public class ContributorACLCategoryBrowseTest extends BaseTest
 		contentAclEntry.setPermissions(contentPermissions);
 		
 		contentAclEntries.add(contentAclEntry);
-		content.setAclEntries(contentAclEntries);
+		//content.setAclEntries(contentAclEntries);
 		
 		contentService.addContentWithEditor(getTestSession(), content);
 		getTestSession().put(CONTRIBUTOR_CONTENT_KEY, content);

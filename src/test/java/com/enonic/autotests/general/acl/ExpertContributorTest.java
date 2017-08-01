@@ -147,7 +147,7 @@ public class ExpertContributorTest extends BaseTest
 		contentAclEntry.setPermissions(contentPermissions);
 		
 		contentAclEntries.add(contentAclEntry);
-		content.setAclEntries(contentAclEntries);
+		//content.setAclEntries(contentAclEntries);
 		
 		contentService.addContentWithEditor(getTestSession(), content);
 		getTestSession().put(EXP_CONTRIBUTOR_CONTENT_KEY, content);

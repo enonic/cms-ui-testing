@@ -28,16 +28,15 @@ import com.enonic.autotests.testdata.contenttype.ContentConvertor;
 import com.enonic.autotests.utils.TestUtils;
 
 /**
- * Test for verifying of  getContentByCategory datasource content.
- *
+ * Test for verifying of getContentByCategory datasource content.
+ * 
  */
 public class PortletPreviewDatasourceTest extends BaseTest
 {
 	private SiteService siteService = new SiteService();
-	
-	
+
 	private final String SITE_DS_KEY = "site_ds_key";
-	private final String TEST_CONTENT_KEY ="test_content_key";
+	private final String TEST_CONTENT_KEY = "test_content_key";
 	private final String DS_REPOSITORY_KEY = "ds_repo";
 	private final String DS_CATEGORY_KEY = "ds_cat";
 	private final String TEST_DS_SECTION = "ds_section";
@@ -47,7 +46,6 @@ public class PortletPreviewDatasourceTest extends BaseTest
 
 	private final String DATASOURCE_GETCONTENT_BY_CATEGORY = "test-data/datasource/content-by-category.xml";
 	private final String CONTENT_NAME = "test.jpg";
-
 
 	@Test(description = "setup: create preconditions. Create a site with section and portlet. Create a repository and category with image ctype, and publish content to the section")
 	public void setup()
@@ -63,15 +61,16 @@ public class PortletPreviewDatasourceTest extends BaseTest
 
 	}
 
-	@Test(dependsOnMethods = "setup",description="click by 'Preview' button and verify: published content present in a datasource content")
+	@Test(dependsOnMethods = "setup", description = "click by 'Preview' button and verify: published content present in a datasource content")
 	public void verifyGetContentByCategoryDataSourceContent()
 	{
 		logger.info(" getContentByCategory#### get datasource content and verify: content-name present in the source");
 		Portlet portlet = (Portlet) getTestSession().get(PORTLET_DS_KEY);
 		String pageSource = siteService.getPreviewDatasourceContent(getTestSession(), portlet);
-		Content<ImageContentInfo> content = (Content<ImageContentInfo>)getTestSession().get(TEST_CONTENT_KEY);
+		Content<ImageContentInfo> content = (Content<ImageContentInfo>) getTestSession().get(TEST_CONTENT_KEY);
 		Assert.assertTrue(pageSource.contains(content.getDisplayName()), "content name was not present in the Preview Datasource xml-content");
-		Assert.assertTrue(pageSource.contains(content.getContentTab().getInfo().getDescription()), "description of content was not present in the Preview Datasource xml-content");
+		Assert.assertTrue(pageSource.contains(content.getContentTab().getInfo().getDescription()),
+				"description of content was not present in the Preview Datasource xml-content");
 		logger.info(" FINISHED $$$$$ TEST PREVIEW  DATASOURCE::: getContentByCategory");
 	}
 
@@ -102,9 +101,8 @@ public class PortletPreviewDatasourceTest extends BaseTest
 		getTestSession().put(PORTLET_DS_KEY, portlet);
 	}
 
-
 	/**
-	 * create repository and  category with "Image" content type.
+	 * create repository and category with "Image" content type.
 	 */
 	private void createRepositoryAndCategory()
 	{
@@ -123,7 +121,6 @@ public class PortletPreviewDatasourceTest extends BaseTest
 		getTestSession().put(DS_CATEGORY_KEY, Integer.valueOf(catKey));
 		logger.info("category was created: cat-name" + imageCategory.getName());
 	}
-
 
 	/**
 	 * add image to the category and publish to the test-site .
@@ -150,7 +147,6 @@ public class PortletPreviewDatasourceTest extends BaseTest
 		getTestSession().put(TEST_CONTENT_KEY, content);
 	}
 
-
 	/**
 	 * create sample test-site.
 	 */
@@ -167,7 +163,6 @@ public class PortletPreviewDatasourceTest extends BaseTest
 		getTestSession().put(SITE_DS_KEY, site);
 		logger.info("site created: " + siteName);
 	}
-
 
 	/**
 	 * allows section page for site.

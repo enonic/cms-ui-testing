@@ -122,7 +122,7 @@ public class EditorTest
 		logger.info("### STARTED:");
 		ContentCategory category = (ContentCategory) getTestSession().get(EDITOR_CATEGORY_KEY);
 		tinyMCEService.verifyBoldItalic(getTestSession(), category);
-		logger.info("$$$$ FINISHED: Format some text as bold anditalic");
+		logger.info("$$$$ FINISHED: Format some text as bold and italic");
 	}
 
     @Test(dataProvider = "parseAlignmentData",
@@ -229,6 +229,7 @@ public class EditorTest
 		logger.info("$$$$ FINISHED Insert special characters into the document.");
 	}
 
+	
 	@Test(description = "Advanced styling :   Deletion ", dependsOnMethods = "setup")
 	public void insertDeletionTest()
 	{
@@ -238,6 +239,7 @@ public class EditorTest
 		logger.info("$$$$ FINISHED Advanced styling : Deletion.");
 	}
 
+	
 	@Test(description = "Advanced styling :  Insertion ", dependsOnMethods = "setup")
 	public void insertInsertionTest()
 	{
@@ -247,6 +249,7 @@ public class EditorTest
 		logger.info("$$$$ FINISHED Advanced styling : Insertion.");
 	}
 
+	
 	@Test(description = "Advanced styling :  Block quote ", dependsOnMethods = "setup")
 	public void insertBlockQuoteTest()
 	{
@@ -256,6 +259,7 @@ public class EditorTest
 		logger.info("$$$$ FINISHED Advanced styling : Block quote.");
 	}
 
+	
 	@Test(description = "Advanced styling :  Abbreviation ", dependsOnMethods = "setup")
 	public void insertAbbreviationTest()
 	{
@@ -274,6 +278,7 @@ public class EditorTest
 		logger.info("$$$$ FINISHED Advanced styling : Acronym.");
 	}
 
+	
 	@Test(description = "Advanced styling :  Citation ", dependsOnMethods = "setup")
 	public void insertCitationTest()
 	{
@@ -283,6 +288,7 @@ public class EditorTest
 		logger.info("$$$$ FINISHED Advanced styling : Citation.");
 	}
 
+	
 	@Test(description = "Advanced styling :  Superscript ", dependsOnMethods = "setup")
 	public void insertSuperscriptTest()
 	{
@@ -301,6 +307,7 @@ public class EditorTest
 		logger.info("$$$$ FINISHED insert : Subscript.");
 	}
 
+	
 	@Test(description = "Insert bulleted list .", dependsOnMethods = "setup")
 	public void insertBulletedListTest()
 	{
@@ -310,6 +317,7 @@ public class EditorTest
 		logger.info("$$$$ FINISHED  Insert bulleted list .");
 	}
 
+	
 	@Test(description = "Insert numbered list .", dependsOnMethods = "setup")
 	public void insertNumberedListTest()
 	{
@@ -318,7 +326,8 @@ public class EditorTest
 		tinyMCEService.verifyInsertNumberedList(getTestSession(), category);
 		logger.info("$$$$ FINISHED  Insert numbered list .");
 	}
-
+    
+	
 	@Test(description = "Increase and decrease Indents . Verify: text moved right, then left. ", dependsOnMethods = "setup")
     public void increaseDecreaseIndentTest()
 	{

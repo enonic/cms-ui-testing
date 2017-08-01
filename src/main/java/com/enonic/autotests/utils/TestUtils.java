@@ -288,6 +288,45 @@ public class TestUtils
 		}
 		return fileName;
 	}
+	public String saveScreenshot(final TestSession testSession, String name)
+	{
+		WebDriver driver = testSession.getDriver();
+		String fileName = name + ".png";
+		File folder = new File(System.getProperty("user.dir") + File.separator + "snapshots");
+
+		if (!folder.exists())
+		{
+			if (!folder.mkdir())
+			{
+				System.out.println("Folder for snapshots was not created ");
+			} else
+			{
+				System.out.println("Folder for snapshots was created " + folder.getAbsolutePath());
+			}
+		}
+		File screenshot = null;
+
+		if ((Boolean) testSession.get(TestSession.IS_REMOTE))
+		{
+
+			WebDriver augmentedDriver = new Augmenter().augment(driver);
+			screenshot = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
+		} else
+		{
+			screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		}
+
+		String fullFileName = folder.getAbsolutePath() + File.separator + fileName;
+
+		try
+		{
+			FileUtils.copyFile(screenshot, new File(fullFileName));
+		} catch (IOException e)
+		{
+
+		}
+		return fileName;
+	}
 
 	public String timeNow()
 	{

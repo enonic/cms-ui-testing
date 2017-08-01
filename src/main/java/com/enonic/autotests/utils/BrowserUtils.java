@@ -10,7 +10,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -33,7 +32,7 @@ public class BrowserUtils {
 		String browserName = (String) testSession.get(TestSession.BROWSER_NAME);
 		BrowserName cfgBrowser = BrowserName.findByValue(browserName);
 		Boolean isRemote = (Boolean) testSession.get(TestSession.IS_REMOTE);
-
+		cfgBrowser = BrowserName.FIREFOX;
 		if (isRemote != null && isRemote) {
 			String hubUrl = (String) testSession.get(TestSession.HUB_URL);
 			Capabilities desiredCapabilities = createDesiredCapabilities(testSession);
@@ -56,9 +55,9 @@ public class BrowserUtils {
 			driver = new ChromeDriver();
 
 		} else if (cfgBrowser.equals(BrowserName.IE)) {
+			
 			driver = new InternetExplorerDriver();
-		} else if (cfgBrowser.equals(BrowserName.HTMLUNIT)) {
-			driver = new HtmlUnitDriver();
+		
 		} else {
 			throw new RuntimeException("Driver not supported:" + cfgBrowser.getName());
 		}
@@ -80,6 +79,8 @@ public class BrowserUtils {
 			capability = DesiredCapabilities.firefox();
 			capability.setPlatform(getPLatform(platform));
 			capability.setVersion(browserVersion);
+			FirefoxProfile fp = new FirefoxProfile();
+			capability.setCapability(FirefoxDriver.PROFILE, fp);
 
 		} else if (cfgBrowser.equals(BrowserName.CHROME)) {
 			capability = DesiredCapabilities.chrome();
@@ -88,12 +89,14 @@ public class BrowserUtils {
 			
 		} else if (cfgBrowser.equals(BrowserName.IE)) {
 			capability = DesiredCapabilities.internetExplorer();
+			//capability.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
 			capability.setPlatform(Platform.WINDOWS);
 			capability.setVersion(browserVersion);
+			
 		} else {
 			throw new TestFrameworkException("support of browser " + cfgBrowser.getName() + " not implemented yet");
 		}
-		logger.info("DesiredCapabilities for RemoteWebDriver uses:  platform:" + platform + " browser:" + browserName + "version:" + browserVersion
+		logger.info("DesiredCapabilities for RemoteWebDriver uses:  platform:" + platform + " browser:" + browserName + " version:" + browserVersion
 				+ " created");
 		return capability;
 	}

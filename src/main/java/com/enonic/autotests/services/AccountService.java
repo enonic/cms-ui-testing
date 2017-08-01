@@ -27,9 +27,9 @@ public class AccountService
 		PageNavigator.navgateToAdminConsole(testSession);
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		UsersTableFrame usersFrame = menu.openUsersTableFrame(testSession);
-		//selects a user in a table, opens Wizard page and populate new data
-		usersFrame.doEditUser(userToEdit, user);		
-		
+		// selects a user in a table, opens Wizard page and populate new data
+		usersFrame.doEditUser(userToEdit, user);
+
 		usersFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		return usersFrame;
 	}
@@ -64,8 +64,8 @@ public class AccountService
 		LeftMenuFrame menu = new LeftMenuFrame(testSession);
 		UsersTableFrame usersFrame = menu.openUsersTableFrame(testSession);
 		usersFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
-		//clicks by "New", opens AddUserWizard page and populate  data: username, password, email... Than clicks by 'Save' button
-		usersFrame.doAddUser(user);				
+		// clicks by "New", opens AddUserWizard page and populate data: username, password, email... Than clicks by 'Save' button
+		usersFrame.doAddUser(user);
 		usersFrame.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		TestUtils.getInstance().saveScreenshot(testSession);
 		return usersFrame;
@@ -81,13 +81,13 @@ public class AccountService
 	 */
 	public boolean isPresentEditHtmlButton(TestSession testSession, Content<?> content)
 	{
-		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView( testSession, content.getParentNames() );
+		AbstractContentTableView tableViewFrame = PageNavigator.openContentsTableView(testSession, content.getParentNames());
 		tableViewFrame.doStartEditContent(content.getDisplayName());
 		ContentWithTinyMCEWizard wizard = new ContentWithTinyMCEWizard(testSession);
 		wizard.waituntilPageLoaded(AppConstants.PAGELOAD_TIMEOUT);
 		TestUtils.getInstance().saveScreenshot(testSession);
 		return wizard.isPresentEditHtmlButton();
-				
+
 	}
 	
 	/**
